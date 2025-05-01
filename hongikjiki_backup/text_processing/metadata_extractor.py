@@ -1,0 +1,250 @@
+import os
+import re
+import hashlib
+import logging
+from typing import Dict, Any, List
+
+logger = logging.getLogger("HongikJikiChatBot")
+
+class MetadataExtractor:
+    """
+    문서에서 메타데이터를 추출하는 클래스
+    강의 번호, 제목, 내용 유형, 카테고리, 태그 등의 메타데이터를 추출
+    """
+    
+    def __init__(self):
+        """MetadataExtractor 초기화"""
+        # 정규 표현식 패턴 초기화
+        self.lecture_pattern = re.compile(r'정법(\d+)강')
+        self.title_patterns = [
+            r'제목:\s*(.+)',
+            r'강의명:\s*(.+)',
+            r'\[정법강의\]\s*(.+)'
+        ]
+    
+    def extract_metadata(self, content: str, filename: str, base_metadata: Dict[str, Any] = None) -> Dict[str, Any]:
+        """
+        텍스트에서 메타데이터 추출
+        
+        Args:
+            content: 분석할 텍스트 내용
+            filename: 파일 이름
+            base_metadata: 기존 메타데이터 (있는 경우)
+            
+        Returns:
+            Dict: 추출된 메타데이터 딕셔너리
+        """
+        # 기본 메타데이터 설정 (또는 기존 메타데이터 확장)
+        metadata = base_metadata or {}
+        
+        # 기본 필드 초기화
+        metadata.update({
+            "filename": filename,
+            "source": "천공 스승님 정법 가르침",
+            "lecture_number": metadata.get("lecture_number"),
+            "title": metadata.get("title"),
+            "file_hash": hashlib.md5(content.encode('utf-8')).hexdigest(),
+            "content_type": metadata.get("content_type"),
+            "format": metadata.get("format", os.path.splitext(filename)[1].lower()),
+            "category": metadata.get("category", "미분류"),
+            "tags": metadata.get("tags", [])
+        })
+        
+        # 강의 번호 추출
+        metadata["lecture_number"] = self._extract_lecture_number(content, filename, metadata["lecture_number"])
+        
+        # 제목 추출
+        metadata["title"] = self._extract_title(content, filename, metadata["title"])
+        
+        # 내용 유형 및 카테고리 추출
+        content_type = self._detect_content_type(content)
+        metadata["content_type"] = content_type
+        
+        # 내용 유형에 따른 카테고리 추론
+        metadata["category"] = self._infer_category(content, content_type)
+        
+        # 태그 추출
+        metadata["tags"] = self._extract_tags(content, content_type)
+        
+        return metadata
+    
+    def _extract_lecture_number(self, content: str, filename: str, default_number: int = None) -> int:
+        """
+        내용 및 파일명에서 강의 번호 추출
+        
+        Args:
+            content: 문서 내용
+            filename: 파일 이름
+            default_number: 기본 강의 번호 (이미 설정된 경우)
+            
+        Returns:
+            int: 추출된 강의 번호 또는 None
+        """
+        if default_number:
+            return default_number
+        
+        # 파일명에서 강의 번호 추출 시도
+        lecture_match = self.lecture_pattern.search(filename)
+        if lecture_match:
+            return int(lecture_match.group(1))
+        
+        # 내용에서 강의 번호 추출 시도
+        content_lecture_match = self.lecture_pattern.search(content)
+        if content_lecture_match:
+            return int(content_lecture_match.group(1))
+        
+        # 강의 번호가 없는 경우 처리
+        # 파일명에서 숫자 패턴 찾기
+        numbers = re.findall(r'\d+', filename)
+        if numbers:
+            # 가장 큰 숫자를 강의 번호로 추정
+            return max([int(n) for n in numbers])
+        
+        return None
+    
+    def _extract_title(self, content: str, filename: str, default_title: str = None) -> str:
+        """
+        내용 및 파일명에서 제목 추출
+        
+        Args:
+            content: 문서 내용
+            filename: 파일 이름
+            default_title: 기본 제목 (이미 설정된 경우)
+            
+        Returns:
+            str: 추출된 제목
+        """
+        if default_title:
+            return default_title
+        
+        # 제목 추출 시도 (다양한 패턴)
+        for pattern in self.title_patterns:
+            title_match = re.search(pattern, content[:500])  # 앞부분만 검색
+            if title_match:
+                return title_match.group(1).strip()
+        
+        # 제목이 없는 경우 처리
+        # 파일명을 기반으로 제목 생성
+        basename = os.path.basename(filename)
+        name_without_ext = os.path.splitext(basename)[0]
+        # 특수문자 및 숫자 제거하여 정리
+        clean_name = re.sub(r'[_\-\d]+', ' ', name_without_ext).strip()
+        if clean_name:
+            return clean_name
+        
+        # 내용의 첫 줄에서 유의미한 텍스트 추출
+        first_lines = content.strip().split('\n')[:3]
+        for line in first_lines:
+            clean_line = line.strip()
+            if len(clean_line) > 5 and not clean_line.startswith('http'):
+                return clean_line[:50]  # 최대 50자로 제한
+        
+        # 여전히 제목이 없으면 기본값 설정
+        return f"무제 문서 ({os.path.basename(filename)})"
+    
+    def _detect_content_type(self, content: str) -> str:
+        """
+        문서 내용 기반 컨텐츠 유형 감지
+        
+        Args:
+            content: 문서 내용
+            
+        Returns:
+            str: 감지된 내용 유형
+        """
+        # 질문-답변 형식 감지
+        if re.search(r'질문\s*:|Q:|Q\s*\.', content):
+            return "lecture_qa"
+        
+        # 짧은 내용은 명언일 가능성
+        if len(content) < 500:
+            return "quote"
+        
+        # 뉴스 기사 감지
+        if "출처:" in content or "기자" in content or "보도" in content:
+            return "article"
+            
+        # 시/산문 감지
+        if re.search(r'\n\s+\n', content) and len(re.findall(r'[.!?]', content)) < 20:
+            return "poem"
+            
+        # 기본값은 강의
+        return "lecture"
+    
+    def _infer_category(self, content: str, content_type: str) -> str:
+        """
+        내용 유형 및 키워드 기반 카테고리 추론
+        
+        Args:
+            content: 문서 내용
+            content_type: 감지된 내용 유형
+            
+        Returns:
+            str: 추론된 카테고리
+        """
+        # 기본 카테고리 매핑
+        type_to_category = {
+            "lecture": "정법강의",
+            "lecture_qa": "질의응답",
+            "quote": "명언/어록",
+            "article": "뉴스/기사",
+            "poem": "시/산문"
+        }
+        
+        # 기본 카테고리 설정
+        category = type_to_category.get(content_type, "미분류")
+        
+        # 키워드 기반 서브카테고리 추정
+        keywords_map = {
+            "홍익인간": "홍익사상",
+            "제사": "전통의례",
+            "용서": "인간관계",
+            "탐진치": "인성수양",
+            "선악": "도덕윤리",
+            "병": "건강/치유",
+            "깨달음": "영적성장",
+            "대자연": "자연원리",
+            "법칙": "우주법칙",
+            "3대7": "법칙원리"
+        }
+        
+        # 내용에서 키워드 탐색
+        for keyword, subcategory in keywords_map.items():
+            if keyword in content[:1000]:  # 처음 1000자 내에 키워드가 있는지 확인
+                # 서브카테고리 추가
+                if category == "미분류":
+                    return subcategory
+                else:
+                    return f"{category}/{subcategory}"
+        
+        return category
+    
+    def _extract_tags(self, content: str, content_type: str) -> List[str]:
+        """
+        문서 내용 기반 태그 추출
+        
+        Args:
+            content: 문서 내용
+            content_type: 감지된 내용 유형
+            
+        Returns:
+            List[str]: 추출된 태그 목록
+        """
+        tags = []
+        
+        # 1. 내용 유형 태그 추가
+        if content_type:
+            tags.append(content_type)
+        
+        # 2. 중요 키워드 기반 태그 추출
+        important_keywords = [
+            "홍익인간", "용서", "깨달음", "정의", "선악", "인과", "탐진치", 
+            "대자연", "법칙", "질서", "음양", "3대7", "천지인"
+        ]
+        
+        # 내용에서 중요 키워드 탐색
+        for keyword in important_keywords:
+            if keyword in content:
+                tags.append(keyword)
+        
+        return list(set(tags))  # 중복 제거

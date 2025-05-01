@@ -1,0 +1,7 @@
+{
+    // 가상환경 파이썬 경로 (이미 선택했다면 생략 가능)
+    "python.pythonPath": "venv/bin/python",
+  
+    // src 폴더를 import 검색 경로로 포함
+    "python.analysis.extraPaths": ["./src"]
+  }

@@ -1,0 +1,101 @@
+[
+  {
+    "filename": "002. 을동6  내조.rtf",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": 6,
+    "title": ". 을동   내조",
+    "file_hash": "63c70b1956ab4cc88decddd24897e85e",
+    "content_type": "lecture",
+    "format": ".rtf",
+    "category": "정법강의",
+    "tags": [
+      "대자연",
+      "lecture",
+      "용서",
+      "질서"
+    ]
+  },
+  {
+    "filename": "003. 을생27  효.rtf",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": 27,
+    "title": ". 을생   효",
+    "file_hash": "601b3fc23cceda8efac3ec5c7ae79ffd",
+    "content_type": "lecture",
+    "format": ".rtf",
+    "category": "정법강의",
+    "tags": [
+      "대자연",
+      "lecture",
+      "정의"
+    ]
+  },
+  {
+    "filename": "005. 을동23  악연'호연.rtf",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": 23,
+    "title": ". 을동   악연'호연",
+    "file_hash": "ba32e451d6a9164e5add3acac6d9a1a8",
+    "content_type": "lecture",
+    "format": ".rtf",
+    "category": "정법강의",
+    "tags": [
+      "대자연",
+      "lecture"
+    ]
+  },
+  {
+    "filename": "004. 을동21 선과 악.rtf",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": 21,
+    "title": ". 을동  선과 악",
+    "file_hash": "3a9868081aac183bef12abbf99152754",
+    "content_type": "lecture",
+    "format": ".rtf",
+    "category": "정법강의/도덕윤리",
+    "tags": [
+      "대자연",
+      "lecture",
+      "선악"
+    ]
+  },
+  {
+    "filename": "001. 병생23  원수사랑.남 탓하지 마라.rtf",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": 23,
+    "title": ". 병생   원수사랑.남 탓하지 마라",
+    "file_hash": "a04bd4614a0b52277860e394cdc55fd8",
+    "content_type": "lecture",
+    "format": ".rtf",
+    "category": "정법강의/건강/치유",
+    "tags": [
+      "대자연",
+      "lecture",
+      "용서",
+      "음양"
+    ]
+  },
+  {
+    "filename": "1-40강 요약 조성우님.pdf",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": 40,
+    "title": "강 요약 조성우님",
+    "file_hash": "8d63f70288f877f71fee67cf5330f3dc",
+    "content_type": "lecture_qa",
+    "format": ".pdf",
+    "category": "질의응답/건강/치유",
+    "tags": [
+      "정의",
+      "용서",
+      "인과",
+      "깨달음",
+      "대자연",
+      "음양",
+      "질서",
+      "lecture_qa",
+      "선악",
+      "홍익인간",
+      "법칙"
+    ]
+  }
+]

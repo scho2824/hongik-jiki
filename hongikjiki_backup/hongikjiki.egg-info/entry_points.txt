@@ -1,0 +1,3 @@
+[console_scripts]
+hongikjiki-cli = hongikjiki.cli:main
+hongikjiki-web = hongikjiki.web:main

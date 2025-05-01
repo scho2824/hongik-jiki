@@ -1,0 +1,15 @@
+# 가상환경
+venv/
+__pycache__/
+
+# 환경 변수
+.env
+
+# 생성된 데이터베이스
+chroma_db/
+
+# 로그 파일
+logs/
+
+# 기타
+.DS_Store

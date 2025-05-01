@@ -1,0 +1,26 @@
+# 기본 의존성
+python-dotenv>=1.0.0
+requests>=2.31.0
+pydantic>=2.0.0
+tqdm>=4.66.0
+
+# 문서 처리 라이브러리
+striprtf>=0.0.22
+python-docx>=1.0.0
+PyMuPDF>=1.22.5
+PyPDF2>=3.0.0
+
+# 임베딩 및 벡터 저장소
+sentence-transformers>=2.2.2
+chromadb>=0.4.18
+openai>=1.1.0
+
+# LangChain 관련
+langchain>=0.0.330
+langchain-community>=0.0.10
+langchain-core>=0.1.6
+
+# NLP 도구
+nltk>=3.8.1
+mecab-python3>=1.0.6   # 한국어 형태소 분석 (선택 사항)
+konlpy>=0.6.0          # 한국어 자연어 처리 (선택 사항)

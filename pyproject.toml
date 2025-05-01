@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hongikjiki"
+version = "0.1.0"
+description = "홍익지기 챗봇 구현을 위한 패키지"
+requires-python = ">=3.8"
+dependencies = [
+    "langchain>=0.0.267",
+    "openai>=1.0.0",
+    "sentence-transformers>=2.2.2",
+    "chromadb>=0.4.13",
+    "flask>=2.3.2",
+    "python-dotenv>=1.0.0",
+    "striprtf>=0.0.25",
+    "python-docx>=0.8.11",
+    "PyPDF2>=3.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.3.1",
+    "black>=23.3.0",
+    "isort>=5.12.0",
+]
+
+[project.scripts]
+hongikjiki-cli = "hongikjiki.cli:main"
+hongikjiki-web = "hongikjiki.web:main"
+
+[tool.setuptools]
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
