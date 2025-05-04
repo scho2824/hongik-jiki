@@ -48,6 +48,11 @@ class VectorStore:
             logger.error(f"임베딩 모델 로드 오류: {e}")
             raise
         
+        # Wrapping embedding function for ChromaDB
+        def _chroma_embedding_function(texts: List[str]) -> List[List[float]]:
+            return [self.embedding_model.encode(text).tolist() for text in texts]
+        embeddings = _chroma_embedding_function
+        
         # 컬렉션 이름
         self.collection_name = "hongikjiki_jungbub"
         
@@ -55,7 +60,8 @@ class VectorStore:
         try:
             self.collection = self.client.get_or_create_collection(
                 name=self.collection_name,
-                metadata={"hnsw:space": "cosine"}  # 코사인 유사도 사용
+                embedding_function=embeddings,
+                metadata={"hnsw:space": "cosine"}
             )
             logger.info(f"컬렉션 로드됨: {self.collection_name}")
         except Exception as e:

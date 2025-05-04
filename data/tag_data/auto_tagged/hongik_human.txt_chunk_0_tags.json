@@ -1,0 +1,29 @@
+{
+  "document_id": "basics/hongik_human.txt_chunk_0",
+  "file": "hongik_human.txt_chunk_0",
+  "tags": {
+    "홍익인간": 0.78
+  },
+  "metadata": {
+    "filename": "hongik_human.txt",
+    "format": ".txt",
+    "file_path": "data/jungbub_teachings/basics/hongik_human.txt",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": null,
+    "title": null,
+    "file_hash": "78b9f669c0695ce12684b1aec4bccb9f",
+    "content_type": null,
+    "category": "미분류",
+    "tags": [
+      "홍익인간"
+    ],
+    "chunk_index": 0,
+    "chunk_info": "전체 문서 (1/1)",
+    "is_short_document": true,
+    "total_chunks": 1,
+    "chunk_id": "basics/hongik_human.txt_chunk_0",
+    "source_file": "basics/hongik_human.txt"
+  },
+  "tagging_time": "2025-05-05T00:21:45.580227",
+  "auto_generated": true
+}

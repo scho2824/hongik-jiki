@@ -1,0 +1,192 @@
+# 홍익지기 태그 시스템 구현 계획
+
+## 1. 개요
+
+이 문서는 홍익지기 챗봇의 태그 시스템 구현을 위한 단계별 계획을 제시합니다. 태그 시스템은 정법 강의 내용을 주제별로 분류하고, 검색 및 추천 기능을 향상시켜 사용자에게 더 관련성 높은 응답을 제공하는 것을 목표로 합니다.
+
+## 2. 구현 단계
+
+### 2.1. 디렉토리 구조 설정 (완료)
+
+```
+hongikjiki/
+│
+├── chatbot.py                         # 메인 챗봇 클래스
+│
+├── text_processing/                   # 텍스트 전처리 및 구조화
+│   ├── __init__.py
+│   ├── document_loader.py             # 텍스트 로딩
+│   ├── text_normalizer.py             # 정제 및 정규화
+│   ├── metadata_extractor.py          # 메타데이터 추출 (태그 확장)
+│   ├── document_chunker.py            # 문서 분할
+│   ├── document_processor.py          # 처리 파이프라인 조정
+│
+├── vector_store/                      # 벡터 DB (Chroma 등)
+│   ├── __init__.py
+│   ├── base.py
+│   ├── embeddings.py
+│   ├── chroma_store.py                # 태그 기반 검색 확장
+│   └── tag_index.py                   # 태그 기반 색인/검색
+│
+├── tagging/                           # 태그 시스템 (독립 도메인)
+│   ├── __init__.py
+│   ├── tag_schema.py                  # 계층적 태그 정의
+│   ├── tag_extractor.py               # 텍스트 기반 태그 추출
+│   ├── tag_analyzer.py                # 태그 통계 및 관계 분석
+│   └── tagging_tools.py               # 수동 태깅 및 툴
+│
+├── pipeline/                          # 전체 파이프라인 정의 및 실행
+│   ├── __init__.py
+│   ├── run_ingest.py                  # 문서 수집 및 벡터화 전체 실행
+│   ├── run_tagging.py                 # 자동 태깅 실행
+│   ├── run_analysis.py                # 태그 관계 분석
+│   └── run_demo_server.py             # Streamlit or FastAPI 데모 서버 실행
+```
+
+### 2.2. 태그 스키마 정의 (완료)
+
+1. `data/config/tag_schema.yaml` 파일에 계층 구조화된 태그 정의
+2. 7개 최상위 카테고리와 하위 태그 구조 설계
+3. 태그 간 관계 정의 (관련 태그 설정)
+
+### 2.3. 코어 모듈 구현 (완료)
+
+1. **`tagging/tag_schema.py`**: 태그 스키마 로드 및 관리
+2. **`tagging/tag_extractor.py`**: 문서 내용 기반 태그 추출
+3. **`tagging/tag_analyzer.py`**: 태그 사용 통계 및 관계 분석
+4. **`tagging/tagging_tools.py`**: 수동 태깅 도구 및 배치 처리
+5. **`vector_store/tag_index.py`**: 태그 기반 검색 및 필터링
+
+### 2.4. 기존 코드 확장 구현 (완료)
+
+1. **`text_processing/metadata_extractor.py`** 확장
+   - 태그 추출 기능 추가
+   - 기본 태그 추출 로직 구현 (태그 모듈이 없을 경우 폴백)
+
+2. **`vector_store/chroma_store.py`** 확장
+   - 태그 인식 검색 기능 추가
+   - 쿼리에서 태그 추출 기능 추가
+   - 고급 검색 기능 구현
+
+3. **`chatbot.py`** 확장
+   - 태그 기반 채팅 응답 개선
+   - 관련 강의 추천 기능 추가
+   - 태그 기반 관련 질문 추천 기능 추가
+
+### 2.5. 파이프라인 스크립트 구현 (완료)
+
+1. **`pipeline/run_tagging.py`**: 문서 자동 태깅 파이프라인
+   - 문서 로드 및 태그 추출
+   - 통계 분석 및 보고서 생성
+   - 태그 인덱스 구축
+
+### 2.6. 패턴 정의 파일 구현 (완료)
+
+1. **`data/config/tag_patterns.json`**: 태그 추출을 위한 패턴 정의
+   - 정규 표현식 패턴
+   - 키워드 목록
+   - 구문 목록
+
+## 3. 통합 및 실행 단계
+
+### 3.1. 디렉토리 구조 초기화
+```bash
+# 필요한 디렉토리 생성
+mkdir -p hongikjiki/tagging
+mkdir -p hongikjiki/pipeline
+mkdir -p data/config
+mkdir -p data/tag_data/auto_tagged
+mkdir -p data/tag_data/manually_tagged
+mkdir -p data/tag_data/input_chunks
+mkdir -p logs
+```
+
+### 3.2. 구현 파일 배치
+```bash
+# 구현된 파일들을 적절한 위치에 복사
+cp tag_schema.py hongikjiki/tagging/
+cp tag_extractor.py hongikjiki/tagging/
+cp tag_analyzer.py hongikjiki/tagging/
+cp tagging_tools.py hongikjiki/tagging/
+cp tag_index.py hongikjiki/vector_store/
+cp run_tagging.py hongikjiki/pipeline/
+```
+
+### 3.3. 설정 파일 배치
+```bash
+# 설정 파일 복사
+cp tag_schema.yaml data/config/
+cp tag_patterns.json data/config/
+```
+
+### 3.4. 기존 파일 업데이트
+1. `metadata_extractor.py`에 태그 추출 메서드 추가
+2. `chroma_store.py`에 태그 기반 검색 메서드 추가
+3. `chatbot.py`에 관련 강의 추천 기능 추가
+
+### 3.5. 태깅 파이프라인 실행
+```bash
+# 태깅 파이프라인 실행
+python -m hongikjiki.pipeline.run_tagging --input-dir data/tag_data/input_chunks --validate
+```
+
+### 3.6. 벡터 저장소 재구축 (기존 문서 태그 포함)
+```bash
+# 벡터 저장소 재구축 스크립트 실행
+python -m hongikjiki.pipeline.run_ingest --include-tags
+```
+
+## 4. 태그 유지보수 단계
+
+### 4.1. 태그 스키마 업데이트
+1. `tag_schema.yaml` 파일 업데이트
+2. 태그 관계 정의 개선
+3. 새로운 카테고리나 태그 추가
+
+### 4.2. 패턴 업데이트
+1. `tag_patterns.json` 파일 업데이트
+2. 정규 표현식, 키워드, 구문 추가 및 개선
+3. 패턴 가중치 조정
+
+### 4.3. 태그 통계 분석
+1. 태그 사용 빈도 분석
+2. 태그 공출현 분석
+3. 관계 네트워크 시각화
+
+### 4.4. 수동 태깅 데이터 추가
+1. 전문가에 의한 코어 문서 수동 태깅
+2. 자동 태깅 결과 검증 및 개선
+3. 태그 정확도 평가
+
+## 5. 최종 검증 및 테스트 단계
+
+### 5.1. 인덱스 구축 테스트
+1. 태그 인덱스 구축 성능 평가
+2. 검색 속도 측정
+3. 메모리 사용량 최적화
+
+### 5.2. 검색 품질 평가
+1. 태그 기반 검색 vs 일반 검색 비교
+2. 정밀도 및 재현율 측정
+3. 사용자 만족도 평가
+
+### 5.3. 챗봇 응답 개선 평가
+1. 관련 강의 추천 정확도 평가
+2. 응답 관련성 평가
+3. 응답 품질 개선 측정
+
+## 6. 결론 및 향후 계획
+
+태그 시스템 구현을 통해 홍익지기 챗봇은 다음과 같은 향상을 이룰 수 있습니다:
+
+1. **검색 결과 하이라이팅**: 응답에 어떤 문서에서 나온 문장인지 표시 가능
+2. **답변의 출처 표시**: 메타데이터(강의 번호, 파일명 등)를 포함하여 학습 및 검증 용이
+3. **주제별 태그 시스템**: 질문의 주제(예: 수행, 관계, 정치 등)를 분류해 더욱 정밀한 검색 가능
+4. **관련 강의 추천**: 사용자 질문과 관련된 다른 강의를 추천하여 학습 경로 제공
+5. **태그 기반 내비게이션**: 사용자가 태그를 통해 관련 주제를 탐색할 수 있는 기능 제공
+
+향후 계획:
+1. 태그 시스템 고도화 및 자동 학습 기능 추가
+2. 사용자 피드백을 통한 태그 품질 개선
+3. 학습 경로 자동 생성 기능 개발
+4. 태그 기반 시각화 도구 개발

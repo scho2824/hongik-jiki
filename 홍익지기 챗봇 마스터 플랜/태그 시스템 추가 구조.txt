@@ -1,0 +1,54 @@
+태그 시스템 추가 구조
+
+hongikjiki/
+│
+├── chatbot.py # Main chatbot class
+│
+├── text_processing/ # 텍스트 전처리 및 구조화
+│ ├── init.py
+│ ├── document_loader.py # 텍스트 로딩
+│ ├── text_normalizer.py # 정제 및 정규화
+│ ├── metadata_extractor.py # 메타데이터 추출
+│ ├── document_chunker.py # 문서 분할
+│ ├── document_processor.py # 처리 파이프라인 조정
+│
+├── vector_store/ # 벡터 DB (Chroma 등)
+│ ├── init.py
+│ ├── base.py
+│ ├── embeddings.py
+│ ├── chroma_store.py
+│ └── tag_index.py # 태그 기반 색인/검색 (확장)
+├── tagging/ # 태그 시스템 (독립 도메인)
+│ ├── init.py
+│ ├── tag_schema.py # 계층적 태그 정의
+│ ├── tag_extractor.py # 텍스트 기반 태그 추출
+│ ├── tag_analyzer.py # 태그 통계 및 관계 분석
+│ └── tagging_tools.py # 수동 태깅 및 툴
+├── pipeline/ # 전체 파이프라인 정의 및 실행
+│ ├── init.py
+│ ├── run_ingest.py # 문서 수집 및 벡터화 전체 실행
+│ ├── run_tagging.py # 자동 태깅 실행
+│ ├── run_analysis.py # 태그 관계 분석
+│ └── run_demo_server.py # Streamlit or FastAPI 데모 서버 실행
+├── langchain_integration/ # LLM 연결 및 QA 체인
+│ ├── init.py
+│ ├── base.py
+│ ├── llm.py
+│ ├── memory.py
+│ └── chain.py
+├── utils/ # 공통 도구
+│ ├── init.py
+│ ├── config.py
+│ └── logging.py
+
+data/
+├── config/
+│ ├── tag_schema.yaml # 위에서 만든 태그 계층 구조
+│ └── tag_patterns.json # 정규식 기반 자동 태그 추출 패턴
+├── logs/ # 로그 파일 저장
+├── tag_data/
+│ ├── manually_tagged/
+│ ├── auto_tagged/
+│ ├── input_chunks/
+│ ├── tag_statistics.json
+│ └── tag_relationships.json

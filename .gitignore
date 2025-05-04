@@ -13,3 +13,4 @@ logs/
 
 # 기타
 .DS_Store
+**/.claude/settings.local.json

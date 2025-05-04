@@ -66,4 +66,41 @@ class TextNormalizer:
         # 4. 시간 패턴 (hh:mm:ss)
         text = re.sub(r'\b\d{1,2}:\d{2}(:\d{2})?\b', '', text)
         
+        # 5. 강의 패턴 (예: 00:00, 01:04) - 줄 시작 타임스탬프
+        text = re.sub(r'^\d{2}:\d{2}\s*', '', text, flags=re.MULTILINE)
+        
         return text
+
+    def chunk_text(self, text: str, max_length: int = 500) -> list[str]:
+        """
+        텍스트를 의미 단위로 나누는 간단한 청크 생성 함수
+        기본적으로 문단 단위로 분할하며, 길이 제한을 고려해 추가 분할
+
+        Args:
+            text (str): 전체 텍스트
+            max_length (int): 각 청크의 최대 길이 (기본값 500자)
+
+        Returns:
+            list[str]: 청크 리스트
+        """
+        if not text:
+            return []
+
+        paragraphs = [p.strip() for p in text.split('\n\n') if p.strip()]
+        chunks = []
+        for para in paragraphs:
+            if len(para) <= max_length:
+                chunks.append(para)
+            else:
+                # 너무 긴 문단은 문장 단위로 더 분할
+                sentences = re.split(r'(?<=[.!?])\s+', para)
+                chunk = ""
+                for sentence in sentences:
+                    if len(chunk) + len(sentence) <= max_length:
+                        chunk += sentence + " "
+                    else:
+                        chunks.append(chunk.strip())
+                        chunk = sentence + " "
+                if chunk:
+                    chunks.append(chunk.strip())
+        return chunks

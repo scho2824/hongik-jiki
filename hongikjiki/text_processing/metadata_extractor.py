@@ -2,7 +2,8 @@ import os
 import re
 import hashlib
 import logging
-from typing import Dict, Any, List
+import sys
+from typing import Dict, Any, List, Optional
 
 logger = logging.getLogger("HongikJikiChatBot")
 
@@ -24,19 +25,18 @@ class MetadataExtractor:
     
     def extract_metadata(self, content: str, filename: str, base_metadata: Dict[str, Any] = None) -> Dict[str, Any]:
         """
-        텍스트에서 메타데이터 추출
-        
+        텍스트에서 메타데이터 추출 (개선된 버전)
+
         Args:
             content: 분석할 텍스트 내용
             filename: 파일 이름
             base_metadata: 기존 메타데이터 (있는 경우)
-            
+
         Returns:
             Dict: 추출된 메타데이터 딕셔너리
         """
-        # 기본 메타데이터 설정 (또는 기존 메타데이터 확장)
         metadata = base_metadata or {}
-        
+
         # 기본 필드 초기화
         metadata.update({
             "filename": filename,
@@ -49,24 +49,190 @@ class MetadataExtractor:
             "category": metadata.get("category", "미분류"),
             "tags": metadata.get("tags", [])
         })
-        
-        # 강의 번호 추출
-        metadata["lecture_number"] = self._extract_lecture_number(content, filename, metadata["lecture_number"])
-        
-        # 제목 추출
-        metadata["title"] = self._extract_title(content, filename, metadata["title"])
-        
-        # 내용 유형 및 카테고리 추출
-        content_type = self._detect_content_type(content)
-        metadata["content_type"] = content_type
-        
-        # 내용 유형에 따른 카테고리 추론
-        metadata["category"] = self._infer_category(content, content_type)
-        
-        # 태그 추출
-        metadata["tags"] = self._extract_tags(content, content_type)
-        
+
+        # 강의 번호 추출 - 다양한 패턴 인식
+        lecture_patterns = [
+            r'정법(\d+)강',
+            r'강의 (\d+)강',
+            r'(\d+)강 가이드북',
+            r'(\d+)회 가이드북'
+        ]
+        for pattern in lecture_patterns:
+            match = re.search(pattern, content[:500] + " " + filename)
+            if match:
+                metadata["lecture_number"] = int(match.group(1))
+                break
+
+        # 제목 추출 - 가이드북 형식 인식 추가
+        title_patterns = [
+            r'제목:\s*(.+)',
+            r'강의명:\s*(.+)',
+            r'\[정법강의\]\s*(.+)',
+            r'정법강의 \d+강 가이드북: (.*?)[\n-]',
+            r'제(\d+)부\s+(.*?)[\n]'
+        ]
+        for pattern in title_patterns:
+            match = re.search(pattern, content[:1000])
+            if match:
+                metadata["title"] = match.group(1).strip()
+                break
+
+        # Q&A 형식 감지
+        if "질문 :" in content[:3000] or "질문:" in content[:3000]:
+            metadata["content_type"] = "lecture_qa"
+            metadata["category"] = "질의응답"
+
+        # 가이드북 형식 감지
+        if "가이드북" in filename or "가이드북" in content[:500]:
+            metadata["content_type"] = "guidebook"
+            metadata["category"] = "가이드북"
+
+        # 생활도 형식 감지
+        if "생활도" in filename or "생활도" in content[:500]:
+            metadata["content_type"] = "daily_wisdom"
+            metadata["category"] = "생활도"
+            
+        # 태그 추출 - 신규 추가
+        if not metadata.get("tags"):
+            metadata["tags"] = self.extract_tags(content, filename, metadata)
+
         return metadata
+    
+    def extract_tags(self, content: str, filename: str, existing_metadata: Dict[str, Any] = None) -> List[str]:
+        """
+        문서 내용에서 관련 태그를 추출
+        
+        Args:
+            content: 문서 내용
+            filename: 파일 이름
+            existing_metadata: 기존 메타데이터 (있는 경우)
+            
+        Returns:
+            List[str]: 추출된 태그 리스트
+        """
+        # 태그 모듈 로드 시도
+        tag_extractor = None
+        try:
+            # 프로젝트 루트 경로 추가
+            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+            if project_root not in sys.path:
+                sys.path.append(project_root)
+                
+            from hongikjiki.tagging.tag_schema import TagSchema
+            from hongikjiki.tagging.tag_extractor import TagExtractor
+            
+            # 태그 스키마 및 패턴 파일 경로 확인
+            tag_schema_path = os.path.join(project_root, 'data', 'config', 'tag_schema.yaml')
+            tag_patterns_path = os.path.join(project_root, 'data', 'config', 'tag_patterns.json')
+            
+            if os.path.exists(tag_schema_path):
+                tag_schema = TagSchema(tag_schema_path)
+                tag_extractor = TagExtractor(
+                    tag_schema, 
+                    patterns_file=tag_patterns_path if os.path.exists(tag_patterns_path) else None
+                )
+        except ImportError:
+            logger.warning("태그 모듈을 불러올 수 없습니다. 기본 태그 추출 방식을 사용합니다.")
+        except Exception as e:
+            logger.error(f"태그 추출기 초기화 오류: {e}")
+        
+        # 기존 태그가 있으면 반환
+        if existing_metadata and "tags" in existing_metadata and existing_metadata["tags"]:
+            return existing_metadata["tags"]
+        
+        # 태그 추출기 사용 가능하면 사용
+        if tag_extractor:
+            tag_scores = tag_extractor.extract_tags(content)
+            # 신뢰도 0.6 이상인 태그만 선택
+            return [tag for tag, score in tag_scores.items() if score >= 0.6]
+        
+        # 태그 추출기가 없으면 기본 추출 방식 사용
+        return self._extract_basic_tags(content, filename)
+    
+    def _extract_basic_tags(self, content: str, filename: str) -> List[str]:
+        """
+        기본적인 태그 추출 로직
+        
+        Args:
+            content: 문서 내용
+            filename: 파일 이름
+            
+        Returns:
+            List[str]: 추출된 기본 태그 리스트
+        """
+        tags = []
+        
+        # 주요 키워드 기반 태그 추출
+        # 우주와 진리 카테고리
+        if "정법" in content:
+            tags.append("정법")
+        
+        if "우주" in content and ("법칙" in content or "원리" in content):
+            tags.append("우주법칙")
+        
+        if "진리" in content:
+            tags.append("진리")
+            
+        # 인간 본성과 삶 카테고리
+        if "본성" in content or "인간의 본질" in content:
+            tags.append("인간의 본성")
+            
+        if "선" in content and "악" in content:
+            tags.append("선과 악")
+            
+        if "자유의지" in content or "선택" in content and "책임" in content:
+            tags.append("자유의지")
+            
+        if "죽음" in content and "삶" in content:
+            tags.append("죽음과 삶")
+            
+        # 탐구와 인식 카테고리
+        if "깨달음" in content or "깨닫" in content:
+            tags.append("깨달음")
+            
+        if "성찰" in content or "자기를 돌아보" in content:
+            tags.append("자기성찰")
+            
+        # 실천과 방법 카테고리
+        if "수행" in content:
+            tags.append("수행")
+            
+        if "행공" in content:
+            tags.append("행공")
+            
+        if "명상" in content or "기도" in content:
+            tags.append("기도와 명상")
+            
+        # 사회와 현실 카테고리
+        if "인간관계" in content or "관계" in content and "사람" in content:
+            tags.append("인간관계")
+            
+        if "가족" in content:
+            tags.append("가족과 공동체")
+            
+        if "국가" in content or "정치" in content:
+            tags.append("정치")
+            
+        # 감정 상태 카테고리
+        emotions = {
+            "불안": ["불안", "걱정", "두려움"],
+            "분노": ["분노", "화", "짜증"],
+            "슬픔": ["슬픔", "우울", "비통"],
+            "평온": ["평온", "평화", "고요"],
+            "기쁨": ["기쁨", "행복", "즐거움"]
+        }
+        
+        for emotion, keywords in emotions.items():
+            for keyword in keywords:
+                if keyword in content:
+                    tags.append(emotion)
+                    break
+        
+        # 홍익인간 특별 태그 (핵심 개념)
+        if "홍익인간" in content or "홍익" in content and "인간" in content:
+            tags.append("홍익인간")
+        
+        return list(set(tags))  # 중복 제거
     
     def _extract_lecture_number(self, content: str, filename: str, default_number: int = None) -> int:
         """
@@ -218,33 +384,3 @@ class MetadataExtractor:
                     return f"{category}/{subcategory}"
         
         return category
-    
-    def _extract_tags(self, content: str, content_type: str) -> List[str]:
-        """
-        문서 내용 기반 태그 추출
-        
-        Args:
-            content: 문서 내용
-            content_type: 감지된 내용 유형
-            
-        Returns:
-            List[str]: 추출된 태그 목록
-        """
-        tags = []
-        
-        # 1. 내용 유형 태그 추가
-        if content_type:
-            tags.append(content_type)
-        
-        # 2. 중요 키워드 기반 태그 추출
-        important_keywords = [
-            "홍익인간", "용서", "깨달음", "정의", "선악", "인과", "탐진치", 
-            "대자연", "법칙", "질서", "음양", "3대7", "천지인"
-        ]
-        
-        # 내용에서 중요 키워드 탐색
-        for keyword in important_keywords:
-            if keyword in content:
-                tags.append(keyword)
-        
-        return list(set(tags))  # 중복 제거

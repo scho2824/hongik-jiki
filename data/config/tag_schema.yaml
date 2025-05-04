@@ -1,0 +1,381 @@
+categories:
+  우주와 진리: 🌌
+  인간 본성과 삶: 🧍
+  탐구와 인식: 🔍
+  실천과 방법: 🧘
+  사회와 현실: 🌏
+  감정 상태: ❤️
+  삶의 단계: 🕰️
+tags:
+  정법:
+    category: 우주와 진리
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  우주법칙:
+    category: 우주와 진리
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  진리:
+    category: 우주와 진리
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  자연의 섭리:
+    category: 우주와 진리
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  창조와 존재:
+    category: 우주와 진리
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  시간과 공간:
+    category: 우주와 진리
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  본성:
+    category: 인간 본성과 삶
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  존재와 죽음:
+    category: 인간 본성과 삶
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  자유와 선택:
+    category: 인간 본성과 삶
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  인간의 본성:
+    category: 인간 본성과 삶
+    parent: 본성
+    emoji: null
+    description: null
+    related_tags: []
+  선과 악:
+    category: 인간 본성과 삶
+    parent: 본성
+    emoji: null
+    description: null
+    related_tags: []
+  욕심과 버림:
+    category: 인간 본성과 삶
+    parent: 본성
+    emoji: null
+    description: null
+    related_tags: []
+  사랑과 집착:
+    category: 인간 본성과 삶
+    parent: 본성
+    emoji: null
+    description: null
+    related_tags: []
+  죽음과 삶:
+    category: 인간 본성과 삶
+    parent: 존재와 죽음
+    emoji: null
+    description: null
+    related_tags: []
+  윤회와 전생:
+    category: 인간 본성과 삶
+    parent: 존재와 죽음
+    emoji: null
+    description: null
+    related_tags: []
+  존재의 의미:
+    category: 인간 본성과 삶
+    parent: 존재와 죽음
+    emoji: null
+    description: null
+    related_tags: []
+  자유의지:
+    category: 인간 본성과 삶
+    parent: 자유와 선택
+    emoji: null
+    description: 인간의 선택과 결정 능력
+    related_tags: []
+  책임과 결과:
+    category: 인간 본성과 삶
+    parent: 자유와 선택
+    emoji: null
+    description: 선택과 행위에 따른 결과와 책임
+    related_tags: []
+  자기성찰:
+    category: 탐구와 인식
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  의식 성장:
+    category: 탐구와 인식
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  깨달음:
+    category: 탐구와 인식
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  자각과 각성:
+    category: 탐구와 인식
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  믿음과 앎:
+    category: 탐구와 인식
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  무의식과 업:
+    category: 탐구와 인식
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  수행:
+    category: 실천과 방법
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  행공:
+    category: 실천과 방법
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  기도와 명상:
+    category: 실천과 방법
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  생활 실천:
+    category: 실천과 방법
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  정법 공부법:
+    category: 실천과 방법
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  관계:
+    category: 사회와 현실
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  공동체:
+    category: 사회와 현실
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  구조와 제도:
+    category: 사회와 현실
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  인간관계:
+    category: 사회와 현실
+    parent: 관계
+    emoji: null
+    description: null
+    related_tags: []
+  갈등 해결:
+    category: 사회와 현실
+    parent: 관계
+    emoji: null
+    description: null
+    related_tags: []
+  공감과 배려:
+    category: 사회와 현실
+    parent: 관계
+    emoji: null
+    description: null
+    related_tags: []
+  가족과 공동체:
+    category: 사회와 현실
+    parent: 공동체
+    emoji: null
+    description: null
+    related_tags: []
+  부모-자녀 관계:
+    category: 사회와 현실
+    parent: 공동체
+    emoji: null
+    description: null
+    related_tags: []
+  부부 관계:
+    category: 사회와 현실
+    parent: 공동체
+    emoji: null
+    description: null
+    related_tags: []
+  세대 간 갈등:
+    category: 사회와 현실
+    parent: 공동체
+    emoji: null
+    description: null
+    related_tags: []
+  정치:
+    category: 사회와 현실
+    parent: 구조와 제도
+    emoji: null
+    description: null
+    related_tags: []
+  경제:
+    category: 사회와 현실
+    parent: 구조와 제도
+    emoji: null
+    description: null
+    related_tags: []
+  리더십:
+    category: 사회와 현실
+    parent: 구조와 제도
+    emoji: null
+    description: null
+    related_tags: []
+  청년과 교육:
+    category: 사회와 현실
+    parent: 구조와 제도
+    emoji: null
+    description: null
+    related_tags: []
+  국가와 민족:
+    category: 사회와 현실
+    parent: 구조와 제도
+    emoji: null
+    description: null
+    related_tags: []
+  변화와 위기:
+    category: 사회와 현실
+    parent: 구조와 제도
+    emoji: null
+    description: null
+    related_tags: []
+  불안:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  분노:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  슬픔:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  외로움:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  무기력:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  후회:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  희망:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  평온:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  기쁨:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  사랑:
+    category: 감정 상태
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  유년기:
+    category: 삶의 단계
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  청소년기:
+    category: 삶의 단계
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  청년기:
+    category: 삶의 단계
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  중년의 위기:
+    category: 삶의 단계
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  가족 형성기:
+    category: 삶의 단계
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  노년의 지혜:
+    category: 삶의 단계
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []
+  죽음을 준비하는 삶:
+    category: 삶의 단계
+    parent: null
+    emoji: null
+    description: null
+    related_tags: []

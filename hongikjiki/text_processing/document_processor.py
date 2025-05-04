@@ -169,10 +169,20 @@ class DocumentProcessor:
             }
             
             # 4. 문서 분할 (청킹)
+            # 강제로 작은 청크 크기(500) 사용하여 토큰 한도를 넘지 않도록 함
+            # 특히 RTF, PDF 파일의 경우 더 작은 청크 사용
+            file_ext = os.path.splitext(file_path)[1].lower()
+            if file_ext in ['.rtf', '.pdf', '.docx']:
+                forced_chunk_size = 400
+                forced_overlap = 100
+            else:
+                forced_chunk_size = 800
+                forced_overlap = 200
+                
             chunked_docs = self.document_chunker.split_documents(
                 [document], 
-                self.chunk_size, 
-                self.overlap
+                forced_chunk_size,
+                forced_overlap
             )
             
             logger.info(f"파일 '{filename}' 처리 완료: {len(chunked_docs)}개 청크 생성")

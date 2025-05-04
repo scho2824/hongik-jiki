@@ -1,0 +1,27 @@
+{
+  "document_id": "intermediate/Youtube_0100강 대학생 아르바이트.txt_chunk_0",
+  "file": "Youtube_0100강 대학생 아르바이트.txt_chunk_0",
+  "tags": {},
+  "metadata": {
+    "filename": "Youtube_0100강 대학생 아르바이트.txt",
+    "format": ".txt",
+    "file_path": "data/jungbub_teachings/intermediate/Youtube_0100강 대학생 아르바이트.txt",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": null,
+    "title": null,
+    "file_hash": "b5fead8d115f2235a16c42cfc2c7d881",
+    "content_type": "lecture_qa",
+    "category": "질의응답",
+    "tags": [],
+    "chunk_index": 0,
+    "chunk_info": "청크 1 (문단 1)",
+    "paragraph_indices": [
+      0
+    ],
+    "total_chunks": 1,
+    "chunk_id": "intermediate/Youtube_0100강 대학생 아르바이트.txt_chunk_0",
+    "source_file": "intermediate/Youtube_0100강 대학생 아르바이트.txt"
+  },
+  "tagging_time": "2025-05-05T00:21:45.829281",
+  "auto_generated": true
+}

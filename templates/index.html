@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ chatbot_name }} - 정법 챗봇</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .chat-area {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .user-message, .bot-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: #e1f5fe;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: #f1f1f1;
+            margin-right: auto;
+        }
+        .input-area {
+            display: flex;
+            margin-top: 10px;
+        }
+        #question {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        /* 태그 관련 스타일 추가 */
+        .tag-container {
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .tag:hover {
+            filter: brightness(0.9);
+        }
+        /* 카테고리별 태그 색상 */
+        .tag-우주와-진리 {
+            background-color: #E3F2FD;
+            border: 1px solid #90CAF9;
+        }
+        .tag-인간-본성과-삶 {
+            background-color: #E8F5E9;
+            border: 1px solid #A5D6A7;
+        }
+        .tag-탐구와-인식 {
+            background-color: #FFF3E0;
+            border: 1px solid #FFCC80;
+        }
+        .tag-실천과-방법 {
+            background-color: #F3E5F5;
+            border: 1px solid #CE93D8;
+        }
+        .tag-사회와-현실 {
+            background-color: #E0F7FA;
+            border: 1px solid #80DEEA;
+        }
+        .tag-감정-상태 {
+            background-color: #FFEBEE;
+            border: 1px solid #EF9A9A;
+        }
+        .tag-삶의-단계 {
+            background-color: #F1F8E9;
+            border: 1px solid #C5E1A5;
+        }
+        /* 관련 질문 스타일 */
+        .suggested-questions {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .suggested-question {
+            display: block;
+            padding: 5px 10px;
+            margin-bottom: 5px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .suggested-question:hover {
+            background-color: #f0f0f0;
+        }
+        /* 응답 메타 영역 */
+        .response-meta {
+            margin-top: 5px;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ chatbot_name }}</h1>
+        <p>천공 스승님의 가르침에 기반한 정법 챗봇입니다.</p>
+        
+        <div id="chat-area" class="chat-area">
+            <div class="bot-message">안녕하세요! 저는 {{ chatbot_name }}입니다. 정법에 관한 질문이 있으시면 언제든지 물어보세요.</div>
+        </div>
+        
+        <div id="suggested-area" style="display: none;">
+            <div id="related-tags" class="tag-container"></div>
+            <div id="suggested-questions" class="suggested-questions"></div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="question" placeholder="질문을 입력하세요...">
+            <button onclick="askQuestion()">질문하기</button>
+        </div>
+        
+        <div class="footer">
+            개발자: {{ developer_name }}
+        </div>
+    </div>
+
+    <script>
+        function askQuestion() {
+            const questionInput = document.getElementById('question');
+            const question = questionInput.value.trim();
+            
+            if (!question) return;
+            
+            // 사용자 메시지 추가
+            addMessage(question, 'user');
+            questionInput.value = '';
+            
+            // 서버에 질문 전송
+            fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question: question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // 챗봇 응답 추가
+                if (data.error) {
+                    addMessage('오류가 발생했습니다: ' + data.error, 'bot');
+                } else {
+                    addBotResponse(data);
+                }
+            })
+            .catch(error => {
+                console.error('오류:', error);
+                addMessage('네트워크 오류가 발생했습니다.', 'bot');
+            });
+        }
+        
+        function addMessage(text, sender) {
+            const chatArea = document.getElementById('chat-area');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender + '-message';
+            
+            // 텍스트에 줄바꿈이 있으면 HTML로 변환
+            messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+            
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+        function addBotResponse(data) {
+            const chatArea = document.getElementById('chat-area');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'bot-message';
+            
+            // 응답 텍스트에 줄바꿈이 있으면 HTML로 변환
+            messageDiv.innerHTML = data.response.replace(/\n/g, '<br>');
+            
+            // 태그 정보가 있으면 메시지에 추가
+            if (data.extracted_tags && data.extracted_tags.length > 0) {
+                // 태그 컨테이너 생성
+                const tagContainer = document.createElement('div');
+                tagContainer.className = 'tag-container';
+                
+                // 태그 정보로 태그 추가
+                data.extracted_tags.forEach(tag => {
+                    const tagSpan = document.createElement('span');
+                    tagSpan.className = 'tag ' + getTagCategoryClass(tag);
+                    tagSpan.textContent = tag;
+                    tagSpan.onclick = function() {
+                        searchByTag(tag);
+                    };
+                    tagContainer.appendChild(tagSpan);
+                });
+                
+                // 추출된 태그 정보 추가
+                const metaDiv = document.createElement('div');
+                metaDiv.className = 'response-meta';
+                metaDiv.appendChild(tagContainer);
+                messageDiv.appendChild(metaDiv);
+                
+                // 추천 질문 영역 업데이트
+                updateSuggestedArea(data);
+            }
+            
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+        function updateSuggestedArea(data) {
+            const suggestedArea = document.getElementById('suggested-area');
+            const relatedTags = document.getElementById('related-tags');
+            const suggestedQuestions = document.getElementById('suggested-questions');
+            
+            // 모든 내용 초기화
+            relatedTags.innerHTML = '';
+            suggestedQuestions.innerHTML = '';
+            
+            // 관련 태그 표시
+            if (data.extracted_tags && data.extracted_tags.length > 0) {
+                const tagLabel = document.createElement('small');
+                tagLabel.textContent = '관련 태그: ';
+                tagLabel.style.color = '#666';
+                relatedTags.appendChild(tagLabel);
+                
+                data.extracted_tags.forEach(tag => {
+                    const tagSpan = document.createElement('span');
+                    tagSpan.className = 'tag ' + getTagCategoryClass(tag);
+                    tagSpan.textContent = tag;
+                    tagSpan.onclick = function() {
+                        searchByTag(tag);
+                    };
+                    relatedTags.appendChild(tagSpan);
+                });
+            }
+            
+            // 추천 질문 표시
+            if (data.suggested_questions && data.suggested_questions.length > 0) {
+                const questionLabel = document.createElement('small');
+                questionLabel.textContent = '관련 질문: ';
+                questionLabel.style.color = '#666';
+                suggestedQuestions.appendChild(questionLabel);
+                
+                data.suggested_questions.forEach(question => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'suggested-question';
+                    questionDiv.textContent = question;
+                    questionDiv.onclick = function() {
+                        document.getElementById('question').value = question;
+                        askQuestion();
+                    };
+                    suggestedQuestions.appendChild(questionDiv);
+                });
+            }
+            
+            // 태그나 질문이 있으면 영역 표시
+            if ((data.extracted_tags && data.extracted_tags.length > 0) || 
+                (data.suggested_questions && data.suggested_questions.length > 0)) {
+                suggestedArea.style.display = 'block';
+            } else {
+                suggestedArea.style.display = 'none';
+            }
+        }
+        
+        function getTagCategoryClass(tagName) {
+            // 태그 이름에 따라 적절한 카테고리 클래스 반환
+            const tagCategories = {
+                '홍익인간': 'tag-우주와-진리',
+                '정법': 'tag-우주와-진리',
+                '우주법칙': 'tag-우주와-진리',
+                '진리': 'tag-우주와-진리',
+                '자연의 섭리': 'tag-우주와-진리',
+                
+                '인간의 본성': 'tag-인간-본성과-삶',
+                '선과 악': 'tag-인간-본성과-삶',
+                '자유의지': 'tag-인간-본성과-삶',
+                '책임과 결과': 'tag-인간-본성과-삶',
+                
+                '자기성찰': 'tag-탐구와-인식',
+                '깨달음': 'tag-탐구와-인식',
+                '의식 성장': 'tag-탐구와-인식',
+                
+                '수행': 'tag-실천과-방법',
+                '행공': 'tag-실천과-방법',
+                '기도와 명상': 'tag-실천과-방법',
+                
+                '인간관계': 'tag-사회와-현실',
+                '갈등 해결': 'tag-사회와-현실',
+                '리더십': 'tag-사회와-현실',
+                
+                '불안': 'tag-감정-상태',
+                '분노': 'tag-감정-상태',
+                '평온': 'tag-감정-상태',
+                '기쁨': 'tag-감정-상태',
+                
+                '청년기': 'tag-삶의-단계',
+                '중년의 위기': 'tag-삶의-단계',
+                '노년의 지혜': 'tag-삶의-단계'
+            };
+            
+            return tagCategories[tagName] || 'tag-우주와-진리';  // 기본값
+        }
+        
+        function searchByTag(tag) {
+            // 태그 클릭 시 해당 태그로 검색
+            document.getElementById('question').value = tag + "에 대해 알려주세요";
+            askQuestion();
+        }
+        
+        // Enter 키로 질문 전송
+        document.getElementById('question').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>

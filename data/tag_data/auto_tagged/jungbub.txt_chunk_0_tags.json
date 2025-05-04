@@ -1,0 +1,25 @@
+{
+  "document_id": "test/jungbub.txt_chunk_0",
+  "file": "jungbub.txt_chunk_0",
+  "tags": {},
+  "metadata": {
+    "filename": "jungbub.txt",
+    "format": ".txt",
+    "file_path": "data/jungbub_teachings/test/jungbub.txt",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": null,
+    "title": null,
+    "file_hash": "4aff535da170e08bbfd09ce7b4f151ae",
+    "content_type": null,
+    "category": "미분류",
+    "tags": [],
+    "chunk_index": 0,
+    "chunk_info": "전체 문서 (1/1)",
+    "is_short_document": true,
+    "total_chunks": 1,
+    "chunk_id": "test/jungbub.txt_chunk_0",
+    "source_file": "test/jungbub.txt"
+  },
+  "tagging_time": "2025-05-05T00:21:45.792478",
+  "auto_generated": true
+}

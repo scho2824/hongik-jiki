@@ -1,0 +1,32 @@
+{
+  "document_id": "intermediate/Youtube_0035강 대학생 취업-2.txt_chunk_0",
+  "file": "Youtube_0035강 대학생 취업-2.txt_chunk_0",
+  "tags": {
+    "경제": 1.0,
+    "구조와 제도": 0.9
+  },
+  "metadata": {
+    "filename": "Youtube_0035강 대학생 취업-2.txt",
+    "format": ".txt",
+    "file_path": "data/jungbub_teachings/intermediate/Youtube_0035강 대학생 취업-2.txt",
+    "source": "천공 스승님 정법 가르침",
+    "lecture_number": null,
+    "title": null,
+    "file_hash": "a5f972d39e3c316b6632e3e9dcedfd2e",
+    "content_type": null,
+    "category": "미분류",
+    "tags": [
+      "경제"
+    ],
+    "chunk_index": 0,
+    "chunk_info": "청크 1 (문단 1)",
+    "paragraph_indices": [
+      0
+    ],
+    "total_chunks": 1,
+    "chunk_id": "intermediate/Youtube_0035강 대학생 취업-2.txt_chunk_0",
+    "source_file": "intermediate/Youtube_0035강 대학생 취업-2.txt"
+  },
+  "tagging_time": "2025-05-05T00:21:45.858995",
+  "auto_generated": true
+}

@@ -1,0 +1,93 @@
+
+홍익지기-프로젝트/
+├── app.py
+├── main.py
+├── templates/
+│   ├── index.html
+│   ├── 404.html
+│   └── 500.html
+├── data/
+│   └── jungbub_teachings/
+│       ├── advanced/
+│       ├── basic/
+│       ├── intermediate/
+│       └──  supplementary/
+├── data/
+│   └── wisdom_quotes/
+│       ├── wq_index.json
+│       ├── wq_truth.json
+│       ├── wq_nature.json
+│       ├── wq_speech.json
+│       ├── wq_self_reflection.json
+│       ├── wq_money.json
+│       ├── wq_spirituality.json
+│       └── wq_thoughts.json
+│       └── ...
+└── hongikjiki/ ```
+ 
+
+```
+hongikjiki/                      # 메인 패키지
+│
+├── __init__.py                  # 패키지 초기화
+│
+├── chatbot.py                   # 홍익지기 챗봇 클래스
+│
+├── text_processing/             # 텍스트 처리 모듈
+│   ├── __init__.py
+│   ├── document_loader.py       # 문서 로드 클래스
+│   ├── text_normalizer.py       # 텍스트 정규화 클래스
+│   ├── metadata_extractor.py    # 메타데이터 추출 클래스
+│   ├── document_chunker.py      # 문서 분할 클래스
+│   └── document_processor.py    # 문서 처리 통합 클래스
+│
+├── vector_store/               # 벡터 저장소 모듈
+│   ├── __init__.py
+│   ├── base.py                 # 벡터 저장소 기본 인터페이스
+│   ├── embeddings.py           # 임베딩 모델 클래스
+│   └── chroma_store.py         # ChromaDB 벡터 저장소 구현
+│
+└── langchain_integration/      # LangChain 통합 모듈
+    ├── __init__.py
+    ├── base.py                 # 기본 인터페이스
+    ├── llm.py                  # LLM 구현
+    ├── memory.py               # 대화 메모리 구현
+    └── chain.py                # 체인 구현
+
+examples/                       # 예제 스크립트
+├── basic_usage.py              # 기본 사용 예제
+└── advanced_usage.py           # 고급 사용 예제
+
+tests/                          # 테스트 코드
+└── ...
+
+data/                           # 데이터 저장 디렉토리
+└── vector_store/               # 벡터 저장소 파일
+
+requirements.txt                # 의존성 정의
+```
+
+## 주요 클래스 구조
+
+### 1. 텍스트 처리 모듈
+- **DocumentLoader**: 다양한 형식의 문서(TXT, RTF, PDF, DOCX)를 로드하는 클래스
+- **TextNormalizer**: 텍스트 정규화 및 타임스탬프 제거 클래스
+- **MetadataExtractor**: 문서에서 메타데이터 추출 클래스
+- **DocumentChunker**: 문서를 청크로 분할하는 클래스
+- **DocumentProcessor**: 위 모든 기능을 통합한 문서 처리 클래스
+
+### 2. 벡터 저장소 모듈
+- **VectorStoreBase**: 벡터 저장소 기본 인터페이스
+- **EmbeddingsBase**: 임베딩 모델 기본 인터페이스
+- **HuggingFaceEmbeddings**: HuggingFace 모델 임베딩 구현
+- **OpenAIEmbeddings**: OpenAI 임베딩 구현
+- **ChromaVectorStore**: ChromaDB 기반 벡터 저장소 구현
+
+### 3. LangChain 통합 모듈
+- **LLMBase**: 언어 모델 기본 인터페이스
+- **ChainBase**: 체인 기본 인터페이스
+- **MemoryBase**: 메모리 기본 인터페이스
+- **OpenAILLM**, **NaverClovaLLM**: 언어 모델 구현
+- **ConversationMemory**, **ContextualMemory**: 대화 메모리 구현
+- **QAChain**, **ConversationalQAChain**: Q&A 체인 구현
+

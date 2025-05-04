@@ -222,3 +222,29 @@ class DocumentLoader:
         except Exception as e:
             logger.error(f"DOCX 파일 처리 오류: {e}")
             return f"[DOCX 파일 처리 오류: {os.path.basename(file_path)}]"
+
+    def load_documents_from_dir(self, base_dir: str) -> list[Dict[str, Any]]:
+        """
+        주어진 디렉토리의 모든 하위 파일을 순회하며 문서를 로드합니다.
+        지원되는 파일 확장자: .txt, .md, .rtf, .pdf, .docx
+
+        Returns:
+            로드된 문서들의 리스트 (content, metadata 포함)
+        """
+        supported_exts = ['.txt', '.md', '.rtf', '.pdf', '.docx']
+        loaded_documents = []
+
+        for root, _, files in os.walk(base_dir):
+            for file in files:
+                ext = os.path.splitext(file)[1].lower()
+                if ext in supported_exts:
+                    file_path = os.path.join(root, file)
+                    doc = self.load_document(file_path)
+                    if doc:
+                        # 추가 메타 정보 (하위 폴더명을 label로 저장)
+                        relative = os.path.relpath(root, base_dir)
+                        doc["metadata"]["label"] = relative
+                        loaded_documents.append(doc)
+
+        logger.info(f"{len(loaded_documents)}개의 문서를 로드했습니다.")
+        return loaded_documents

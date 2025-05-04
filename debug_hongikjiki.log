@@ -1,0 +1,15 @@
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO - Successfully imported Hongik-Jiki modules
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO - ================================================================================
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO - Hongik-Jiki Chatbot Diagnostic Tool
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO - ================================================================================
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO - Starting Hongik-Jiki diagnostic tests
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO - Checking environment variables:
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO -   EMBEDDING_MODEL: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO -   DATA_DIR: ./data/jungbub_teachings
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO -   OPENAI_API_KEY: **********
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO -   CHATBOT_NAME: Hongik-Jiki
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO -   DEVELOPER_NAME: 조성우
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO - Checking data directory: ./data/jungbub_teachings
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - INFO - Found 5 total files, 0 text files in ./data/jungbub_teachings
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - WARNING - No text files found in ./data/jungbub_teachings
+2025-05-04 11:20:47,550 - HongikJikiDiagnostic - ERROR - Data directory check failed. Please make sure your documents are in the correct location.
