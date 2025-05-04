@@ -91,20 +91,16 @@ class HongikJikiChatBot:
                 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
                 if project_root not in sys.path:
                     sys.path.append(project_root)
-                    
+
                 from hongikjiki.tagging.tag_schema import TagSchema
                 from hongikjiki.tagging.tag_extractor import TagExtractor
-                
-                # 태그 스키마 및 패턴 파일 확인
+
+                # 태그 스키마 파일 확인
                 tag_schema_path = os.path.join(project_root, 'data', 'config', 'tag_schema.yaml')
-                tag_patterns_path = os.path.join(project_root, 'data', 'config', 'tag_patterns.json')
-                
+
                 if os.path.exists(tag_schema_path):
                     tag_schema = TagSchema(tag_schema_path)
-                    self.tag_extractor = TagExtractor(
-                        tag_schema, 
-                        patterns_file=tag_patterns_path if os.path.exists(tag_patterns_path) else None
-                    )
+                    self.tag_extractor = TagExtractor(tag_schema)
                     logger.info("태그 추출기 초기화 완료")
             except ImportError:
                 logger.info("태그 모듈을 불러올 수 없습니다. 태그 기능은 비활성화됩니다.")

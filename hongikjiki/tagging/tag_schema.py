@@ -324,7 +324,9 @@ class TagSchema:
                 "parent": tag.parent,
                 "emoji": tag.emoji,
                 "description": tag.description,
-                "related_tags": tag.related_tags
+                "related_tags": tag.related_tags,
+                "keywords": tag.keywords,
+                "phrases": tag.phrases
             }
         
         schema_data = {
@@ -364,7 +366,9 @@ class TagSchema:
                     category=tag_data["category"],
                     parent=tag_data.get("parent"),
                     emoji=tag_data.get("emoji"),
-                    description=tag_data.get("description")
+                    description=tag_data.get("description"),
+                    keywords=tag_data.get("keywords", []),
+                    phrases=tag_data.get("phrases", [])
                 )
                 self.tags[name] = tag
                 
