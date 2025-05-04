@@ -11,7 +11,7 @@ vector_store = ChromaVectorStore(
 print("Document Count:", vector_store.count())
 
 # 쿼리 테스트
-query = "자유의 본질"
+query = "정법이란 무엇인가요?"
 results = vector_store.search(query, k=3)
 for i, doc in enumerate(results):
-    print(f"\n[{i+1}] {doc['content']}\nMetadata: {doc['metadata']}")
+    print(f"\n[{i+1}] {doc['content'][:200]}...\nMetadata: {doc['metadata']}")
