@@ -14,3 +14,10 @@ logs/
 # 기타
 .DS_Store
 **/.claude/settings.local.json
+
+# Ignore generated and intermediate data
+data/tag_data/auto_tagged/
+data/processed/
+data/qa/
+data/vector_store/
+echo -e "\n# 중간 태깅 산출물 무시\ndata/tag_data/tag_index.json\ndata/tag_data/tag_statistics.json" >> .gitignore
