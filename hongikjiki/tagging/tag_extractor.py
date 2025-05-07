@@ -54,14 +54,46 @@ class TagExtractor:
     def load_patterns(self, file_path: str) -> None:
         """
         Load tag patterns from a JSON file
-        
+
         Args:
             file_path: Path to patterns file
         """
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                self.patterns = json.load(f)
-            logger.info(f"Tag patterns loaded from {file_path}")
+                data = json.load(f)
+            # Unwrap if patterns are under a top-level "tags" key
+            if isinstance(data, dict) and 'tags' in data and isinstance(data['tags'], dict):
+                self.patterns = data['tags']
+            else:
+                self.patterns = data
+            # Normalize pattern_data for each tag
+            normalized = {}
+            for tag, pdata in self.patterns.items():
+                if isinstance(pdata, list):
+                    normalized[tag] = {
+                        "patterns": pdata,
+                        "keywords": [],
+                        "phrases": [],
+                        "weight": 1.0
+                    }
+                elif isinstance(pdata, dict):
+                    # Ensure all keys exist
+                    normalized[tag] = {
+                        "patterns": pdata.get("patterns", []),
+                        "keywords": pdata.get("keywords", []),
+                        "phrases": pdata.get("phrases", []),
+                        "weight": pdata.get("weight", 1.0)
+                    }
+                else:
+                    # Single string or unexpected type
+                    normalized[tag] = {
+                        "patterns": [str(pdata)],
+                        "keywords": [],
+                        "phrases": [],
+                        "weight": 1.0
+                    }
+            self.patterns = normalized
+            logger.info(f"Tag patterns normalized for {len(self.patterns)} tags")
         except Exception as e:
             logger.error(f"Error loading tag patterns from {file_path}: {e}")
             # Fall back to default patterns

@@ -8,20 +8,33 @@ def merge_chunks(input_dir, output_file):
     merged = []
 
     # 디렉토리 내 모든 파일 탐색
-    for filename in os.listdir(input_dir):
-        if filename.endswith(".json"):
-            path = os.path.join(input_dir, filename)
+    for idx, filename in enumerate(os.listdir(input_dir), start=1):
+        if not filename.endswith(".json"):
+            continue
+        print(f"Processing file {idx}: {filename}")  # debug progress
+        path = os.path.join(input_dir, filename)
+        try:
             with open(path, "r", encoding="utf-8") as f:
-                try:
-                    data = json.load(f)
-                    # 각각의 청크가 dict 구조일 경우
-                    if isinstance(data, dict):
-                        merged.append(data)
-                    # 혹시 리스트 형태라면 펼쳐서 추가
-                    elif isinstance(data, list):
-                        merged.extend(data)
-                except json.JSONDecodeError:
-                    print(f"⚠️ JSON 디코딩 실패: {filename}")
+                data = json.load(f)
+        except Exception as e:
+            print(f"⚠️ Skipping {filename} due to load error: {e}")
+            continue
+
+        # 각각의 청크가 dict 구조일 경우
+        if isinstance(data, dict):
+            merged.append({
+                "metadata": data.get("metadata", {}),
+                "content": data.get("content") or data.get("page_content", ""),
+                "tags": data.get("tags", [])
+            })
+        elif isinstance(data, list):
+            for item in data:
+                if isinstance(item, dict):
+                    merged.append({
+                        "metadata": item.get("metadata", {}),
+                        "content": item.get("content") or item.get("page_content", ""),
+                        "tags": item.get("tags", [])
+                    })
     
     # 병합된 리스트를 하나의 JSON 파일로 저장
     with open(output_file, "w", encoding="utf-8") as f:

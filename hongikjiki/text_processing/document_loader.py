@@ -2,6 +2,28 @@ import os
 import re
 import logging
 from typing import Optional, Dict, Any
+import hashlib
+import json
+from datetime import datetime
+
+PROCESSED_RECORD_PATH = "data/processed_files.json"
+
+def calculate_file_hash(file_path: str) -> str:
+    sha256_hash = hashlib.sha256()
+    with open(file_path, "rb") as f:
+        for byte_block in iter(lambda: f.read(4096), b""):
+            sha256_hash.update(byte_block)
+    return sha256_hash.hexdigest()
+
+def load_processed_files() -> dict:
+    if os.path.exists(PROCESSED_RECORD_PATH):
+        with open(PROCESSED_RECORD_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+def save_processed_files(record: dict):
+    with open(PROCESSED_RECORD_PATH, "w", encoding="utf-8") as f:
+        json.dump(record, f, indent=2, ensure_ascii=False)
 
 logger = logging.getLogger("HongikJikiChatBot")
 
@@ -234,17 +256,34 @@ class DocumentLoader:
         supported_exts = ['.txt', '.md', '.rtf', '.pdf', '.docx']
         loaded_documents = []
 
+        processed_files = load_processed_files()
+
         for root, _, files in os.walk(base_dir):
             for file in files:
                 ext = os.path.splitext(file)[1].lower()
                 if ext in supported_exts:
                     file_path = os.path.join(root, file)
+
+                    file_hash = calculate_file_hash(file_path)
+                    if file_hash in processed_files:
+                        logger.info(f"이미 처리된 파일입니다. 건너뜀: {file_path}")
+                        continue
+
                     doc = self.load_document(file_path)
                     if doc:
                         # 추가 메타 정보 (하위 폴더명을 label로 저장)
                         relative = os.path.relpath(root, base_dir)
                         doc["metadata"]["label"] = relative
                         loaded_documents.append(doc)
+
+                        processed_files[file_hash] = {
+                            "file_path": file_path,
+                            "processed_time": datetime.now().isoformat(),
+                            "chunks_count": None,
+                            "vector_ids": []
+                        }
+
+        save_processed_files(processed_files)
 
         logger.info(f"{len(loaded_documents)}개의 문서를 로드했습니다.")
         return loaded_documents

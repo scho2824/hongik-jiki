@@ -354,12 +354,13 @@ class TaggingBatch:
         # Save result if requested
         if save_result:
             file_name = os.path.basename(document_id) if os.path.sep in document_id else document_id
-            self._save_document_tags(document_id, file_name, filtered_tags, metadata)
+            self._save_document_tags(document_id, file_name, filtered_tags, metadata, content)
         
         return filtered_tags
     
     def _save_document_tags(self, document_id: str, file_name: str, tags: Dict[str, float],
-                          metadata: Optional[Dict[str, Any]] = None) -> None:
+                          metadata: Optional[Dict[str, Any]] = None,
+                          content: str = "") -> None:
         """
         Save tags for a document
         
@@ -381,7 +382,8 @@ class TaggingBatch:
                 "tags": tags,
                 "metadata": metadata or {},
                 "tagging_time": datetime.now().isoformat(),
-                "auto_generated": True
+                "auto_generated": True,
+                "page_content": content
             }
             
             # Save to file

@@ -346,27 +346,64 @@ class HongikJikiChatBot:
             List[str]: 관련 강의 정보 리스트
         """
         lectures = []
-        seen_files = set()  # 중복 방지용
+        seen_contents = set()  # 내용 기반 중복 방지
         
         for result in search_results:
             metadata = result.get("metadata", {})
-            filename = metadata.get("filename", "")
             
-            if filename in seen_files:
-                continue
-                
-            # 강의 번호가 있는 경우 사용
+            # 메타데이터에서 정보 추출
             lecture_num = metadata.get("lecture_number")
             title = metadata.get("title", "")
+            content = result.get("content", "")[:100]  # 내용 일부를 중복 확인에 사용
             
-            if lecture_num:
+            # 이미 추가된 내용과 유사한 경우 건너뛰기
+            if content in seen_contents:
+                continue
+            
+            seen_contents.add(content)
+            
+            # 강의 번호와 제목이 있는 경우
+            if lecture_num and title:
                 lecture = f"정법 {lecture_num}강: {title}"
+            
+            # 강의 번호만 있는 경우 - 내용에서 제목 추출 시도
+            elif lecture_num and not title:
+                import re
+                title_match = re.search(r'제목[:\s]+(.+?)[\n\r]', content)
+                if title_match:
+                    title = title_match.group(1).strip()
+                    lecture = f"정법 {lecture_num}강: {title}"
+                else:
+                    lecture = f"정법 {lecture_num}강"
+            
+            # 제목만 있는 경우
+            elif title and not lecture_num:
+                lecture = title
+            
+            # 둘 다 없는 경우 콘텐츠에서 정보 추출 시도
             else:
-                # 강의 번호가 없는 경우 파일명 사용
-                lecture = filename.replace(".txt", "").replace("_", " ")
+                import re
+                lecture_match = re.search(r'정법\s*(\d+)\s*강', content)
+                title_match = re.search(r'제목[:\s]+(.+?)[\n\r]', content)
                 
+                if lecture_match:
+                    lecture_num = lecture_match.group(1)
+                    if title_match:
+                        title = title_match.group(1).strip()
+                        lecture = f"정법 {lecture_num}강: {title}"
+                    else:
+                        lecture = f"정법 {lecture_num}강"
+                elif title_match:
+                    lecture = title_match.group(1).strip()
+                else:
+                    filename = metadata.get("filename", "")
+                    if filename.endswith(".txt"):
+                        if filename.startswith("_") or filename.startswith("-"):
+                            lecture = "정법 강의 자료"
+                        else:
+                            lecture = filename.replace(".txt", "").replace("_", " ")
+            
             lectures.append(lecture)
-            seen_files.add(filename)
         
         return lectures[:3]  # 최대 3개만 반환
     

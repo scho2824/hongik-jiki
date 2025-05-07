@@ -96,6 +96,31 @@ class ChromaVectorStore(VectorStoreBase):
         
         if metadatas is None:
             metadatas = [{} for _ in texts]
+
+        # 중복 source_id 방지: 기존 문서의 source_id 수집
+        existing_docs = self.get_all_documents()
+        existing_source_ids = set()
+        # Safely retrieve all stored metadata entries
+        existing_metadatas = existing_docs.get("metadatas", [])
+        for meta in existing_metadatas:
+            if isinstance(meta, dict) and "source_id" in meta:
+                existing_source_ids.add(meta["source_id"])
+
+        # 중복된 source_id를 가진 문서 필터링
+        filtered_texts = []
+        filtered_metadatas = []
+        for text, meta in zip(texts, metadatas):
+            if meta.get("source_id") not in existing_source_ids:
+                filtered_texts.append(text)
+                filtered_metadatas.append(meta)
+            else:
+                logger.info(f"중복된 source_id로 인해 스킵된 문서: {meta.get('source_id')}")
+
+        texts = filtered_texts
+        metadatas = filtered_metadatas
+        if not texts:
+            logger.info("모든 입력 텍스트가 중복 source_id로 인해 스킵되었습니다.")
+            return []
         
         # 메타데이터 정리 (복잡한 타입 처리)
         sanitized_metadatas = []
@@ -103,7 +128,6 @@ class ChromaVectorStore(VectorStoreBase):
             if metadata is None:
                 sanitized_metadatas.append({})
                 continue
-                
             sanitized = {}
             for key, value in metadata.items():
                 # None 값 처리
@@ -111,11 +135,9 @@ class ChromaVectorStore(VectorStoreBase):
                     sanitized[key] = ""
                 # 리스트 처리
                 elif isinstance(value, list):
-                    # 리스트를 문자열로 변환
                     sanitized[key] = ", ".join(str(item) for item in value) if value else ""
                 # 딕셔너리 처리
                 elif isinstance(value, dict):
-                    # 딕셔너리를 문자열로 변환
                     sanitized[key] = str(value)
                 # 기본 타입은 그대로 사용
                 elif isinstance(value, (str, int, float, bool)):
@@ -123,9 +145,8 @@ class ChromaVectorStore(VectorStoreBase):
                 # 그 외 타입은 문자열로 변환
                 else:
                     sanitized[key] = str(value)
-                    
             sanitized_metadatas.append(sanitized)
-        
+
         # 문서 ID 생성
         ids = [f"doc_{i}_{hash(text) % 10000000}" for i, text in enumerate(texts)]
         

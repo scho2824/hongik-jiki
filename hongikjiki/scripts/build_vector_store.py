@@ -2,6 +2,7 @@ import logging
 import os
 import json
 import hashlib
+from datetime import datetime
 from langchain.schema import Document
 from hongikjiki.vector_store.chroma_store import ChromaVectorStore
 from hongikjiki.vector_store.embeddings import get_embeddings
@@ -57,7 +58,7 @@ def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_na
 
     if new_docs:
         print("🔹 문서 임베딩 및 저장 중...")
-        vector_store.add_texts(
+        vector_ids = vector_store.add_texts(
             [doc.page_content for doc in new_docs],
             metadatas=[doc.metadata for doc in new_docs]
         )
@@ -66,6 +67,38 @@ def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_na
 
     # print("🔹 문서 임베딩 및 저장 중...")
     # vector_store.add_texts([doc.page_content for doc in docs], metadatas=[doc.metadata for doc in docs])
+
+    # --- Extended metadata logging ---
+    processed_log_path = "data/processed_files.json"
+    os.makedirs(os.path.dirname(processed_log_path), exist_ok=True)
+
+    # Load existing log if it exists
+    if os.path.exists(processed_log_path):
+        with open(processed_log_path, "r", encoding="utf-8") as f:
+            processed_log = json.load(f)
+    else:
+        processed_log = {}
+
+    timestamp = datetime.now().isoformat()
+
+    if new_docs:
+        for doc, vector_id in zip(new_docs, vector_ids):
+            source = doc.metadata.get("source", "")
+            hash_val = hash_text(doc.page_content)
+            tags = doc.metadata.get("tags", [])
+            processed_log[source] = {
+                "hash": hash_val,
+                "processed_time": timestamp,
+                "chunks_count": 1,
+                "tags": tags,
+                "vector_ids": [vector_id],
+                "source_text": doc.page_content[:100]  # Optional preview
+            }
+
+    # Save back to file
+    with open(processed_log_path, "w", encoding="utf-8") as f:
+        json.dump(processed_log, f, ensure_ascii=False, indent=2)
+
     vector_store.persist()
     print("✅ 벡터 저장소 구축 완료!")
 
@@ -73,9 +106,11 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--qa_file", type=str, required=True, help="Path to QA JSON file")
+    parser.add_argument("--persist_dir", type=str, default="./data/vector_store", help="Path to save Chroma vector store")
+    parser.add_argument("--collection_name", type=str, default="hongikjiki_jungbub", help="Name of the Chroma collection")
     args = parser.parse_args()
 
-    build_vector_store(args.qa_file)
+    build_vector_store(args.qa_file, persist_dir=args.persist_dir, collection_name=args.collection_name)
 os.makedirs("logs", exist_ok=True)
 
 logging.basicConfig(

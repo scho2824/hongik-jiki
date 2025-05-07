@@ -2,6 +2,8 @@ import os
 import logging
 from typing import List, Dict, Any, Optional
 import hashlib
+import json
+from datetime import datetime
 
 from hongikjiki.text_processing.document_loader import DocumentLoader
 from hongikjiki.text_processing.text_normalizer import TextNormalizer
@@ -9,6 +11,23 @@ from hongikjiki.text_processing.metadata_extractor import MetadataExtractor
 from hongikjiki.text_processing.document_chunker import DocumentChunker
 
 logger = logging.getLogger("HongikJikiChatBot")
+
+def update_processed_log(file_path, content_hash, chunk_count, log_path="data/processed/processed_files.json"):
+    try:
+        with open(log_path, "r", encoding="utf-8") as f:
+            record = json.load(f)
+    except FileNotFoundError:
+        record = {}
+
+    record[file_path] = {
+        "hash": content_hash,
+        "processed_time": datetime.now().isoformat(),
+        "chunks_count": chunk_count,
+        "vector_ids": []
+    }
+
+    with open(log_path, "w", encoding="utf-8") as f:
+        json.dump(record, f, ensure_ascii=False, indent=2)
 
 class DocumentProcessor:
     """
@@ -71,7 +90,20 @@ class DocumentProcessor:
         
         for filename in os.listdir(directory):
             file_path = os.path.join(directory, filename)
-            
+
+            # 처리 로그 로드
+            log_path = "data/processed/processed_files.json"
+            try:
+                with open(log_path, "r", encoding="utf-8") as f:
+                    processed_log = json.load(f)
+            except FileNotFoundError:
+                processed_log = {}
+
+            if file_path in processed_log:
+                logger.info(f"이미 처리된 파일: {filename} → 건너뜀")
+                skipped_files += 1
+                continue
+
             # 디렉토리 건너뛰기
             if os.path.isdir(file_path):
                 logger.debug(f"디렉토리 건너뛰기: {filename}")
@@ -126,6 +158,13 @@ class DocumentProcessor:
         # 5. 문서 분할 (청킹)
         chunked_docs = self.document_chunker.split_documents(documents, chunk_size, overlap)
         logger.info(f"총 {len(chunked_docs)}개 청크 생성 완료")
+        
+        # 💾 처리 기록 저장 (문서별)
+        for doc in documents:
+            file_path = doc["metadata"]["source"]
+            file_hash = doc["metadata"]["file_hash"]
+            chunk_count = sum(1 for c in chunked_docs if c["metadata"]["source"] == file_path)
+            update_processed_log(file_path, file_hash, chunk_count)
         
         return chunked_docs
     

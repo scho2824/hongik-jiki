@@ -83,7 +83,7 @@ def load_documents(input_dir: str) -> List[Dict[str, Any]]:
             # Extract necessary fields
             doc = {
                 "id": data.get("id") or os.path.splitext(filename)[0],
-                "content": data.get("content") or data.get("text", ""),
+                "content": data.get("content") or data.get("text", "") or data.get("page_content", ""),
                 "metadata": data.get("metadata", {})
             }
             
@@ -109,7 +109,7 @@ def run_tagging_pipeline(args: argparse.Namespace) -> None:
     tag_schema = TagSchema(args.tag_schema)
     
     logger.info("Initializing tag extractor")
-    tag_extractor = TagExtractor(tag_schema, None)
+    tag_extractor = TagExtractor(tag_schema, args.tag_patterns)
     
     logger.info("Initializing tag analyzer")
     tag_analyzer = TagAnalyzer(tag_schema)
@@ -188,8 +188,8 @@ def parse_arguments() -> argparse.Namespace:
                         help="Directory for saving tagged documents")
     parser.add_argument("--tag-schema", type=str, default="data/config/tag_schema.yaml",
                         help="Path to tag schema YAML file")
-    # parser.add_argument("--tag-patterns", type=str, default="data/config/tag_patterns.json",
-    #                     help="Path to tag patterns JSON file")
+    parser.add_argument("--tag-patterns", type=str, default="data/config/tag_patterns.json",
+                        help="Path to tag patterns JSON file")
     parser.add_argument("--stats-file", type=str, default="data/tag_data/tag_statistics.json",
                         help="Path to tag statistics file")
     parser.add_argument("--index-file", type=str, default="data/tag_data/tag_index.json",

@@ -92,45 +92,7 @@ try:
     # 데이터베이스에 문서 수 확인
     collection_info = vector_store.collection.count()
     logger.info(f"현재 데이터베이스 문서 수: {collection_info}")
-    
-    # 문서가 없으면 문서 로드 및 처리
-    if collection_info == 0:
-        logger.info("데이터베이스가 비어 있습니다. 문서 로드 및 처리를 시작합니다.")
-        
-        # 재귀적으로 문서 로드
-        documents = load_documents_recursive(DATA_DIR)
-        
-        if not documents:
-            logger.warning(f"{DATA_DIR} 폴더에 문서가 없습니다.")
-            print(f"오류: {DATA_DIR} 폴더에 정법 문서를 찾을 수 없습니다.")
-            print("정법 문서를 data/jungbub_teachings 폴더에 추가한 후 다시 시도하세요.")
-            sys.exit(1)
-        
-        # 텍스트 프로세서 생성
-        text_processor = DocumentProcessor()
-        
-        # 문서 분할
-        chunks = []
-        for doc in documents:
-            try:
-                if "file_path" in doc["metadata"]:
-                    processed_chunks = text_processor.process_file(doc["metadata"]["file_path"])
-                    chunks.extend(processed_chunks)
-                else:
-                    logger.warning(f"파일 경로 메타데이터가 없는 문서: {doc.get('metadata', {})}")
-            except Exception as e:
-                logger.error(f"문서 처리 중 오류 발생: {e}")
-        
-        logger.info(f"총 {len(documents)}개 문서를 {len(chunks)}개 청크로 분할했습니다.")
-        
-        # 벡터 데이터베이스에 추가
-        if chunks:
-            vector_store.add_documents(chunks)
-            logger.info(f"벡터 데이터베이스에 {len(chunks)}개 청크 추가 완료")
-        else:
-            logger.warning("처리된 청크가 없습니다.")
-            print("오류: 문서 처리 중 문제가 발생했습니다.")
-            sys.exit(1)
+    # Ingestion (chunking, tagging, QA, vector build) is handled by separate pipeline scripts.
     
     # LLM 인스턴스화 (HongikJikiChatBot 인스턴스화 전에)
     llm = get_llm("openai", model="gpt-4o", temperature=0.7)
@@ -145,6 +107,17 @@ try:
         },
         llm=llm  # Pass the pre-initialized llm
     )
+    # Load and assign TagSchema so chatbot.tag_schema exists
+    from hongikjiki.tagging.tag_schema import TagSchema
+    tag_schema_path = "data/config/tag_schema.yaml"
+    tag_schema = TagSchema(tag_schema_path)
+    chatbot.tag_schema = tag_schema
+    logger.info(f"TagSchema loaded for chatbot: {tag_schema_path}")
+    # Ensure tag extractor is initialized with the correct patterns path
+    from hongikjiki.tagging.tag_extractor import TagExtractor
+    tag_patterns_path = "data/config/tag_patterns.json"
+    chatbot.tag_extractor = TagExtractor(chatbot.tag_schema, tag_patterns_path)
+    logger.info(f"TagExtractor re-initialized with patterns: {tag_patterns_path}")
     logger.info("챗봇 초기화 완료 (단일 호출)")
     
 except Exception as e:
