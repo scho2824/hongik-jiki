@@ -189,11 +189,17 @@ def ask():
         if hasattr(chatbot, 'get_related_questions'):
             suggested_questions = chatbot.get_related_questions(question)
         
+        # 추천 문서 가져오기 (해당 메서드가 있는 경우)
+        recommended_documents = []
+        if hasattr(chatbot, 'get_recommended_documents'):
+            recommended_documents = chatbot.get_recommended_documents(question)
+
         # 응답 데이터 구성
         response_data = {
             "response": response,
             "extracted_tags": extracted_tags,
-            "suggested_questions": suggested_questions
+            "suggested_questions": suggested_questions,
+            "recommended_documents": recommended_documents
         }
         
         return jsonify(response_data)

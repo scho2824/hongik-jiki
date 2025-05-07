@@ -433,6 +433,12 @@ class ChromaVectorStore(VectorStoreBase):
         except Exception as e:
             logger.error(f"문서 수 조회 오류: {e}")
             return 0
+
+    def get_all_documents(self) -> list:
+        """
+        저장소 내 모든 문서를 반환합니다.
+        """
+        return self.collection.get(include=['metadatas', 'documents'])
     
     def reset(self) -> None:
         """
@@ -489,3 +495,9 @@ class ChromaVectorStore(VectorStoreBase):
         except Exception as e:
             logger.error(f"문서 삭제 오류: {e}")
             raise
+
+    def persist(self) -> None:
+        """
+        Chroma는 자동으로 저장되므로 명시적인 persist는 불필요합니다.
+        """
+        logger.info("Chroma는 자동으로 저장되므로 persist 호출은 생략됩니다.")

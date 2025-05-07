@@ -635,3 +635,32 @@ class HongikJikiChatBot:
         except Exception as e:
             logger.error(f"태그 기반 검색 오류: {e}")
             return []
+    def get_recommended_documents(self, question: str, max_docs_per_tag: int = 2) -> List[Dict[str, Any]]:
+        """
+        사용자 질문에서 추출한 태그를 기반으로 관련 문서를 검색하여 추천합니다.
+        
+        Args:
+            question: 사용자 질문
+            max_docs_per_tag: 태그당 최대 추천 문서 수
+        
+        Returns:
+            List[Dict]: 추천 문서 리스트
+        """
+        if not self.use_tags or not self.tag_extractor:
+            return []
+
+        try:
+            extracted_tags = self.tag_extractor.extract_tags_from_query(question)
+            recommended = []
+
+            for tag in extracted_tags:
+                results = self.search_documents_by_tag(tag, k=max_docs_per_tag)
+                for res in results:
+                    res["tag"] = tag
+                    recommended.append(res)
+
+            return recommended
+
+        except Exception as e:
+            logger.error(f"추천 문서 검색 오류: {e}")
+            return []

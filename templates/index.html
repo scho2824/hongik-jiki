@@ -252,6 +252,29 @@
                 updateSuggestedArea(data);
             }
             
+            // 추천 문서 표시
+            if (data.recommended_documents && data.recommended_documents.length > 0) {
+                const docSection = document.createElement('div');
+                docSection.className = 'response-meta';
+                const docLabel = document.createElement('small');
+                docLabel.textContent = '추천 문서:';
+                docLabel.style.color = '#666';
+                docSection.appendChild(docLabel);
+
+                data.recommended_documents.forEach(doc => {
+                    const docDiv = document.createElement('div');
+                    docDiv.style.padding = '5px 10px';
+                    docDiv.style.marginTop = '5px';
+                    docDiv.style.backgroundColor = '#fafafa';
+                    docDiv.style.border = '1px solid #ddd';
+                    docDiv.style.borderRadius = '5px';
+                    docDiv.innerHTML = `<strong>${doc.title}</strong><br>${doc.content}<br><small>${doc.source}</small>`;
+                    docSection.appendChild(docDiv);
+                });
+
+                messageDiv.appendChild(docSection);
+            }
+            
             chatArea.appendChild(messageDiv);
             chatArea.scrollTop = chatArea.scrollHeight;
         }

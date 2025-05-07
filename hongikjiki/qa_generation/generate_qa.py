@@ -1,4 +1,7 @@
 
+from hongikjiki.tagging.tag_extractor import TagExtractor
+from hongikjiki.tagging.tag_schema import TagSchema
+
 
 import json
 from typing import List, Dict
@@ -8,6 +11,8 @@ def load_dataset(input_path: str) -> List[Dict[str, str]]:
         return json.load(f)
 
 def simple_qa_generator(dataset: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    tag_schema = TagSchema.from_file("data/config/tag_schema.yaml")
+    tag_extractor = TagExtractor(tag_schema, "data/config/tag_patterns.json")
     qa_pairs = []
     for item in dataset:
         text = item.get("content", "")
@@ -15,7 +20,8 @@ def simple_qa_generator(dataset: List[Dict[str, str]]) -> List[Dict[str, str]]:
             continue
         question = f"이 문장은 무엇을 말하고 있나요?"
         answer = text.strip()
-        qa_pairs.append({"question": question, "answer": answer})
+        tags = list(tag_extractor.extract_tags(text).keys())
+        qa_pairs.append({"question": question, "answer": answer, "tags": tags})
     return qa_pairs
 
 def save_qa_dataset(output_path: str, qa_pairs: List[Dict[str, str]]):
