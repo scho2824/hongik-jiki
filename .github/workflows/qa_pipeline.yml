@@ -1,4 +1,4 @@
-# .github/workflows/qa_pipeline.yml
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: QA Pipeline
 
 on:
@@ -17,7 +17,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - name: 체크아웃 코드
         uses: actions/checkout@v3
