@@ -3,5 +3,11 @@
   "python.analysis.extraPaths": [
     ".",              // 워크스페이스 루트
     "./hongikjiki"    // hongikjiki 패키지 바로 아래도 포함
-  ]
+  ],
+  // YAML 파일 내 편집기의 컨텍스트 경고를 비활성화합니다
+  "yaml.validate": false,
+  // Apply GitHub Actions schema to QA pipeline workflow
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/qa_pipeline.yml"
+  }
 }

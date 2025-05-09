@@ -1,5 +1,8 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: QA Pipeline
+permissions:
+  contents: write
+  actions: write
 
 on:
   workflow_dispatch:
@@ -8,7 +11,7 @@ on:
     paths:
       - 'hongikjiki/qa_generation/**'
       - 'data/processed/**'
-      - 'data/qa/raw_jungbub_qa_dataset.json'
+      - 'data/qa/jungbub_qa_dataset.json'
   schedule:
     # 매주 일요일 오전 1시(Asia/Seoul)에도 자동 실행
     - cron: '0 1 * * 0'
@@ -21,6 +24,10 @@ jobs:
     steps:
       - name: 체크아웃 코드
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
+          fetch-depth: 0
 
       - name: Python 설정
         uses: actions/setup-python@v4
