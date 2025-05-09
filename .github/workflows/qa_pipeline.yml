@@ -2,6 +2,7 @@
 name: QA Pipeline
 
 on:
+  workflow_dispatch:
   push:
     # 코드나 원본 QA 데이터가 변경될 때마다 트리거
     paths:
