@@ -33,7 +33,7 @@ jobs:
       - name: Refined QA 생성
         run: |
           python hongikjiki/qa_generation/generate_refined_qa.py \
-            --input_file data/qa/raw_jungbub_qa_dataset.json \
+            --input_file data/qa/jungbub_qa_dataset.json \
             --output_file data/qa/validated_jungbub_qa_dataset.json
 
       - name: High-Insight QA 생성
