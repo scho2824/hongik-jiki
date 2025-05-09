@@ -5,6 +5,7 @@ import json
 import logging
 from typing import List, Dict
 from tqdm import tqdm  # 진행 상황 표시용
+import random
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO, 
@@ -14,6 +15,63 @@ logger = logging.getLogger(__name__)
 # Initialize tag extractor once for reuse
 tag_schema = TagSchema("data/config/tag_schema.yaml")
 tag_extractor = TagExtractor(tag_schema, "data/config/tag_patterns.json")
+
+def generate_multiple_qa(text: str, tags: Dict[str, float]) -> List[Dict[str, str]]:
+    qa_list = []
+
+    # 다양한 질문 템플릿에서 무작위로 2개 선택
+    base_questions = [
+        "이 문장에서 전하려는 핵심 개념은 무엇인가요?",
+        "이 가르침의 중심 메시지는 무엇인가요?",
+        "이 내용을 통해 무엇을 배울 수 있나요?",
+        "이 내용을 일상에 적용한다면 어떤 변화가 있을까요?",
+        "이 내용은 어떤 삶의 태도를 권유하고 있나요?",
+        "이 내용은 당신의 가치관에 어떤 영향을 줄 수 있나요?",
+    ]
+    selected_questions = random.sample(base_questions, k=2)
+    for q in selected_questions:
+        qa_list.append({
+            "question": q,
+            "cleaned_question": q,
+            "quoted_insight": text.strip().split(".")[0] + ".",
+            "insight_explanation": "",
+            "answer": text.strip(),
+            "tags": list(tags.keys()),
+            "source_text": text.strip()
+        })
+
+    # 질문 3~4: 태그 기반 질문 (상위 태그 1~2개)
+    tag_insight_templates = [
+        "이 내용은 '{tag}'와 관련하여 어떤 통찰을 줍니까?",
+        "'{tag}'라는 관점에서 이 내용을 어떻게 해석할 수 있나요?",
+        "이 내용은 '{tag}' 개념을 어떻게 설명하고 있나요?"
+    ]
+
+    # Safely obtain the schema dictionary regardless of attribute name
+    internal_schema = getattr(tag_schema, "schema", getattr(tag_schema, "_schema", {}))
+    tag_descriptions = {
+        tag: internal_schema.get(tag, {}).get("description", tag)
+        for tag in tags.keys()
+    }
+
+    top_tags = sorted(tags.items(), key=lambda x: x[1], reverse=True)[:2]
+    for tag, _ in top_tags:
+        description = tag_descriptions.get(tag, tag)
+        question_template = random.choice(tag_insight_templates)
+        qa_list.append({
+            "question": question_template.format(tag=description),
+            "cleaned_question": question_template.format(tag=description),
+            "quoted_insight": text.strip().split(".")[0] + ".",
+            "insight_explanation": "",
+            "answer": text.strip(),
+            "tags": [tag],
+            "source_text": text.strip()
+        })
+
+    # 중복 제거 (보장된 태그 유일성)
+    for qa_item in qa_list:
+        qa_item["tags"] = list(set(qa_item["tags"]))
+    return qa_list
 
 def load_dataset(input_path: str) -> List[Dict[str, str]]:
     with open(input_path, "r", encoding="utf-8") as f:
@@ -50,31 +108,15 @@ def advanced_qa_generator(dataset: List[Dict[str, str]], min_length: int = 30) -
         
         # 태그 추출
         try:
-            tags = list(tag_extractor.extract_tags(text).keys())
+            main_tags, near_tags = tag_extractor.extract_tags(text, return_near=True)
+            tags = main_tags if main_tags else dict(near_tags[:2])  # Use near tags if main_tags is empty
         except Exception as e:
             logger.warning(f"Tag extraction failed for chunk: {e}")
-            tags = []
+            tags = {}
         
-        # 단락 내용에 따라 적절한 질문 선택
-        # 간단한 구현: 태그와 텍스트 길이에 따라 질문 선택
-        if len(tags) > 0 and '깨달음' in tags:
-            question = question_templates[2]  # 핵심 메시지
-        elif len(tags) > 0 and '실천' in tags:
-            question = question_templates[3]  # 일상 적용
-        elif len(text) > 500:
-            question = question_templates[1]  # 중요 개념
-        elif len(tags) > 0 and '가치' in tags:
-            question = question_templates[4]  # 강조하는 가치
-        else:
-            question = question_templates[0]  # 기본 질문
-        
-        answer = text.strip()
-        
-        qa_pairs.append({
-            "question": question, 
-            "answer": answer, 
-            "tags": tags
-        })
+        # 다양한 질문 생성: 핵심 개념, 실천, 태그 기반 등
+        multiple_qa = generate_multiple_qa(text, tags)
+        qa_pairs.extend(multiple_qa)
         
         processed += 1
     

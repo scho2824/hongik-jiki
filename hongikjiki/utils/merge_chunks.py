@@ -22,17 +22,25 @@ def merge_chunks(input_dir, output_file):
 
         # 각각의 청크가 dict 구조일 경우
         if isinstance(data, dict):
+            content = data.get("content") or data.get("page_content", "")
+            if not content.strip():
+                print(f"⚠️ Skipping empty content in file: {filename} (single object)")
+                continue
             merged.append({
                 "metadata": data.get("metadata", {}),
-                "content": data.get("content") or data.get("page_content", ""),
+                "content": content,
                 "tags": data.get("tags", [])
             })
         elif isinstance(data, list):
-            for item in data:
+            for idx, item in enumerate(data):
                 if isinstance(item, dict):
+                    content = item.get("content") or item.get("page_content", "")
+                    if not content.strip():
+                        print(f"⚠️ Skipping empty content in file: {filename}, item index: {idx}")
+                        continue
                     merged.append({
                         "metadata": item.get("metadata", {}),
-                        "content": item.get("content") or item.get("page_content", ""),
+                        "content": content,
                         "tags": item.get("tags", [])
                     })
     

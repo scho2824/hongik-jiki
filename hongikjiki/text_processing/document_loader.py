@@ -1,7 +1,7 @@
 import os
 import re
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 import hashlib
 import json
 from datetime import datetime
@@ -36,7 +36,7 @@ class DocumentLoader:
         """DocumentLoader 초기화"""
         pass
     
-    def load_document(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def load_document(self, file_path: str) -> Optional[List[Dict[str, Any]]]:
         """
         파일 경로로부터 문서를 로드하고 텍스트와 기본 메타데이터 추출
         
@@ -44,7 +44,7 @@ class DocumentLoader:
             file_path: 로드할 파일 경로
             
         Returns:
-            Dict: 문서 내용과 기본 메타데이터를 포함하는 딕셔너리 또는 None (로드 실패)
+            List[Dict]: 문서 내용과 기본 메타데이터를 포함하는 딕셔너리 리스트 또는 None (로드 실패)
         """
         try:
             filename = os.path.basename(file_path)
@@ -77,10 +77,24 @@ class DocumentLoader:
                     "file_path": file_path
                 }
                 
-                return {
-                    "content": content,
-                    "metadata": metadata
-                }
+                if "질문:" in content:
+                    chunks = content.split("질문:")
+                    documents = []
+                    for chunk in chunks:
+                        chunk = chunk.strip()
+                        if not chunk:
+                            continue
+                        full_text = "질문:" + chunk
+                        documents.append({
+                            "content": full_text,
+                            "metadata": {**metadata, "sub_chunked": True}
+                        })
+                    return documents
+                else:
+                    return [{
+                        "content": content.strip(),
+                        "metadata": metadata
+                    }]
                 
             return None
             
@@ -269,12 +283,12 @@ class DocumentLoader:
                         logger.info(f"이미 처리된 파일입니다. 건너뜀: {file_path}")
                         continue
 
-                    doc = self.load_document(file_path)
-                    if doc:
-                        # 추가 메타 정보 (하위 폴더명을 label로 저장)
-                        relative = os.path.relpath(root, base_dir)
-                        doc["metadata"]["label"] = relative
-                        loaded_documents.append(doc)
+                    docs = self.load_document(file_path)
+                    if docs:
+                        for doc in docs:
+                            relative = os.path.relpath(root, base_dir)
+                            doc["metadata"]["label"] = relative
+                            loaded_documents.append(doc)
 
                         processed_files[file_hash] = {
                             "file_path": file_path,

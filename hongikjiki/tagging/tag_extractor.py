@@ -6,7 +6,7 @@ Extracts relevant tags from document content using pattern matching and semantic
 import re
 import json
 import os
-from typing import Dict, List, Optional, Set, Tuple, Any
+from typing import Dict, List, Optional, Set, Tuple, Any, Union
 import logging
 from collections import defaultdict
 
@@ -116,7 +116,7 @@ class TagExtractor:
         except Exception as e:
             logger.error(f"Error saving tag patterns to {file_path}: {e}")
     
-    def extract_tags(self, content: str, existing_tags: List[str] = None) -> Dict[str, float]:
+    def extract_tags(self, content: str, existing_tags: List[str] = None, return_near: bool = False) -> Union[Dict[str, float], Tuple[Dict[str, float], List[Tuple[str, float]]]]:
         """
         Extract relevant tags from document content
         
@@ -149,7 +149,14 @@ class TagExtractor:
         for parent, score in parent_tags.items():
             if parent not in tag_scores or tag_scores[parent] < score:
                 tag_scores[parent] = score
-        
+
+        # Log near-threshold candidates for diagnostics
+        near_candidates = self.log_near_threshold_candidates(content)
+        if near_candidates:
+            logger.debug(f"Near-threshold candidates for content: {near_candidates}")
+
+        if return_near:
+            return tag_scores, near_candidates
         return tag_scores
     
     def _calculate_tag_score(self, content: str, pattern_data: Dict[str, Any]) -> float:
@@ -310,3 +317,19 @@ class TagExtractor:
         
         if weight is not None:
             pattern_data["weight"] = weight
+    def log_near_threshold_candidates(self, content: str) -> List[Tuple[str, float]]:
+        """
+        Return tags that scored just below the threshold for further inspection.
+
+        Args:
+            content: Document content to analyze
+
+        Returns:
+            List of (tag, score) tuples that nearly matched
+        """
+        near_candidates = []
+        for tag_name, pattern_data in self.patterns.items():
+            score = self._calculate_tag_score(content, pattern_data)
+            if self.min_confidence - 0.1 <= score < self.min_confidence:
+                near_candidates.append((tag_name, round(score, 3)))
+        return sorted(near_candidates, key=lambda x: x[1], reverse=True)

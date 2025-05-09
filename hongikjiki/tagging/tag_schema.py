@@ -385,3 +385,18 @@ class TagSchema:
             logger.error(f"Error loading tag schema from {file_path}: {e}")
             # Fall back to default schema
             self._init_default_schema()
+
+    @classmethod
+    def load_from_file(cls, path: str) -> "TagSchema":
+        """
+        Create and return a TagSchema instance loaded from a YAML file.
+
+        Args:
+            path: Path to the schema file
+
+        Returns:
+            TagSchema instance
+        """
+        instance = cls()
+        instance.load_schema(path)
+        return instance
