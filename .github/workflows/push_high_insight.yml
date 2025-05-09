@@ -1,6 +1,4 @@
 name: Push High-Insight Dataset
-
-# 수동 실행만 지원
 on:
   workflow_dispatch:
 
@@ -17,6 +15,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
           fetch-depth: 0
+
+      - name: 🔖 현재 커밋 정보 출력
+        run: |
+          echo "🔍 SHA: $(git rev-parse HEAD)"
+          echo "📝 Commit message: $(git log -1 --pretty=%B)"
 
       - name: Push high_insight_qa_dataset.json
         run: |

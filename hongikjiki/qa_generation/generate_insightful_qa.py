@@ -4,6 +4,7 @@ import re
 from dotenv import load_dotenv
 from openai import OpenAI
 from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -68,7 +69,19 @@ def process_file(input_path, output_path):
     with open(input_path, "r", encoding="utf-8") as infile:
         qa_data = json.load(infile)
 
-    enhanced = [enhance_qa(qa) for qa in tqdm(qa_data)]
+    enhanced = []
+    # 병렬 처리로 OpenAI 호출 속도 향상
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = {executor.submit(enhance_qa, qa): qa for qa in qa_data}
+        for future in tqdm(as_completed(futures), total=len(futures)):
+            try:
+                result = future.result()
+                enhanced.append(result)
+            except Exception as e:
+                # 오류 발생 시 원본 qa 유지
+                qa = futures[future]
+                print("❌ 병렬 처리 오류:", e)
+                enhanced.append(qa)
 
     with open(output_path, "w", encoding="utf-8") as outfile:
         json.dump(enhanced, outfile, ensure_ascii=False, indent=2)
