@@ -1,0 +1,52 @@
+# .github/workflows/qa_pipeline.yml
+name: QA Pipeline
+
+on:
+  push:
+    # 코드나 원본 QA 데이터가 변경될 때마다 트리거
+    paths:
+      - 'hongikjiki/qa_generation/**'
+      - 'data/processed/**'
+      - 'data/qa/raw_jungbub_qa_dataset.json'
+  schedule:
+    # 매주 일요일 오전 1시(Asia/Seoul)에도 자동 실행
+    - cron: '0 1 * * 0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 체크아웃 코드
+        uses: actions/checkout@v3
+
+      - name: Python 설정
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: 의존성 설치
+        run: |
+          pip install -r requirements.txt
+
+      - name: Refined QA 생성
+        run: |
+          python hongikjiki/qa_generation/generate_refined_qa.py \
+            --input_file data/qa/raw_jungbub_qa_dataset.json \
+            --output_file data/qa/validated_jungbub_qa_dataset.json
+
+      - name: High-Insight QA 생성
+        run: |
+          python hongikjiki/qa_generation/generate_insightful_qa.py \
+            --input_file data/qa/validated_jungbub_qa_dataset.json \
+            --output_file data/qa/high_insight_qa_dataset.json
+
+      - name: 결과 커밋 & 푸시
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "actions@github.com"
+          git add data/qa/high_insight_qa_dataset.json
+          git diff --cached --quiet || git commit -m "chore: update high_insight_qa_dataset.json [skip ci]"
+          git push
