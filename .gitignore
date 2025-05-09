@@ -22,10 +22,6 @@ data/processed/
 data/qa/*
 !data/qa/high_insight_qa_dataset.json
 data/vector_store/
-echo -e "\n# 중간 태깅 산출물 무시\ndata/tag_data/tag_index.json\ndata/tag_data/tag_statistics.json" >> .gitignore
-
-echo -e "\n# 벡터 저장소 무시\ndata/vector_store/\ndata/tag_data/validation_report.*" >> .gitignore
-
 data/tag_data/tag_index.json
 data/tag_data/tag_statistics.json
 fix_merge_chunks.py
