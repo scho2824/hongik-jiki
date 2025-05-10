@@ -41,9 +41,15 @@ jobs:
              '. |= {"metadata": {commit: $sha, timestamp: $date, message: $msg}, "qa": .}' \
              data/qa/high_insight_qa_dataset.json > tmp.json && mv tmp.json data/qa/high_insight_qa_dataset.json
 
+
       - name: ✅ Validate JSON
         run: |
           jq empty data/qa/high_insight_qa_dataset.json
+
+      - name: 🆔 Configure git identity
+        run: |
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name  "${{ github.actor }}"
 
       - name: Push high_insight_qa_dataset.json
         run: |
