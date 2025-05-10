@@ -12,8 +12,11 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional, Union, Set
 from datetime import datetime
 
-from hongikjiki.text_processor import TextProcessor
+from hongikjiki.text_processing.document_processor import DocumentProcessor
 from hongikjiki.utils import find_documents, ensure_dir
+
+from hongikjiki.qa_generation.generate_qa import QAGenerator
+from hongikjiki.qa_generation.generate_refined_qa import refine_qa_pair
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -169,7 +172,7 @@ def update_documents(data_dir: Union[str, Path], vector_store=None, force_reinde
         vector_store = VectorStore()
     
     # 텍스트 처리기 초기화
-    processor = TextProcessor()
+    processor = DocumentProcessor()
     
     # 변경된 파일 감지
     changed_files = detect_changed_files(data_dir) if not force_reindex else {
@@ -209,9 +212,60 @@ def update_documents(data_dir: Union[str, Path], vector_store=None, force_reinde
         file_path_str = str(file_path)
         
         try:
-            # 문서 청크 생성
-            document_chunks = processor.prepare_document_chunks(file_path)
-            
+            # processor.process_file 내부에서 QA 생성 및 태그 추출까지 모두 수행됨
+            document_chunks = processor.process_file(file_path)
+
+            # Use the imported QAGenerator
+            qa_generator = QAGenerator()
+            qa_pairs = qa_generator.generate(document_chunks)
+
+            if qa_pairs:
+                # QA 데이터를 청크에 메타데이터로 삽입
+                # ---------- robust QA‑chunk matching ----------
+                for qa in qa_pairs:
+                    q_src_id = qa.get("source_id", "")
+                    q_hash    = qa.get("file_hash")
+                    q_cidx    = qa.get("chunk_index")
+
+                    matching_chunk = None
+                    # 1) exact source_id match
+                    for c in document_chunks:
+                        if q_src_id and q_src_id == c["metadata"].get("source_id"):
+                            matching_chunk = c
+                            break
+                    # 2) fallback: hash + chunk_index match
+                    if matching_chunk is None and q_hash is not None and q_cidx is not None:
+                        for c in document_chunks:
+                            meta = c["metadata"]
+                            if meta.get("file_hash") == q_hash and meta.get("chunk_index") == q_cidx:
+                                matching_chunk = c
+                                break
+
+                    if matching_chunk:
+                        matching_chunk.setdefault("metadata", {})["qa"] = {
+                            "question": qa.get("question"),
+                            "answer":   qa.get("answer")
+                        }
+                logger.info(f"{len(qa_pairs)}개의 QA가 메타데이터로 통합되었습니다.")
+
+                for chunk in document_chunks:
+                    qa_meta = chunk["metadata"].get("qa")
+                    if qa_meta:
+                        refined = refine_qa_pair(qa_meta["question"], qa_meta["answer"])
+                        chunk["metadata"]["qa"]["refined"] = refined
+
+            # TagExtractor fallback import for Pylance compatibility
+            try:
+                from hongikjiki.tagging.tag_extractor import TagExtractor
+            except ImportError:
+                from tagging.tag_extractor import TagExtractor
+            tag_extractor = TagExtractor()
+
+            for chunk in document_chunks:
+                content_for_tagging = chunk.get("content", "")
+                tags = tag_extractor.extract_tags(content_for_tagging)
+                chunk["metadata"]["tags"] = tags
+
             if not document_chunks:
                 logger.warning(f"문서에서 추출된 청크가 없습니다: {file_path}")
                 continue
@@ -223,8 +277,23 @@ def update_documents(data_dir: Union[str, Path], vector_store=None, force_reinde
                 except Exception as e:
                     logger.error(f"기존 벡터 제거 오류 ({file_path}): {e}")
             
-            # 벡터 저장소에 추가
-            vector_store.add_documents(document_chunks)
+            # 벡터 저장소에 추가 및 vector_id 저장 (vector_ids 가 None 인 경우 대비)
+            vector_ids = None
+            try:
+                vector_ids = vector_store.add_documents(document_chunks)
+            except Exception as ve:
+                logger.warning(f"벡터 저장 중 오류 발생: {ve}")
+
+            # vector_ids 가 리스트일 때만 매핑, 아니면 fallback ID 생성
+            for idx, chunk in enumerate(document_chunks):
+                if isinstance(vector_ids, list) and idx < len(vector_ids):
+                    chunk["metadata"]["vector_id"] = vector_ids[idx]
+                else:
+                    # add_documents 가 None 을 리턴했거나 길이가 맞지 않을 때
+                    # 파일 해시 + 청크 인덱스로 임시 ID 부여
+                    fh = chunk["metadata"].get("file_hash", "unk")
+                    ci = chunk["metadata"].get("chunk_index", idx)
+                    chunk["metadata"]["vector_id"] = f"{fh}_{ci}"
             
             # 메타데이터 업데이트
             metadata[file_path_str] = update_document_metadata(file_path)

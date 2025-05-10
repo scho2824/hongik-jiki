@@ -6,6 +6,9 @@ from typing import List, Dict, Any, Optional
 
 logger = logging.getLogger("HongikJikiChatBot")
 
+ # NOTE: 이 클래스는 더 이상 전체 전처리 파이프라인의 진입점으로 사용되지 않습니다.
+ #       대신 DocumentProcessor가 전체 흐름을 제어하며, 이 클래스는 로우레벨 유틸로 사용됩니다.
+
 class HongikJikiTextProcessor:
     """정법 텍스트 처리 클래스"""
     

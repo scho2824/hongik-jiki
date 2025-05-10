@@ -116,6 +116,8 @@ def advanced_qa_generator(dataset: List[Dict[str, str]], min_length: int = 30) -
         
         # 다양한 질문 생성: 핵심 개념, 실천, 태그 기반 등
         multiple_qa = generate_multiple_qa(text, tags)
+        for qa in multiple_qa:
+            qa["metadata"] = item.get("metadata", {})
         qa_pairs.extend(multiple_qa)
         
         processed += 1
@@ -130,6 +132,40 @@ def advanced_qa_generator(dataset: List[Dict[str, str]], min_length: int = 30) -
 def save_qa_dataset(output_path: str, qa_pairs: List[Dict[str, str]]):
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(qa_pairs, f, ensure_ascii=False, indent=2)
+
+# ---------------------------------------------------------------------------
+# OO wrapper so other modules can simply do:
+#     from hongikjiki.qa_generation.generate_qa import QAGenerator
+# ---------------------------------------------------------------------------
+class QAGenerator:
+    """
+    Thin wrapper around ``advanced_qa_generator`` that mirrors the old API
+    expected by document_manager.py and other callers.
+    """
+
+    def __init__(self, min_length: int = 30):
+        self.min_length = min_length
+
+    def generate(self, dataset: List[Dict[str, str]]) -> List[Dict[str, str]]:
+        """
+        Generate QA pairs from an in‑memory list of chunk dictionaries.
+
+        Args:
+            dataset: List of chunk dicts produced by DocumentProcessor /
+                     VectorStore etc.
+
+        Returns:
+            List of QA pair dicts (same schema as ``advanced_qa_generator``).
+        """
+        return advanced_qa_generator(dataset, self.min_length)
+
+    def generate_from_file(self, input_file: str) -> List[Dict[str, str]]:
+        """
+        Convenience helper that loads <input_file> JSON, runs generation,
+        and returns the QA list.
+        """
+        data = load_dataset(input_file)
+        return self.generate(data)
 
 if __name__ == "__main__":
     import argparse
