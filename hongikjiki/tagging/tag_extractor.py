@@ -153,7 +153,8 @@ class TagExtractor:
         # Log near-threshold candidates for diagnostics
         near_candidates = self.log_near_threshold_candidates(content)
         if near_candidates:
-            logger.debug(f"Near-threshold candidates for content: {near_candidates}")
+            formatted = ", ".join([f"{tag}:{score}" for tag, score in near_candidates])
+            logger.debug(f"🟡 Near-threshold tags for document: {formatted}")
 
         if return_near:
             return tag_scores, near_candidates
@@ -332,4 +333,5 @@ class TagExtractor:
             score = self._calculate_tag_score(content, pattern_data)
             if self.min_confidence - 0.1 <= score < self.min_confidence:
                 near_candidates.append((tag_name, round(score, 3)))
-        return sorted(near_candidates, key=lambda x: x[1], reverse=True)
+        # Cap the number of reported candidates to avoid flooding logs
+        return sorted(near_candidates, key=lambda x: x[1], reverse=True)[:5]

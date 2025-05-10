@@ -6,6 +6,8 @@ import logging
 from typing import List, Dict
 from tqdm import tqdm  # 진행 상황 표시용
 import random
+import os
+import glob
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO, 
@@ -16,7 +18,7 @@ logger = logging.getLogger(__name__)
 tag_schema = TagSchema("data/config/tag_schema.yaml")
 tag_extractor = TagExtractor(tag_schema, "data/config/tag_patterns.json")
 
-def generate_multiple_qa(text: str, tags: Dict[str, float]) -> List[Dict[str, str]]:
+def generate_multiple_qa(text: str, tags: Dict[str, float], source: str = None, original_tags: List[str] = None) -> List[Dict[str, str]]:
     qa_list = []
 
     # 다양한 질문 템플릿에서 무작위로 2개 선택
@@ -30,14 +32,17 @@ def generate_multiple_qa(text: str, tags: Dict[str, float]) -> List[Dict[str, st
     ]
     selected_questions = random.sample(base_questions, k=2)
     for q in selected_questions:
+        qa_item_tags = list(tags.keys())
+        combined_tags = list(set(qa_item_tags + (original_tags or [])))
         qa_list.append({
             "question": q,
             "cleaned_question": q,
             "quoted_insight": text.strip().split(".")[0] + ".",
             "insight_explanation": "",
             "answer": text.strip(),
-            "tags": list(tags.keys()),
-            "source_text": text.strip()
+            "tags": combined_tags,
+            "source_text": text.strip(),
+            "source": source
         })
 
     # 질문 3~4: 태그 기반 질문 (상위 태그 1~2개)
@@ -58,14 +63,17 @@ def generate_multiple_qa(text: str, tags: Dict[str, float]) -> List[Dict[str, st
     for tag, _ in top_tags:
         description = tag_descriptions.get(tag, tag)
         question_template = random.choice(tag_insight_templates)
+        qa_item_tags = [tag]
+        combined_tags = list(set(qa_item_tags + (original_tags or [])))
         qa_list.append({
             "question": question_template.format(tag=description),
             "cleaned_question": question_template.format(tag=description),
             "quoted_insight": text.strip().split(".")[0] + ".",
             "insight_explanation": "",
             "answer": text.strip(),
-            "tags": [tag],
-            "source_text": text.strip()
+            "tags": combined_tags,
+            "source_text": text.strip(),
+            "source": source
         })
 
     # 중복 제거 (보장된 태그 유일성)
@@ -73,9 +81,29 @@ def generate_multiple_qa(text: str, tags: Dict[str, float]) -> List[Dict[str, st
         qa_item["tags"] = list(set(qa_item["tags"]))
     return qa_list
 
-def load_dataset(input_path: str) -> List[Dict[str, str]]:
-    with open(input_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+def load_dataset(input_dir: str) -> List[Dict[str, str]]:
+    dataset = []
+    json_files = glob.glob(os.path.join(input_dir, "**", "*.json"), recursive=True)
+    jsonl_files = glob.glob(os.path.join(input_dir, "**", "*.jsonl"), recursive=True)
+    all_files = json_files + jsonl_files
+
+    for file_path in all_files:
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                if file_path.endswith(".jsonl"):
+                    for line in f:
+                        if line.strip():
+                            dataset.append(json.loads(line))
+                else:
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        dataset.extend(data)
+                    else:
+                        dataset.append(data)
+        except Exception as e:
+            logger.warning(f"Failed to load {file_path}: {e}")
+
+    return dataset
 
 def advanced_qa_generator(dataset: List[Dict[str, str]], min_length: int = 30) -> List[Dict[str, str]]:
     qa_pairs = []
@@ -114,9 +142,12 @@ def advanced_qa_generator(dataset: List[Dict[str, str]], min_length: int = 30) -
             logger.warning(f"Tag extraction failed for chunk: {e}")
             tags = {}
         
+        source = item.get("source")
+        original_tags = item.get("tags", [])
         # 다양한 질문 생성: 핵심 개념, 실천, 태그 기반 등
-        multiple_qa = generate_multiple_qa(text, tags)
+        multiple_qa = generate_multiple_qa(text, tags, source=source, original_tags=original_tags)
         for qa in multiple_qa:
+            # 기존 문서 메타데이터가 있다면 보존
             qa["metadata"] = item.get("metadata", {})
         qa_pairs.extend(multiple_qa)
         
@@ -170,16 +201,16 @@ class QAGenerator:
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_file", type=str, required=True)
+    parser.add_argument("--input_dir", type=str, required=True)
     parser.add_argument("--output_file", type=str, required=True)
     parser.add_argument("--min_length", type=int, default=30, 
                        help="최소 텍스트 길이 (이보다 짧은 청크는 처리하지 않음)")
     args = parser.parse_args()
 
-    logger.info(f"📥 입력 파일: {args.input_file}")
+    logger.info(f"📥 입력 디렉토리: {args.input_dir}")
     logger.info(f"📤 출력 파일: {args.output_file}")
 
-    dataset = load_dataset(args.input_file)
+    dataset = load_dataset(args.input_dir)
     qa_pairs = advanced_qa_generator(dataset, args.min_length)
     save_qa_dataset(args.output_file, qa_pairs)
 

@@ -25,6 +25,8 @@ logger = logging.getLogger(__name__)
 # 문서 메타데이터 파일 경로
 META_FILE = Path("./data/document_metadata.json")
 
+SUPPORTED_EXTENSIONS = {".txt", ".pdf", ".docx", ".rtf"}
+
 def calculate_file_hash(file_path: Union[str, Path]) -> str:
     """
     파일의 MD5 해시값 계산
@@ -175,11 +177,18 @@ def update_documents(data_dir: Union[str, Path], vector_store=None, force_reinde
     processor = DocumentProcessor()
     
     # 변경된 파일 감지
-    changed_files = detect_changed_files(data_dir) if not force_reindex else {
-        "added": find_documents(data_dir),
-        "deleted": [],
-        "modified": []
-    }
+    if not force_reindex:
+        changed_files = detect_changed_files(data_dir)
+    else:
+        file_paths = [
+            f for f in Path(data_dir).rglob("*")
+            if f.suffix.lower() in SUPPORTED_EXTENSIONS and f.is_file()
+        ]
+        changed_files = {
+            "added": file_paths,
+            "deleted": [],
+            "modified": []
+        }
     
     # 변경된 파일이 없으면 종료
     if not changed_files["added"] and not changed_files["deleted"] and not changed_files["modified"]:
@@ -356,7 +365,12 @@ def list_documents(data_dir: Union[str, Path] = None) -> List[Dict[str, Any]]:
         data_dir = Path(data_dir)
         documents = []
         
-        for file_path in find_documents(data_dir):
+        file_paths = [
+            f for f in data_dir.rglob("*")
+            if f.suffix.lower() in SUPPORTED_EXTENSIONS and f.is_file()
+        ]
+        
+        for file_path in file_paths:
             file_path_str = str(file_path)
             
             if file_path_str in metadata:

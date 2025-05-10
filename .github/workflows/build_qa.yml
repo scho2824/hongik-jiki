@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Build QA Dataset
 
 # 워크플로 트리거: main 브랜치에 원본이 변경되거나 수동 실행
@@ -5,7 +6,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'data/raw/**'
+      - 'data/jungbub_teachings/**'
       - 'scripts/**'
       - 'hongikjiki/**'
       - '.github/workflows/build_qa.yml'
@@ -41,7 +42,7 @@ jobs:
       # 4) QA 데이터셋 생성
       - name: Generate QA dataset
         run: |
-          python -m hongikjiki.document_manager update_documents --data-dir data/raw
+          python -m hongikjiki.document_manager update_documents --data-dir data/jungbub_teachings
           python scripts/aggregate_qa.py --out data/qa/high_insight_qa_dataset.jsonl
 
       # 5) QA 데이터셋 검증 (형식·중복 등)

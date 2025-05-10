@@ -1,29 +1,67 @@
 import os
 import json
 from typing import List, Dict
+from pathlib import Path
+
+def normalize_text(text: str) -> str:
+    """Apply basic normalization: strip, unify quotes, fix dashes, etc."""
+    return (
+        text.replace("“", "\"").replace("”", "\"")
+            .replace("‘", "'").replace("’", "'")
+            .replace("–", "-").replace("—", "-")
+            .strip()
+    )
+
+def extract_tags(text: str) -> List[str]:
+    """Tag simple themes based on keywords."""
+    tags = []
+    if "사랑" in text or "관계" in text:
+        tags.append("관계")
+    if "죽음" in text or "삶" in text:
+        tags.append("삶과 죽음")
+    if "자유" in text or "선택" in text:
+        tags.append("자유")
+    if "에너지" in text:
+        tags.append("에너지")
+    return tags
 
 def read_subtitle_files(input_dir: str) -> List[Dict[str, str]]:
-    data = []
-    for filename in os.listdir(input_dir):
-        if not (filename.endswith(".json") or filename.endswith(".txt")):
+    """
+    Recursively load .json or .txt subtitle files from input_dir and sub‑directories.
+    Each item in the returned list is {"content": "<text>"} with length > 20.
+    """
+    data: List[Dict[str, str]] = []
+    ALLOWED_SUFFIXES = {".json", ".txt"}
+
+    for path in Path(input_dir).rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in ALLOWED_SUFFIXES:
             continue
-        path = os.path.join(input_dir, filename)
+
         try:
-            if filename.endswith(".json"):
-                with open(path, "r", encoding="utf-8") as f:
+            if path.suffix.lower() == ".json":
+                with path.open("r", encoding="utf-8") as f:
                     items = json.load(f)
                     for item in items:
                         text = item.get("text", "").strip()
                         if text and len(text) > 20:
-                            data.append({"content": text})
-            elif filename.endswith(".txt"):
-                with open(path, "r", encoding="utf-8") as f:
+                            data.append({
+                                "content": normalize_text(text),
+                                "source": str(path),
+                                "tags": extract_tags(text)
+                            })
+            else:  # .txt
+                with path.open("r", encoding="utf-8") as f:
                     for line in f:
                         text = line.strip()
                         if text and len(text) > 20:
-                            data.append({"content": text})
+                            data.append({
+                                "content": normalize_text(text),
+                                "source": str(path),
+                                "tags": extract_tags(text)
+                            })
         except Exception as e:
-            print(f"⚠️ Failed to load {filename}: {e}")
+            print(f"⚠️ Failed to load {path}: {e}")
+
     return data
 
 def save_dataset(output_file: str, dataset: List[Dict[str, str]]):
