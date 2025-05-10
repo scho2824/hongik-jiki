@@ -65,4 +65,4 @@ jobs:
           AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
         run: |
           aws s3 cp data/qa/high_insight_qa_dataset.jsonl \
-            s3://hongikjiki/qa/latest.jsonl --acl public-read#
+            s3://hongikjiki/qa/latest.jsonl --acl public-read
