@@ -36,7 +36,7 @@ class DocumentLoader:
         """DocumentLoader 초기화"""
         pass
     
-    def load_document(self, file_path: str) -> Optional[List[Dict[str, Any]]]:
+    def load_document(self, file_path: str) -> Optional[Any]:
         """
         파일 경로로부터 문서를 로드하고 텍스트와 기본 메타데이터 추출
         
@@ -44,7 +44,9 @@ class DocumentLoader:
             file_path: 로드할 파일 경로
             
         Returns:
-            List[Dict]: 문서 내용과 기본 메타데이터를 포함하는 딕셔너리 리스트 또는 None (로드 실패)
+            List[Dict]: "질문:"이 포함된 경우 문서 내용과 기본 메타데이터를 포함하는 딕셔너리 리스트,
+            Dict: "질문:"이 없는 경우 단일 딕셔너리,
+            또는 None (로드 실패)
         """
         try:
             filename = os.path.basename(file_path)
@@ -91,10 +93,10 @@ class DocumentLoader:
                         })
                     return documents
                 else:
-                    return [{
+                    return {
                         "content": content.strip(),
                         "metadata": metadata
-                    }]
+                    }
                 
             return None
             

@@ -65,9 +65,24 @@ def enhance_qa(qa):
         })
     return qa
 
-def process_file(input_path, output_path):
+def process_file(input_path, output_path, lecture_id=None, lecture_title=""):
     with open(input_path, "r", encoding="utf-8") as infile:
         qa_data = json.load(infile)
+
+    # ------------------------------------------------------------------------
+    # Populate metadata fields from arguments or default to empty
+    for qa in qa_data:
+        # Set lecture_id if provided; otherwise, ensure field exists but empty
+        if lecture_id is not None:
+            qa["lecture_id"] = lecture_id
+        else:
+            qa.setdefault("lecture_id", "")
+        # Set lecture_title if provided; otherwise, ensure field exists but empty
+        if lecture_title:
+            qa["lecture_title"] = lecture_title
+        else:
+            qa.setdefault("lecture_title", "")
+    # ------------------------------------------------------------------------
 
     enhanced = []
     # 병렬 처리로 OpenAI 호출 속도 향상
@@ -93,6 +108,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_file", type=str, required=True)
     parser.add_argument("--output_file", type=str, required=True)
+    parser.add_argument("--lecture_id", type=str, default=None, help="Optional lecture identifier")
+    parser.add_argument("--lecture_title", type=str, default="", help="Optional lecture title")
     args = parser.parse_args()
 
-    process_file(args.input_file, args.output_file)
+    process_file(args.input_file, args.output_file, args.lecture_id, args.lecture_title)

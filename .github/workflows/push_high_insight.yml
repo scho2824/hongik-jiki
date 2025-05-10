@@ -21,6 +21,18 @@ jobs:
           echo "🔍 SHA: $(git rev-parse HEAD)"
           echo "📝 Commit message: $(git log -1 --pretty=%B)"
 
+      - name: 🔧 JSON 메타데이터 주입
+        run: |
+          SHA=$(git rev-parse HEAD)
+          DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          MSG=$(git log -1 --pretty=%B | tr '\n' ' ')
+          # Wrap the existing array into an object with metadata and qa fields
+          jq --arg sha "$SHA" \
+             --arg date "$DATE" \
+             --arg msg "$MSG" \
+             '. |= {"metadata": {commit: $sha, timestamp: $date, message: $msg}, "qa": .}' \
+             data/qa/high_insight_qa_dataset.json > tmp.json && mv tmp.json data/qa/high_insight_qa_dataset.json
+
       - name: Push high_insight_qa_dataset.json
         run: |
           git add data/qa/high_insight_qa_dataset.json

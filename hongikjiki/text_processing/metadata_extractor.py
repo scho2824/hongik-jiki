@@ -49,8 +49,9 @@ class MetadataExtractor:
             "category": metadata.get("category", "미분류"),
             "tags": metadata.get("tags", [])
         })
+        logger.debug(f"Metadata after initial update: {metadata}")
 
-        # 강의 번호 추출 - 다양한 패턴 인식
+        # 강의 번호 추출 - content 우선, 없으면 filename
         lecture_patterns = [
             r'정법(\d+)강',
             r'강의 (\d+)강',
@@ -58,10 +59,16 @@ class MetadataExtractor:
             r'(\d+)회 가이드북'
         ]
         for pattern in lecture_patterns:
-            match = re.search(pattern, content[:500] + " " + filename)
+            match = re.search(pattern, content[:500])
             if match:
                 metadata["lecture_number"] = int(match.group(1))
                 break
+        else:
+            for pattern in lecture_patterns:
+                match = re.search(pattern, filename)
+                if match:
+                    metadata["lecture_number"] = int(match.group(1))
+                    break
 
         # 제목 추출 - 가이드북 형식 인식 추가
         title_patterns = [
@@ -77,25 +84,17 @@ class MetadataExtractor:
                 metadata["title"] = match.group(1).strip()
                 break
 
-        # Q&A 형식 감지
-        if "질문 :" in content[:3000] or "질문:" in content[:3000]:
-            metadata["content_type"] = "lecture_qa"
-            metadata["category"] = "질의응답"
+        # Detect overall content type and infer category
+        content_type = self._detect_content_type(content)
+        metadata["content_type"] = content_type
+        metadata["category"] = self._infer_category(content, content_type)
+        logger.debug(f"Detected content_type={content_type}, inferred category={metadata['category']}")
 
-        # 가이드북 형식 감지
-        if "가이드북" in filename or "가이드북" in content[:500]:
-            metadata["content_type"] = "guidebook"
-            metadata["category"] = "가이드북"
-
-        # 생활도 형식 감지
-        if "생활도" in filename or "생활도" in content[:500]:
-            metadata["content_type"] = "daily_wisdom"
-            metadata["category"] = "생활도"
-            
         # 태그 추출 - 신규 추가
         if not metadata.get("tags"):
             metadata["tags"] = self.extract_tags(content, filename, metadata)
 
+        logger.debug(f"Final metadata: {metadata}")
         return metadata
     
     def extract_tags(self, content: str, filename: str, existing_metadata: Dict[str, Any] = None) -> List[str]:

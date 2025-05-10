@@ -46,16 +46,16 @@ class DocumentChunker:
     - 중첩 청크 생성으로 검색 성능 향상
     """
     
-    def __init__(self, default_chunk_size: int = 800, default_overlap: int = 200):
+    def __init__(self, chunk_size: int = 800, overlap: int = 200):
         """
         DocumentChunker 초기화
         
         Args:
-            default_chunk_size: 기본 청크 크기 (문자 수)
-            default_overlap: 기본 중복 영역 크기 (문자 수)
+            chunk_size: 기본 청크 크기 (문자 수)
+            overlap: 기본 중복 영역 크기 (문자 수)
         """
-        self.default_chunk_size = default_chunk_size
-        self.default_overlap = default_overlap
+        self.default_chunk_size = chunk_size
+        self.default_overlap = overlap
         
         # 문장 구분 패턴 (한국어 종결어미 포함)
         self.sentence_pattern = re.compile(r'([.!?][\s\n]+|[.!?]$|다\.[\s\n]+|다\.$|까\?[\s\n]+|까\?$|니다\.[\s\n]+|니다\.$)')
@@ -89,7 +89,21 @@ class DocumentChunker:
             try:
                 content = doc["content"]
                 metadata = doc["metadata"]
-                
+                # 문서 구조 분석: 항상 먼저 한 번만
+                doc_structure = self._analyze_document_structure(content)
+
+                # Fallback: single-paragraph long document -> simple fixed-size splits
+                if not doc_structure["has_clear_sections"] and len(doc_structure["paragraphs"]) <= 1 and len(content) > chunk_size:
+                    simple_chunks = self.chunk_text(content, chunk_size)
+                    for idx, txt in enumerate(simple_chunks):
+                        chunk_metadata = metadata.copy()
+                        chunk_metadata["chunk_index"] = idx
+                        chunk_metadata["chunk_info"] = f"기본 청크 {idx+1} (단순 분할)"
+                        chunk_metadata["source_id"] = f"{metadata.get('file_hash','doc')}_chunk_{idx}"
+                        chunk_metadata["chunk"] = idx
+                        chunks.append({"chunk": txt, "metadata": chunk_metadata})
+                    continue
+
                 # 짧은 콘텐츠는 분할하지 않음
                 if len(content) < chunk_size:
                     chunk_metadata = metadata.copy()
@@ -98,27 +112,29 @@ class DocumentChunker:
                     chunk_metadata["is_short_document"] = True
                     # Assign source_id for short document
                     chunk_metadata["source_id"] = f"{metadata.get('file_hash', 'doc')}_chunk_0"
+                    chunk_metadata["chunk"] = 0
                     chunks.append({
-                        "content": content,
+                        "chunk": content,
                         "metadata": chunk_metadata
                     })
                     continue
-                
-                # 문서 구조 분석
-                doc_structure = self._analyze_document_structure(content)
-                
+
                 # 의미 단위 기반 분할
                 semantic_chunks = self._split_by_semantic_units(content, metadata, chunk_size, overlap, doc_structure)
+                for i, chunk in enumerate(semantic_chunks):
+                    chunk["metadata"]["chunk"] = chunk["metadata"].get("chunk_index", i)
                 chunks.extend(semantic_chunks)
-                
+
                 # 중첩 청크 생성 (검색 성능 향상)
                 if len(semantic_chunks) > 1:
                     overlap_chunks = self._create_overlapping_chunks(semantic_chunks, metadata)
+                    for i, chunk in enumerate(overlap_chunks):
+                        chunk["metadata"]["chunk"] = chunk["metadata"].get("chunk_index", len(semantic_chunks) + i)
                     chunks.extend(overlap_chunks)
             except Exception as e:
                 logger.warning(f"Error processing document {doc.get('metadata', {}).get('source_id', 'unknown')}: {e}")
                 continue
-        
+
         # 청크 정보 업데이트 및 source_id 할당
         for i, chunk in enumerate(chunks):
             chunks[i]["metadata"]["total_chunks"] = len(chunks)
@@ -126,9 +142,8 @@ class DocumentChunker:
             # chunks[i]["metadata"]["chunk_id"] = f"{metadata.get('file_hash', 'doc')}_{i}"
             if "source_id" not in chunks[i]["metadata"]:
                 chunks[i]["metadata"]["source_id"] = f"{chunks[i]['metadata'].get('file_hash', 'doc')}_chunk_{chunks[i]['metadata'].get('chunk_index', i)}"
-
-        logger.debug(f"{len(documents)}개 문서를 {len(chunks)}개 청크로 분할")
-        save_processed_file_metadata(chunks)
+            # Preserve content alias for backward compatibility
+            chunks[i]["content"] = chunks[i]["chunk"]
         return chunks
     
     def _analyze_document_structure(self, content: str) -> Dict[str, Any]:
@@ -195,6 +210,11 @@ class DocumentChunker:
             # Assign source_id for each chunk in section_chunks
             for idx, chunk in enumerate(section_chunks):
                 chunk["metadata"]["source_id"] = f"{metadata.get('file_hash', 'doc')}_chunk_{chunk['metadata'].get('chunk_index', idx)}"
+            # Convert any 'content' keys to 'chunk' keys
+            for chunk in section_chunks:
+                if "content" in chunk:
+                    chunk["chunk"] = chunk["content"]
+                    del chunk["content"]
             chunks.extend(section_chunks)
         else:
             # 일반 문서는 문단 및 문장 기반 분할
@@ -215,7 +235,7 @@ class DocumentChunker:
                         chunk_metadata["paragraph_indices"] = chunk_paragraphs
                         chunk_metadata["source_id"] = f"{metadata.get('file_hash', 'doc')}_chunk_{chunk_metadata['chunk_index']}"
                         chunks.append({
-                            "content": current_chunk.strip(),
+                            "chunk": current_chunk.strip(),
                             "metadata": chunk_metadata
                         })
                     
@@ -256,7 +276,7 @@ class DocumentChunker:
                 chunk_metadata["paragraph_indices"] = chunk_paragraphs
                 chunk_metadata["source_id"] = f"{metadata.get('file_hash', 'doc')}_chunk_{chunk_metadata['chunk_index']}"
                 chunks.append({
-                    "content": current_chunk.strip(),
+                    "chunk": current_chunk.strip(),
                     "metadata": chunk_metadata
                 })
         
@@ -305,7 +325,7 @@ class DocumentChunker:
                 chunk_metadata["paragraph_indices"] = list(range(start_idx, end_idx+1))
                 chunk_metadata["source_id"] = f"{metadata.get('file_hash', 'doc')}_chunk_{chunk_metadata['chunk_index']}"
                 chunks.append({
-                    "content": section_content,
+                    "chunk": section_content,
                     "metadata": chunk_metadata
                 })
             else:
@@ -330,7 +350,7 @@ class DocumentChunker:
                             chunk_metadata["is_section_part"] = True
                             chunk_metadata["source_id"] = f"{metadata.get('file_hash', 'doc')}_chunk_{chunk_metadata['chunk_index']}"
                             chunks.append({
-                                "content": current_chunk,
+                                "chunk": current_chunk,
                                 "metadata": chunk_metadata
                             })
                         
@@ -373,7 +393,7 @@ class DocumentChunker:
                     chunk_metadata["is_section_part"] = True
                     chunk_metadata["source_id"] = f"{metadata.get('file_hash', 'doc')}_chunk_{chunk_metadata['chunk_index']}"
                     chunks.append({
-                        "content": current_chunk,
+                        "chunk": current_chunk,
                         "metadata": chunk_metadata
                     })
         
@@ -422,8 +442,8 @@ class DocumentChunker:
         
         # 인접한 두 청크를 합쳐서 중첩 청크 생성
         for i in range(len(chunks) - 1):
-            chunk1 = chunks[i]["content"]
-            chunk2 = chunks[i+1]["content"]
+            chunk1 = chunks[i].get("chunk", chunks[i].get("content"))
+            chunk2 = chunks[i+1].get("chunk", chunks[i+1].get("content"))
             
             # 두 청크 합치기
             combined_content = chunk1 + "\n\n" + chunk2
@@ -438,19 +458,25 @@ class DocumentChunker:
             
             # 중첩 청크 추가
             overlap_chunks.append({
-                "content": combined_content,
+                "chunk": combined_content,
                 "metadata": overlap_metadata
             })
         
         return overlap_chunks
-    def chunk_text(self, text: str) -> List[str]:
+    def chunk_text(self, text: str, size: int = None) -> List[str]:
         """
         단일 텍스트를 기본 청크 크기 기준으로 단순 분할 (간이용)
         태깅 또는 테스트용 간단한 청크 생성
+        Args:
+            text: 분할할 텍스트
+            size: 청크 크기 (기본값은 self.default_chunk_size)
+        Returns:
+            List[str]: 분할된 청크 리스트
         """
+        chunk_size = size or self.default_chunk_size
         chunks = []
-        for i in range(0, len(text), self.default_chunk_size):
-            chunk = text[i:i + self.default_chunk_size].strip()
+        for i in range(0, len(text), chunk_size):
+            chunk = text[i:i + chunk_size].strip()
             if chunk:
                 chunks.append(chunk)
         return chunks
