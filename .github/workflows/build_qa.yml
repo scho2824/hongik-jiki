@@ -1,5 +1,3 @@
-
-
 name: Build QA Dataset
 
 # 워크플로 트리거: main 브랜치에 원본이 변경되거나 수동 실행
@@ -58,9 +56,9 @@ jobs:
           name: high_insight_qa_dataset_${{ github.sha }}
           path: data/qa/high_insight_qa_dataset.jsonl
 
-      # 7) (옵션) S3 배포: main 브랜치에서만 실행
+      # 7) (옵션) S3 배포: main 브랜치에서만 실행, DEPLOY_ROLE이 정의된 경우에만 실행
       - name: Deploy to S3
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != ''
         env:
           AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
         run: |
