@@ -34,8 +34,18 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Cache pip packages
+        id: pip-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: 의존성 설치
         run: |
+          echo "Cache hit? ${{ steps.pip-cache.outputs.cache-hit }}"
           pip install -r requirements.txt
 
       - name: Refined QA 생성

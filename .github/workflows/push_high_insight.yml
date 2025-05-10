@@ -10,11 +10,19 @@ jobs:
 
     steps:
       - name: 체크아웃 코드
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
           fetch-depth: 0
+
+      - name: 🛠 Ensure jq is installed
+        run: |
+          if ! command -v jq &> /dev/null; then
+            sudo apt-get update -y
+            sudo apt-get install -y jq
+          fi
+          jq --version
 
       - name: 🔖 현재 커밋 정보 출력
         run: |
@@ -32,6 +40,10 @@ jobs:
              --arg msg "$MSG" \
              '. |= {"metadata": {commit: $sha, timestamp: $date, message: $msg}, "qa": .}' \
              data/qa/high_insight_qa_dataset.json > tmp.json && mv tmp.json data/qa/high_insight_qa_dataset.json
+
+      - name: ✅ Validate JSON
+        run: |
+          jq empty data/qa/high_insight_qa_dataset.json
 
       - name: Push high_insight_qa_dataset.json
         run: |
