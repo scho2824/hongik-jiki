@@ -47,3 +47,18 @@ def print_welcome_message():
     print("정법은 통찰로 자신과 세상의 본질을 깨닫고, 역설로 우리의 상식을 뒤집어")
     print("홍익인간의 삶을 실현하는 데 목적이 있습니다.")
     print("=" * 60)
+
+
+# 문서 파일 검색 함수
+from pathlib import Path
+from typing import List, Union, Optional
+
+def find_documents(data_dir: Union[str, Path], exts: Optional[List[str]] = None) -> List[Path]:
+    """지정된 디렉토리에서 문서 파일(.txt 등) 목록을 재귀적으로 검색"""
+    exts = exts or [".txt", ".md", ".rtf"]
+    data_dir = Path(data_dir)
+    return [p for p in data_dir.rglob("*") if p.suffix in exts and p.is_file()]
+
+def ensure_dir(path: Union[str, Path]) -> None:
+    """디렉토리가 존재하지 않으면 생성"""
+    Path(path).mkdir(parents=True, exist_ok=True)

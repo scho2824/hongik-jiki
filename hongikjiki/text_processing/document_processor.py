@@ -100,8 +100,11 @@ class DocumentProcessor:
             docs_list = []
         all_new_chunks = []
         for doc in docs_list:
-            content = doc["content"]
-            metadata_in = doc["metadata"]
+            content = doc.get("content")
+            metadata_in = doc.get("metadata", {})
+            if not content:
+                logger.warning(f"문서에서 content가 없습니다: {file_path}")
+                continue
             normalized = self.text_normalizer.normalize(content)
             content_hash = hashlib.md5(normalized.encode('utf-8')).hexdigest()
             if content_hash in self.processed_hashes:
