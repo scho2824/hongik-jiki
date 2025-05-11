@@ -49,8 +49,9 @@ jobs:
           path: data/qa/high_insight_qa_dataset.jsonl
 
       - name: Deploy to S3
-        if: ${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != '' }}
+        if: ${{ github.ref == 'refs/heads/main' && env.DEPLOY_ROLE != '' }}
         env:
+          DEPLOY_ROLE: ${{ secrets.DEPLOY_ROLE }}
           AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
         run: |
           aws s3 cp data/qa/high_insight_qa_dataset.jsonl \
