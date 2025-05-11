@@ -56,7 +56,7 @@ jobs:
           python scripts/tag_from_qa_dataset.py
 
       - name: Upload tagged QA dataset
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: refined_high_insight_qa_dataset_tagged
           path: data/qa/refined_high_insight_qa_dataset_tagged.jsonl
