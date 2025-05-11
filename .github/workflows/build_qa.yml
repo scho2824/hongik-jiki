@@ -55,11 +55,6 @@ jobs:
         run: |
           python scripts/tag_from_qa_dataset.py
 
-      - name: Upload tagged QA dataset
-        uses: actions/upload-artifact@v3
-        with:
-          name: refined_high_insight_qa_dataset_tagged
-          path: data/qa/refined_high_insight_qa_dataset_tagged.jsonl
 
       - name: Build Chroma vector store
         run: |
@@ -68,11 +63,22 @@ jobs:
             --persist-dir data/vector_store \
             --embedding-model text-embedding-3-small
 
-      - name: Upload artefact
-        uses: actions/upload-artifact@v3
-        with:
-          name: high_insight_qa_dataset_${{ github.sha }}
-          path: data/qa/high_insight_qa_dataset.jsonl
+      - name: Deploy tagged QA to S3
+        if: ${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != '' }}
+        env:
+          AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
+        run: |
+          aws s3 cp data/qa/refined_high_insight_qa_dataset_tagged.jsonl \
+            s3://hongikjiki/qa/latest_tagged.jsonl --acl public-read
+
+      - name: Deploy raw QA to S3
+        if: ${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != '' }}
+        env:
+          AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
+        run: |
+          aws s3 cp data/qa/high_insight_qa_dataset.jsonl \
+            s3://hongikjiki/qa/latest.jsonl --acl public-read
+
 
       - name: Deploy to S3
         if: ${{ github.ref == 'refs/heads/main' && env.DEPLOY_ROLE != '' }}
