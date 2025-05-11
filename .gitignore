@@ -27,3 +27,7 @@ data/vector_store/
 data/tag_data/tag_index.json
 data/tag_data/tag_statistics.json
 fix_merge_chunks.py
+
+# Ignore large backup artifacts and mirror clone
+hongik-jiki-backup-*.zip
+hongik-jiki-mirror.git/

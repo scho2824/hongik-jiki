@@ -47,6 +47,16 @@ jobs:
         run: |
           python scripts/qa_lint.py data/qa/high_insight_qa_dataset.jsonl
 
+      - name: Tag QA dataset
+        run: |
+          python scripts/tag_from_qa_dataset.py
+
+      - name: Upload tagged QA dataset
+        uses: actions/upload-artifact@v3
+        with:
+          name: refined_high_insight_qa_dataset_tagged
+          path: data/qa/refined_high_insight_qa_dataset_tagged.jsonl
+
       - name: Build Chroma vector store
         run: |
           python scripts/build_vector_store.py \
