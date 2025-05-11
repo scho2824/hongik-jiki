@@ -19,72 +19,70 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+
     steps:
+      # 1️⃣ Checkout source
       - uses: actions/checkout@v4
 
+      # 2️⃣ Python setup + deps
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip'
+          cache: pip
 
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           pip install -e .
 
+      # 3️⃣ Generate / update QA dataset
       - name: Generate QA dataset
         run: |
           python -m hongikjiki.document_manager update_documents --data-dir data/jungbub_teachings
           python scripts/aggregate_qa.py --out data/qa/high_insight_qa_dataset.jsonl
 
-      - name: Use refined QA dataset
+      # 4️⃣ (Optional) use pre‑refined file on feature branches
+      - name: Use refined QA dataset (if exists)
+        if: ${{ github.ref != 'refs/heads/main' }}
         run: |
-          echo "Using pre-refined QA dataset"
-          cp data/qa/refined_high_insight_qa_dataset.jsonl data/qa/high_insight_qa_dataset.jsonl
+          if [ -f data/qa/refined_high_insight_qa_dataset.jsonl ]; then
+            cp data/qa/refined_high_insight_qa_dataset.jsonl data/qa/high_insight_qa_dataset.jsonl
+          fi
 
+      # 5️⃣ Validate basic JSON / structure
       - name: Validate QA dataset
         run: |
           python scripts/qa_lint.py data/qa/high_insight_qa_dataset.jsonl
 
+      # 6️⃣ Tagging
       - name: Tag QA dataset
         run: |
           python scripts/tag_from_qa_dataset.py
 
-      - name: Tag QA dataset
-        run: |
-          python scripts/tag_from_qa_dataset.py
-
-
+      # 7️⃣ Build vector store
       - name: Build Chroma vector store
         run: |
           python scripts/build_vector_store.py \
-            --qa-file data/qa/high_insight_qa_dataset.jsonl \
-            --persist-dir data/vector_store \
-            --embedding-model text-embedding-3-small
+            --qa_file data/qa/high_insight_qa_dataset.jsonl \
+            --persist_dir data/vector_store
 
-      - name: Deploy tagged QA to S3
-        if: ${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != '' }}
+      # 8️⃣ Upload tagged artefact for this run (always)
+      - name: Upload tagged QA dataset artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tagged_qa_${{ github.sha }}
+          path: data/qa/refined_high_insight_qa_dataset_tagged.jsonl
+
+      # 9️⃣ Deploy to S3 (main only & deploying repo has role)
+      - name: Deploy QA datasets to S3
+        if: "${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != '' }}"
         env:
           AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
         run: |
+          # raw
+          aws s3 cp data/qa/high_insight_qa_dataset.jsonl \
+            s3://hongikjiki/qa/latest.jsonl --acl public-read
+          # tagged
           aws s3 cp data/qa/refined_high_insight_qa_dataset_tagged.jsonl \
             s3://hongikjiki/qa/latest_tagged.jsonl --acl public-read
-
-      - name: Deploy raw QA to S3
-        if: ${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != '' }}
-        env:
-          AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
-        run: |
-          aws s3 cp data/qa/high_insight_qa_dataset.jsonl \
-            s3://hongikjiki/qa/latest.jsonl --acl public-read
-
-
-      - name: Deploy to S3
-        if: ${{ github.ref == 'refs/heads/main' && env.DEPLOY_ROLE != '' }}
-        env:
-          DEPLOY_ROLE: ${{ secrets.DEPLOY_ROLE }}
-          AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
-        run: |
-          aws s3 cp data/qa/high_insight_qa_dataset.jsonl \
-            s3://hongikjiki/qa/latest.jsonl --acl public-read
