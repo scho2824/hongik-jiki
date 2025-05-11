@@ -48,7 +48,7 @@ jobs:
       # 5) QA 데이터셋 검증 (형식·중복 등)
       - name: Validate QA dataset
         run: |
-          python scripts/qa_lint.py data/qa/high_insight_qa_dataset.jsonl
+          python ./scripts/qa_lint.py data/qa/high_insight_qa_dataset.jsonl
 
       # 6) Artefact 업로드 (다른 워크플로/사용자가 다운로드 가능)
       - name: Upload artefact
