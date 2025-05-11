@@ -40,7 +40,7 @@ jobs:
 
       - name: Validate QA dataset
         run: |
-          python ./scripts/qa_lint.py data/qa/high_insight_qa_dataset.jsonl
+          python scripts/qa_lint.py data/qa/high_insight_qa_dataset.jsonl
 
       - name: Upload artefact
         uses: actions/upload-artifact@v4
