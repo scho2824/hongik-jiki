@@ -51,6 +51,10 @@ jobs:
         run: |
           python scripts/tag_from_qa_dataset.py
 
+      - name: Tag QA dataset
+        run: |
+          python scripts/tag_from_qa_dataset.py
+
       - name: Upload tagged QA dataset
         uses: actions/upload-artifact@v3
         with:
