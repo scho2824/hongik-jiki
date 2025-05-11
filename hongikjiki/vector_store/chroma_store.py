@@ -522,3 +522,16 @@ class ChromaVectorStore(VectorStoreBase):
         Chroma는 자동으로 저장되므로 명시적인 persist는 불필요합니다.
         """
         logger.info("Chroma는 자동으로 저장되므로 persist 호출은 생략됩니다.")
+
+    def query(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
+        """
+        검색 쿼리를 기반으로 관련 문서를 반환하는 query 메서드
+
+        Args:
+            query (str): 검색할 쿼리 텍스트
+            top_k (int): 반환할 결과 개수
+
+        Returns:
+            List[Dict[str, Any]]: 관련 문서 리스트
+        """
+        return self.search(query, k=top_k)

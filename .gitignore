@@ -18,9 +18,11 @@ logs/
 # Ignore generated and intermediate data
 data/tag_data/auto_tagged/
 data/processed/
-# Ignore all generated QA files, but allow the high_insight dataset
+# Ignore all generated QA files, but allow specific managed files and directories
 data/qa/*
+!data/qa/refined_high_insight_qa_dataset.jsonl
 !data/qa/high_insight_qa_dataset.json
+!data/qa/managed/
 data/vector_store/
 data/tag_data/tag_index.json
 data/tag_data/tag_statistics.json

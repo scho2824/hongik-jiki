@@ -23,7 +23,7 @@ def hash_text(text):
 
 def load_qa_pairs(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+        return [json.loads(line) for line in f if line.strip()]
 
 def convert_to_documents(qa_pairs):
     documents = []
@@ -127,12 +127,47 @@ def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_na
     vector_store.persist()
     logger.info("✅ 벡터 저장소 구축 완료!")
 
+def test_vector_query(prompt: str, k: int = 3):
+    vector_store = ChromaVectorStore(
+        collection_name="hongikjiki_jungbub",
+        persist_directory="data/vector_store",
+        embeddings=get_embeddings("openai", model="text-embedding-3-small")
+    )
+    embedding = vector_store.embeddings.embed_query(prompt)
+
+    # robust similarity search
+    if hasattr(vector_store, "similarity_search_by_vector"):
+        results = vector_store.similarity_search_by_vector(embedding, k=k)
+    elif hasattr(vector_store, "vectorstore"):
+        results = vector_store.vectorstore.similarity_search_by_vector(embedding, k=k)
+    elif hasattr(vector_store, "store"):
+        results = vector_store.store.similarity_search_by_vector(embedding, k=k)
+    elif hasattr(vector_store, "query"):
+        results = vector_store.query(prompt, top_k=k)
+    else:
+        raise AttributeError("No available similarity search method found in ChromaVectorStore")
+
+    for i, doc in enumerate(results, 1):
+        print(f"\n🔹 Top {i}")
+        print(doc["content"])
+        print(f"📎 Metadata: {doc['metadata']}")
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--qa_file", type=str, required=True, help="Path to QA JSON file")
+    parser.add_argument("--qa_file", type=str, help="Path to QA JSON file (required when building vector store)")
     parser.add_argument("--persist_dir", type=str, default="./data/vector_store", help="Path to save Chroma vector store")
     parser.add_argument("--collection_name", type=str, default="hongikjiki_jungbub", help="Name of the Chroma collection")
+    parser.add_argument("--query", type=str, help="Run a similarity query")
+    parser.add_argument("--top_k", type=int, default=3, help="Top K results to return")
+
     args = parser.parse_args()
 
-    build_vector_store(args.qa_file, persist_dir=args.persist_dir, collection_name=args.collection_name)
+    # validation: require qa_file unless running query mode
+    if not args.query and not args.qa_file:
+        parser.error("either --qa_file or --query must be provided")
+
+    if args.query:
+        test_vector_query(args.query, args.top_k)
+    else:
+        build_vector_store(args.qa_file, persist_dir=args.persist_dir, collection_name=args.collection_name)

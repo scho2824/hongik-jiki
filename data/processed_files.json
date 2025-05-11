@@ -6709,5 +6709,1585 @@
     "processed_time": "2025-05-10T09:29:09.700568",
     "chunks_count": 4,
     "vector_ids": []
+  },
+  "jungbub_qa_b0726b5e943d72ad39a519985bbb7b85": {
+    "hash": "67e2c3b6c87649a33ecff678839d3d57",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_0_592951"
+    ],
+    "source_text": "Q: What is in 4w6Iujy3ioE.txt?\nA: 제목: [정법강의] 194강 성형수술-3\n언어: ko\n\n2.9 - 7.5: 우리가 다이아몬드 이만한 걸 하나 딱\n5.1"
+  },
+  "jungbub_qa_7213d41f78c4e7f07df8ba2a7d021544": {
+    "hash": "ee12b77e5dc364a40bd0210847b87bca",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_1_3405687"
+    ],
+    "source_text": "Q: What is in 8FpwmUB0dVE.txt?\nA: 제목: [정법강의] 404강 여자대선후보, 대통령 친인척 비리\n언어: ko\n\n3.1 - 6.7: [음악]\n14.6 - "
+  },
+  "jungbub_qa_44ffe3fb8e75664b55ce6e0709880181": {
+    "hash": "ff14f8485b503a70c4a8bfdc81ec98d6",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_3_1833338"
+    ],
+    "source_text": "Q: What is in 3yQGjwRjxVk.txt?\nA: 제목: [정법강의] 105강 종교에 여자들이 많은 이유\n언어: ko\n\n5.0 - 8.3: [음악]\n12.6 - 20.2"
+  },
+  "jungbub_qa_a33802f4c075dbe2ad981c7a93844e16": {
+    "hash": "75c09abf7366a331b7fcfab95a25d601",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_4_1986522"
+    ],
+    "source_text": "Q: What is in 9Afzj4EFSdY.txt?\nA: 제목: [정법강의] 283강 [수행, 참선시리즈] 7. 수련의 단계\n언어: ko\n\n18.9 - 24.6: 보세요 지식인"
+  },
+  "jungbub_qa_3b6cdfe8559f9c7d7eaed3dd1afd4d6f": {
+    "hash": "cec1b29cc4a7f6a551c29bd1a1fb8bd0",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_5_3949580"
+    ],
+    "source_text": "Q: What is in 4CIEYAFw6Tk.txt?\nA: 제목: [정법강의] 431강 역지사지(易地思之)-2 (2/3)\n언어: ko\n\n3.3 - 9.7: 선생님 이야기를 듣고 "
+  },
+  "jungbub_qa_d2eae124afe6d113f0ea788859dbcea4": {
+    "hash": "628ccd4fcaf3879d0d56fdeb3e648574",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_6_9153657"
+    ],
+    "source_text": "Q: What is in --1-uqR7Kws.txt?\nA: 제목: [정법강의] 446강 개같이 벌어서 정승처럼 쓴다-1\n언어: ko\n\n3.1 - 6.6: [음악]\n13.3 - 1"
+  },
+  "jungbub_qa_49741ab671dfe86970e5714de35c2f26": {
+    "hash": "bf6eb8cdc68f2ca07206c47fa4fc9e01",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_7_2058961"
+    ],
+    "source_text": "Q: What is in 2KV74fHK_q4.txt?\nA: 제목: [정법강의] 244강 모나고 고집 세고 못된 성격-1\n언어: ko\n\n3.1 - 6.7: [음악]\n14.2 - 1"
+  },
+  "jungbub_qa_c1aa81ad7f433fe863bb3de3297b98f7": {
+    "hash": "56a879078edb5153fafd57ba87126733",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_8_3363064"
+    ],
+    "source_text": "Q: What is in d0D_xqCsnZE.txt?\nA: 제목: [홍익인간 인성교육] 8526강 연예인의 유튜브 채널 운영\n언어: ko\n\n3.8 - 14.6: 아 아 아 아 으"
+  },
+  "jungbub_qa_f129bab7c3ed65a23a16bfe901168c37": {
+    "hash": "cfb0b069773105ca1b19bb7de97b1271",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_9_5009368"
+    ],
+    "source_text": "Q: What is in 0SNl338Ywsw.txt?\nA: 제목: [정법강의] 101강 장학금을 주는 자와 받는 자\n언어: ko\n\n4.9 - 8.2: [음악]\n16.0 - 22."
+  },
+  "jungbub_qa_9e262947e70f071842efc7c12c679dd8": {
+    "hash": "545037b2164ac9850b73a01717c7d1e5",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_10_4779906"
+    ],
+    "source_text": "Q: What is in DuoNbr5dwMU.txt?\nA: 제목: [홍익인간 인성교육][청춘포럼] 9533강 진정한 우리가 되기 위한 존중\n언어: ko\n\n17.0 - 18.0: "
+  },
+  "jungbub_qa_bf33f7e316e6481a31d8dd17487dcc69": {
+    "hash": "16408c91b8ce2382894ac5988530d57e",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_11_5522116"
+    ],
+    "source_text": "Q: What is in 6WEg4P65GY8.txt?\nA: 제목: [정법강의] 247강  2012년 덕담-1\n언어: ko\n\n3.0 - 6.6: [음악]\n9.3 - 16.6: 아 "
+  },
+  "jungbub_qa_0f43b394486a30c32400bcbd8dcf8a3d": {
+    "hash": "038b70e6ca4bbb0126346308c25613f6",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_12_7572457"
+    ],
+    "source_text": "Q: What is in _lSIoGEKzpA.txt?\nA: 제목: [정법강의] 178강 윤회\n언어: ko\n\n3.1 - 6.6: [음악]\n10.0 - 17.4: 어 우리 인간과 동"
+  },
+  "jungbub_qa_b14f3cd2ea9e1eae4ed858ddd682356a": {
+    "hash": "da87d26e859dc2144ca9009c399044ed",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_13_5313525"
+    ],
+    "source_text": "Q: What is in 2_hb3_VNYaI.txt?\nA: 제목: [정법강의] 231강 연예인-1  미인박복\n언어: ko\n\n3.0 - 6.5: [음악]\n17.4 - 24.4: 그"
+  },
+  "jungbub_qa_fddce2a1b1687fbe33baacb5b72ec659": {
+    "hash": "32d42d78b72a823abf855cbd482f910c",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_14_9828385"
+    ],
+    "source_text": "Q: What is in 3UwFHJFSrnA.txt?\nA: 제목: [정법강의] 186강 평생교육-2\n언어: ko\n\n3.5 - 9.1: 우리 국민들의 지금 이게 연세 많은\n6.0 "
+  },
+  "jungbub_qa_c9083114ba0482a911783d75965487a8": {
+    "hash": "db9dbb3392af7abf0501712aa0c19896",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_15_1475937"
+    ],
+    "source_text": "Q: What is in 9gw_DB3QuhQ.txt?\nA: 제목: [정법강의] 420강 정치2 - 20~30대 정치참여, 국회의원정년\n언어: ko\n\n3.5 - 12.8: 아이들이"
+  },
+  "jungbub_qa_9afc9514ad5d071da300f4d8d7cff672": {
+    "hash": "4bab3871ae8738e0a979599fce86222e",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_16_4192386"
+    ],
+    "source_text": "Q: What is in 7Upz3kfEZdc.txt?\nA: 제목: [정법강의] 286강 [수행, 참선시리즈] 9. 영통, 접신-1\n언어: ko\n\n3.1 - 6.6: [음악]\n19"
+  },
+  "jungbub_qa_5bfce1a130d5ac30782458885f4da781": {
+    "hash": "ffce2fbdba9de8cc8c6696a9c338ba15",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_17_5785853"
+    ],
+    "source_text": "Q: What is in _h1cXSY9Plg.txt?\nA: 제목: [정법강의] 273강 개명(改名)-2\n언어: ko\n\n4.3 - 10.6: 앞으로에 하면 장난이\n7.5 - 13."
+  },
+  "jungbub_qa_8aa0b1ce041d8758f28e1c113b6e69b0": {
+    "hash": "72251daee7ac0f5951ba6b5adb8442fb",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_19_6668562"
+    ],
+    "source_text": "Q: What is in 2DSUb31FdTo.txt?\nA: 제목: [정법강의] 207강 대화-2 내 말을 잘 듣는 상대를 편애\n언어: ko\n\n3.4 - 8.6: 우리가 이제 대화"
+  },
+  "jungbub_qa_874bc17115446f5bb2d3dc4ae0b425ec": {
+    "hash": "4027fc0a850817c6c0e77d2648051042",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_20_8605948"
+    ],
+    "source_text": "Q: What is in 6jA3We695js.txt?\nA: 제목: [정법강의] 114강 정치 쇄신과 정치인 물갈이 -3\n언어: ko\n\n5.0 - 8.2: [음악]\n8.7 - 15"
+  },
+  "jungbub_qa_7b40f3809e7dbb9e9a74d6d2762e8af0": {
+    "hash": "a90c6019bc218e23b8bc387a056c4ff0",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_21_4498117"
+    ],
+    "source_text": "Q: What is in RY5KKEE5EoE.txt?\nA: 제목: [홍익인간 인성교육][청춘포럼] 9531강 화가 잘나고 밤에 무서움을 느낍니다\n언어: ko\n\n17.4 - 18."
+  },
+  "jungbub_qa_0bb3a158b5586913646b35f18ce863fd": {
+    "hash": "969ea478674f95b776cbb506e3df4695",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_22_8635558"
+    ],
+    "source_text": "Q: What is in _BOUdNdTV7I.txt?\nA: 제목: [홍익인간 인성교육] 8543강 착하게 살지 말라 VS 남을 위해 살라\n언어: ko\n\n1.3 - 9.1: 아 으"
+  },
+  "jungbub_qa_a0b1b1e5786bd78def5b2aba911a3e7a": {
+    "hash": "b95d0909c8ba63b87b7f6c18b23830a4",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_23_8938739"
+    ],
+    "source_text": "Q: What is in 4k4Rhxp4aZk.txt?\nA: 제목: [정법강의] 240강 우리민족의 특별한 역할-3\n언어: ko\n\n3.0 - 7.9: [음악]\n4.5 - 11.4:"
+  },
+  "jungbub_qa_bc18a16d0311ade861fc038fa723fee6": {
+    "hash": "f27bc2d7c94bd67d809d031c1af6e850",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_24_9890485"
+    ],
+    "source_text": "Q: What is in 7-qk-FSBnEs.txt?\nA: 제목: [정법강의] 157강 시어머니 모시기\n언어: ko\n\n3.2 - 6.5: [음악]\n10.6 - 16.6: 그 관계"
+  },
+  "jungbub_qa_2a4340fa4be0f93dccb5b917cac9a108": {
+    "hash": "ae0f3503f0e94ed852f2569ed4bb19d7",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_26_5379718"
+    ],
+    "source_text": "Q: What is in 2Blm-u4vSuc.txt?\nA: 제목: [정법강의] 288강 [수행, 참선시리즈] 9. 영통, 접신-3\n언어: ko\n\n4.3 - 10.7: 너는 지금 "
+  },
+  "jungbub_qa_daeba2365eb6dfe915884e483e0a2af1": {
+    "hash": "382667009d7fbcffdea83618791a8094",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_27_1493046"
+    ],
+    "source_text": "Q: What is in -T5lyd_4suI.txt?\nA: 제목: [정법강의] 306강 [이병철회장의 잊혀진질문 2-3] 창조주 증명\n언어: ko\n\n14.7 - 19.7: 어 그"
+  },
+  "jungbub_qa_b39846f2f2561aaa58d8f61d868aabaa": {
+    "hash": "0206c5ff803892b5a0069e51f7a4730c",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_28_8006820"
+    ],
+    "source_text": "Q: What is in -uchPYjVfL0.txt?\nA: 제목: [정법강의] 211강 상대의 말을 되받아친다\n언어: ko\n\n3.0 - 6.5: [음악]\n16.7 - 22.1: "
+  },
+  "jungbub_qa_7b8a26c4cacdaec4516849b1e7ca23b8": {
+    "hash": "3d6ecbbb35d8cacab720e6dc453e8eec",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_29_903147"
+    ],
+    "source_text": "Q: What is in 6ufEjjQDsEs.txt?\nA: 제목: [정법강의] 269강 신묘년 동안거 회향-2\n언어: ko\n\n4.2 - 12.8: 이때까지 지도자가 없었어도\n7."
+  },
+  "jungbub_qa_01b376e770b2b007cafa93867c1ed20b": {
+    "hash": "475020a410be264ab71dbf87d06d530e",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_30_5211273"
+    ],
+    "source_text": "Q: What is in 0qOiQ8d-nx0.txt?\nA: 제목: [정법강의] 202강 사랑 확인\n언어: ko\n\n3.1 - 6.6: [음악]\n15.0 - 20.1: 어른이 아니니"
+  },
+  "jungbub_qa_d3e837ef56b619916a6ceec5d579ec43": {
+    "hash": "41897b32663b3b5c03a79f25602a5c50",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_31_4834152"
+    ],
+    "source_text": "Q: What is in 6U7xSNwzVK4.txt?\nA: 제목: [정법강의] 246강 자존심\n언어: ko\n\n3.2 - 6.7: [음악]\n11.6 - 17.2: 우리 자존심 대단"
+  },
+  "jungbub_qa_0eb5e3be77bfe0ed13994a75785b4a0a": {
+    "hash": "a5263bc91877ad64012090cdabd15079",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_32_420300"
+    ],
+    "source_text": "Q: What is in 1Jz9-qtKYt4.txt?\nA: 제목: [정법강의] 411강 산에 가고 싶은 마음\n언어: ko\n\n3.1 - 6.7: [음악]\n16.0 - 22.4: 우"
+  },
+  "jungbub_qa_9df36a20fd9e81b0f4ade78dede06c20": {
+    "hash": "2aab6cbe2f8784d88f2dd39dd4150a87",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_33_5201232"
+    ],
+    "source_text": "Q: What is in _MhJJhq5CHk.txt?\nA: 제목: [정법강의] 238강 우리민족의 특별한 역할-1\n언어: ko\n\n12.2 - 18.2: 어 요거를 설명을 하기에는"
+  },
+  "jungbub_qa_5272455d318c5cfd2d8b20212caf31f8": {
+    "hash": "4ed865f16ed7d8fd7fe521cc3f929a3f",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_34_7211831"
+    ],
+    "source_text": "Q: What is in ubLv_0z0gKY.txt?\nA: 제목: [홍익인간 인성교육] 8538강 모순을 알았지만 잘 바뀌지 않는다\n언어: ko\n\n9.7 - 17.5: 8538강"
+  },
+  "jungbub_qa_53927c912947bf69e458ffbf89535c3f": {
+    "hash": "682bb3a7cd1eda3f257b29e90bcc2b06",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_35_6469129"
+    ],
+    "source_text": "Q: What is in 1mL0R9-HgXA.txt?\nA: 제목: [정법강의] 489강 가족-2 바른 육아와 뒷바라지 (2/6)\n언어: ko\n\n3.4 - 12.1: 동문 하고 있"
+  },
+  "jungbub_qa_9cbebec7aace1115b6d9366c2fd99ab6": {
+    "hash": "c593b32993b7b4ad8a9fc896118dc90a",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_36_9754325"
+    ],
+    "source_text": "Q: What is in 2QL4jfvNdl0.txt?\nA: 제목: [정법강의] 464강 지혜와 겸손-1\n언어: ko\n\n3.0 - 6.5: [음악]\n12.0 - 19.0: 지혜를 "
+  },
+  "jungbub_qa_814f3ac230384e7fbf26b7e3d3ec37a6": {
+    "hash": "d92156bf121f370b5db0fbf7c0099ea4",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_37_6429478"
+    ],
+    "source_text": "Q: What is in 1ofBaVsK_Hg.txt?\nA: 제목: [정법강의] 200강 공황장애-1\n언어: ko\n\n3.1 - 6.7: [음악]\n17.4 - 25.0: 우리가 공황"
+  },
+  "jungbub_qa_9e82fd6867628b80fff62aaf368cfe16": {
+    "hash": "1e83906bf9f102152189818eba28865d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_38_8377105"
+    ],
+    "source_text": "Q: What is in 3UP1fuhL0sk.txt?\nA: 제목: [정법강의] 327강 [잊혀진 질문 9-2] 종교가 필요한가\n언어: ko\n\n3.6 - 9.0: 이래서이 사람들이"
+  },
+  "jungbub_qa_cce26ff1581103dc35823581b4e93822": {
+    "hash": "5bc34fa6c461f9dbd639647beb983c11",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_39_3206005"
+    ],
+    "source_text": "Q: What is in 7kjRkxFn4Eg.txt?\nA: 제목: [정법강의] 141강 올해는 서쪽으로 이사하면 좋다는데-1\n언어: ko\n\n14.2 - 23.2: 아 그 이동수 "
+  },
+  "jungbub_qa_fe1d45edbe952cc2b047c9a68d342966": {
+    "hash": "43a93199b9230185d05efcf419f4be34",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_40_6462546"
+    ],
+    "source_text": "Q: What is in 4_Wa1Pewsfo.txt?\nA: 제목: [정법강의] 138강 2012년 흑룡해 - 1\n언어: ko\n\n5.0 - 8.3: [음악]\n17.2 - 25.6:"
+  },
+  "jungbub_qa_45b345c81fc1d0d55328581d65cd84a3": {
+    "hash": "4f295c3f89392b127565eb813e9b20a1",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_41_2686061"
+    ],
+    "source_text": "Q: What is in -KeyhtQ-y-M.txt?\nA: 제목: [정법강의] 304강 [이병철회장의 잊혀진질문 2-1] 창조주 증명\n언어: ko\n\n3.2 - 25.3: [음악]"
+  },
+  "jungbub_qa_9dce423b2629a552555809bc50e6cc95": {
+    "hash": "0aa5ef73ac5ace3000c43892d590c710",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_42_7134915"
+    ],
+    "source_text": "Q: What is in -mEX1pLFk_g.txt?\nA: 제목: [정법강의] 430강 역지사지(易地思之)-1 (1/3)\n언어: ko\n\n3.1 - 6.6: [음악]\n20.4 - "
+  },
+  "jungbub_qa_17ad57bb49a857552ead5bfa413538fa": {
+    "hash": "f5e59fd5695dac8be6ca26be368982c6",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_43_2409576"
+    ],
+    "source_text": "Q: What is in _UeWJ7Sm5pU.txt?\nA: 제목: [정법강의] 126강 저렇게 하면 될텐데\n언어: ko\n\n14.8 - 20.0: 우리가 살면서 이렇게 해가지고 어"
+  },
+  "jungbub_qa_a1735773cf9f48e6b2ca42fd409e37c7": {
+    "hash": "0216fcfd8761cbca713b20c66201371d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_45_2752595"
+    ],
+    "source_text": "Q: What is in _G6DLJrBWNM.txt?\nA: 제목: [정법 시사/이슈] 402강 박찬호, 문대성의 성공미래-2\n언어: ko\n\n3.8 - 8.6: 그게 이제 내가 이"
+  },
+  "jungbub_qa_004d81722b7331eed1459cecd339e12b": {
+    "hash": "47affc98c2e534b324515574fa6bb3e6",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_47_1923809"
+    ],
+    "source_text": "Q: What is in 0seMiruT3YU.txt?\nA: 제목: [정법강의] 224강 도움받은 사람들\n언어: ko\n\n3.1 - 6.4: [음악]\n16.6 - 22.2: 그 지금"
+  },
+  "jungbub_qa_8869d4bfba9c5f617acac07e784571df": {
+    "hash": "363847e05a3056d6c335374a80adcc73",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_48_277164"
+    ],
+    "source_text": "Q: What is in _9tOGIkAMgo.txt?\nA: 제목: [정법강의] 266강 간에 붙었다 쓸개에 붙었다-2 악담\n언어: ko\n\n3.1 - 7.4: [음악]\n5.3 - "
+  },
+  "jungbub_qa_ac38aa039c56cb1c65ab7ae65a2d99be": {
+    "hash": "3aded1d11d1c597361c1cfc87e170dcc",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_49_2707026"
+    ],
+    "source_text": "Q: What is in 1iSPHT8K-f4.txt?\nA: 제목: [정법강의] 104강 종교단체 쇄신-2\n언어: ko\n\n5.5 - 11.6: 종교가 앞으로 이때까지 한 바탕은\n8"
+  },
+  "jungbub_qa_dfccce552717c51504e71fced005a484": {
+    "hash": "a4d8be531defdfde1e4026b4510337ca",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_50_2770811"
+    ],
+    "source_text": "Q: What is in _0SIgRYbdhk.txt?\nA: 제목: [정법강의] 275강 자식 참교육\n언어: ko\n\n3.2 - 6.7: [음악]\n17.7 - 22.8: 우리가 빛이"
+  },
+  "jungbub_qa_bbc1bda8db272fbe492fadbd62857c06": {
+    "hash": "a347183fdcc270daa6d3ca28c4c4d073",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_51_4082932"
+    ],
+    "source_text": "Q: What is in 2ynlh-5tsSc.txt?\nA: 제목: [정법강의] 473강 싫증 잘낸다, 거짓말\n언어: ko\n\n3.1 - 6.7: [음악]\n11.0 - 18.7: 오"
+  },
+  "jungbub_qa_3ea35254d9eae55271bf5e1359619848": {
+    "hash": "80fa94b8a371c01ba4bab72ee28ae7b8",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_52_3097486"
+    ],
+    "source_text": "Q: What is in kHy3ReKxugI.txt?\nA: 제목: [홍익인간 인성교육][청춘포럼] 9529강 어머니의 지원으로 창업 준비 중\n언어: ko\n\n16.7 - 17.7:"
+  },
+  "jungbub_qa_02c981dfa0c363cea6d97beacd89852a": {
+    "hash": "966a9807697123679c5137556d2831ba",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_53_154914"
+    ],
+    "source_text": "Q: What is in 8otGuK42bUg.txt?\nA: 제목: [정법강의] 400강 철 없는 디지털-2\n언어: ko\n\n4.2 - 9.7: 우리 자식한테 혼신을 안\n6.0 - "
+  },
+  "jungbub_qa_b9c4ffae0f853507cfeefa763bc4f600": {
+    "hash": "e6be9e702121f846e4e6b181aefbbd82",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_54_2658219"
+    ],
+    "source_text": "Q: What is in 0fACBdnwgrw.txt?\nA: 제목: [정법강의] 214강 미래의 사주-1\n언어: ko\n\n3.0 - 6.6: [음악]\n7.9 - 11.6: 우리 사주"
+  },
+  "jungbub_qa_aeffcbc6b822ef454f288c872c650d68": {
+    "hash": "46a2de7423e832826cf3cff7c9510660",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_55_9358602"
+    ],
+    "source_text": "Q: What is in 5Mlo0Ymbjnc.txt?\nA: 제목: [정법강의] 196강 공부거리-2(2_2)\n언어: ko\n\n2.8 - 6.4: [음악]\n16.6 - 22.2: 어"
+  },
+  "jungbub_qa_48572d61e6b409e4983027bb58c9a0b5": {
+    "hash": "a4d73ca2f88218ea57fce183d6d315a7",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_56_5823236"
+    ],
+    "source_text": "Q: What is in 4eeIQxlxkNw.txt?\nA: 제목: [정법강의] 210강 감이 빠르다\n언어: ko\n\n3.0 - 6.6: [음악]\n15.4 - 20.5: 당신은 지금"
+  },
+  "jungbub_qa_e1af00c8967c8c4d752fdb43cd0d51da": {
+    "hash": "c69d6acca87414d6a8066d2a82606eaa",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_57_1911138"
+    ],
+    "source_text": "Q: What is in 3eyRtJhfeKA.txt?\nA: 제목: [정법강의] 279강 [수행, 참선 시리즈] 3. 수행, 수련의 근본\n언어: ko\n\n8.1 - 13.3: 수련 "
+  },
+  "jungbub_qa_219f96f21a88c6f7f7c5438a204416b1": {
+    "hash": "565a73aa2ecc53be363b588913c28f9d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_58_4514720"
+    ],
+    "source_text": "Q: What is in 9EOY3c0AZSs.txt?\nA: 제목: [정법강의] 289강 [수행, 참선시리즈] 10. 공부법과 기 응체\n언어: ko\n\n3.0 - 6.5: [음악]\n"
+  },
+  "jungbub_qa_da705f8eb7ed2a8cfcc2a1a74fc4c30e": {
+    "hash": "56160da572f5ad4532f96d529e501e51",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_59_8358877"
+    ],
+    "source_text": "Q: What is in Xl-5gJb0OjY.txt?\nA: 제목: [홍익인간 인성교육][청춘포럼] 9530강 인연을 만나지 못해 고민입니다\n언어: ko\n\n17.2 - 18.2: "
+  },
+  "jungbub_qa_ac64a00cf5aea828b192095fd80d7963": {
+    "hash": "b9ed215a5867d7962c9101b8817b050a",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_60_1164910"
+    ],
+    "source_text": "Q: What is in -8ZnetO2h8M.txt?\nA: 제목: [정법강의] 307강 [잊혀진질문 3-1] 창조론 vs 진화론\n언어: ko\n\n3.2 - 11.7: [음악]\n9."
+  },
+  "jungbub_qa_30864d4ec2688b0c9e16c73d88ddad93": {
+    "hash": "ab94012d6c7b69f7f4e940b297d72dc2",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_61_3905176"
+    ],
+    "source_text": "Q: What is in 5tAaUaeaD94.txt?\nA: 제목: [정법강의] 221강 친정어머니, 시어머니 간섭\n언어: ko\n\n3.1 - 6.6: [음악]\n17.2 - 23.7"
+  },
+  "jungbub_qa_32a912a561b2e29dcb8ad5e2f801b740": {
+    "hash": "18c1ab527ded2e4250b1b9fc4d1f5ecf",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_62_4490399"
+    ],
+    "source_text": "Q: What is in 3YPApHF8oWU.txt?\nA: 제목: [정법강의] 435강 이장, 묘가 없어진다\n언어: ko\n\n3.1 - 6.7: [음악]\n21.7 - 28.1: 그"
+  },
+  "jungbub_qa_9432966683af5d0b8c5a99d3dfae0368": {
+    "hash": "7e998166d9bf1492173cc77f94333aca",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_63_688439"
+    ],
+    "source_text": "Q: What is in hongik_human.txt?\nA: 홍익인간이란 인간을 널리 이롭게 하는 이념입니다. 천공 스승님은 홍익인간이 우리나라의 건국이념이자 인류의 보편적 가치"
+  },
+  "jungbub_qa_e9004a8e72aa7af0047755e22156ce74": {
+    "hash": "4840c70b4e093b4a0dac6769ccf6267d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_64_7839283"
+    ],
+    "source_text": "Q: What is in 0vwlgzDhOxE.txt?\nA: 제목: [정법강의] 320강 [잊혀진질문 7-3] 예수-인간형상\n언어: ko\n\n3.1 - 6.6: [음악]\n19.1 -"
+  },
+  "jungbub_qa_52f9050f62468351f39eade79e8e36ae": {
+    "hash": "103f456078b1497509a531c7e3f69905",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_65_4607895"
+    ],
+    "source_text": "Q: What is in test_document.txt?\nA: 정법1강 - 홍익인간의 의미\n\n홍익인간은 \"널리 인간을 이롭게 한다\"는 의미로, 한국의 건국이념입니다.\n이는 단순한"
+  },
+  "jungbub_qa_26705609aec4d3f852fb8278ace298b7": {
+    "hash": "43aaba78be2ba4e9c999b09b62864742",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_66_8467991"
+    ],
+    "source_text": "Q: What is in 3y_CxAEnyJo.txt?\nA: 제목: [정법강의] 256강 감정 해소-1\n언어: ko\n\n2.9 - 6.4: [음악]\n14.8 - 20.0: 해소하는 "
+  },
+  "jungbub_qa_7bac12dd4cd99f838b8508ba3d0a4664": {
+    "hash": "9511c2a00253e76438c2d3edb43b067d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_67_1471796"
+    ],
+    "source_text": "Q: What is in 3to7_law.txt?\nA: 3대7 법칙은 정법의 중요한 원리 중 하나로, 우주와 인간 세계의 구성 비율에 관한 법칙입니다. 천공 스승님은 모든 것이 3"
+  },
+  "jungbub_qa_cc6161971ba34ece86c85731f7fcca76": {
+    "hash": "c18f47e97cf3bef2bc1f61f250959e0b",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_68_766222"
+    ],
+    "source_text": "Q: What is in natural_law.txt?\nA: 자연의 법칙을 따르는 것은 정법의 핵심 가르침 중 하나입니다. 천공 스승님은 자연의 법칙을 거스르면 반드시 그에 따른 "
+  },
+  "jungbub_qa_a823f05d2ff1df0fc95416743f3a4a0b": {
+    "hash": "151841fe8f94e31e110c4ebcf645ed36",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_69_3206453"
+    ],
+    "source_text": "Q: What is in jungbub.txt?\nA: 정법(正法)은 올바른 법, 바른 가르침이라는 뜻으로, 우주의 근본 원리와 조화를 이루는 삶의 방식을 의미합니다. \n정법은 모든"
+  },
+  "jungbub_qa_2693193962c57d2deb3c8246c802279c": {
+    "hash": "2cca8afbc766e12af6ef3c58fbf842a4",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_70_9747318"
+    ],
+    "source_text": "Q: What is in hongik.txt?\nA: 홍익인간(弘益人間)이란 널리 인간을 이롭게 한다는 뜻으로, 우리 민족의 건국이념입니다. \n이는 단순한 구호가 아니라 자신과 타인"
+  },
+  "jungbub_qa_bb72f90bdc3e926e7438493033d055f2": {
+    "hash": "c60648ce20043fc9438a688446d50336",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_72_7475104"
+    ],
+    "source_text": "Q: What is in Youtube_0087강 왜 평균수명이 늘어나나요-2.txt?\nA: 87강 왜 평균수명이 늘어나나요?-2\n질문: 한국인의 평"
+  },
+  "jungbub_qa_37dd859f035d2a5a589dc41ae2c84412": {
+    "hash": "2f309e370016f75acb61e3bf07ada785",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_73_2039336"
+    ],
+    "source_text": "Q: What is in Youtube_0083강 청년실업-3 대학 4년 공부.txt?\nA: 83강. 청년실업-3 대학 4년 공부\n질문1 : 40대"
+  },
+  "jungbub_qa_12f331456e9d7df5d75fb5fee187b521": {
+    "hash": "824f6f0b4e97b670c628e4db57dd1860",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_74_8053238"
+    ],
+    "source_text": "Q: What is in Youtube_0069강 대형마트의 지역상권 점령-1.txt?\nA: 69강 대형마트의 지역상권 점령-1\n질문: 요즘 대기"
+  },
+  "jungbub_qa_55f77b00bd6e7b0424bcf46a94ea1743": {
+    "hash": "fcd4001f589830e95c74d6a1c60a3ce0",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_75_1045309"
+    ],
+    "source_text": "Q: What is in Youtube_0099강 유난히 남의 허물이 잘 보인다.txt?\nA: 99강 유난히 남의 허물이 잘 보인다\n질문 : 상대"
+  },
+  "jungbub_qa_d76a11af87a1395452dfe4817de54be8": {
+    "hash": "6038c8d213caa98993d87b6a750d34a8",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_76_6093532"
+    ],
+    "source_text": "Q: What is in Youtube_0053강 억세게 재수 좋은 자 vs 지지리도 재수 없는 자.txt?\nA: 53강 억세게 재수 좋"
+  },
+  "jungbub_qa_945e551bfd1c41fecceebea8ff6d6e4e": {
+    "hash": "a552c5bd4f34c3997e4f185f7be90f98",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_77_5280248"
+    ],
+    "source_text": "Q: What is in Youtube_0042강 동지 불공.txt?\nA: 42강 동지불공\n질문 : 해마다 동지가 되면 불교에서는 동지 불공을 드린다고 하며 가족들"
+  },
+  "jungbub_qa_fe5b3e142441fda8e281af2c347a54fc": {
+    "hash": "d9db520f7f13df992392792b2b3e9893",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_78_2415652"
+    ],
+    "source_text": "Q: What is in Youtube_0010강 깨달음-3 젊은이들도 깨달을 수 있나요.txt?\nA: 10강 깨달음-3 젊은이들도 깨"
+  },
+  "jungbub_qa_0e50a69cc261ceae5c376de3b3d5b45d": {
+    "hash": "2edde46f500696130ea92c6cfc47ada7",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_80_6483748"
+    ],
+    "source_text": "Q: What is in Youtube_0086강 왜 평균수명이 늘어나나요-1.txt?\nA: 86강 왜 평균수명이 늘어나나요?-1\n질문 : 한국인의 "
+  },
+  "jungbub_qa_983d1dc303ddff605a71ea5a5b43cf04": {
+    "hash": "66c8bce67b76cd5fd54c3eb7a405618a",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_81_5766925"
+    ],
+    "source_text": "Q: What is in Youtube_0033강 이 시대의 효_2.txt?\nA: 33강 이 시대의 효-2\n질문: 그러면 한 부모에 자식들은 여러 명인데, 자식들 중에"
+  },
+  "jungbub_qa_a62b06a01d18020b98be61272744cf9e": {
+    "hash": "baf301136c282efae73e3c34d5c4834f",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_82_2328607"
+    ],
+    "source_text": "Q: What is in Youtube_0014강 봉사활동-2 아이가 자꾸 눈에 밟히고 선합니다.txt?\nA: 14강 봉사활동-2 "
+  },
+  "jungbub_qa_2c25e8c8da7f1808f801c949755e584d": {
+    "hash": "08d41d681815c4037d2415ee545f91c4",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_83_4133033"
+    ],
+    "source_text": "Q: What is in Youtube_0050강 존경받는 기업인이 되려면-3.txt?\nA: 50강 존경받는 기업인이 되려면-3(3_3)\n접든지"
+  },
+  "jungbub_qa_a4f9c08f931d05c5d5b9bd1902bb4572": {
+    "hash": "b99360b696e274d75a57bae134168bd0",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_84_4137929"
+    ],
+    "source_text": "Q: What is in Youtube_0078강 전 재산을 사회 환원 한다는데-2.txt?\nA: 78강 전 재산을 사회 환원 한다는데-2\n질"
+  },
+  "jungbub_qa_92a0ffc3488315c3929db795a3d6f365": {
+    "hash": "06f1212bf20ced07357ff6762c44fb76",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_85_8471079"
+    ],
+    "source_text": "Q: What is in Youtube_0100강 대학생 아르바이트.txt?\nA: 100강 대학생 아르바이트\n질문: 지금 대학교 2학년인데, 제 주위를 보면 "
+  },
+  "jungbub_qa_1f79934a13c50b3d1d97777bf4196b4a": {
+    "hash": "5a78aa33c4675c840519cf67701fb05e",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_86_5483330"
+    ],
+    "source_text": "Q: What is in Youtube_0016강 전생-1 전생과 수행.txt?\nA: 16강 전생-1 전생과 수행\n질문: 예전에 책에서 ‘전생에 수행자로 "
+  },
+  "jungbub_qa_1ff62f5b7912e9f24a5d665537b3f516": {
+    "hash": "47ce3a7ada9f74a7a94b2b173c8c7d10",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_87_7587839"
+    ],
+    "source_text": "Q: What is in Youtube_0048강 존경받는 기업인이 되려면-1.txt?\nA: 48강 존경받는 기업인이 되려면-1(1_3)\n질문 "
+  },
+  "jungbub_qa_e011a26a9c7b852e5cbf00a2a274d81f": {
+    "hash": "feb1667f2d8e18e78a4f6a1c3e0daf1c",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_88_5562651"
+    ],
+    "source_text": "Q: What is in Youtube_0094강 젊은이들의 월급 저축-1 어느 정도.txt?\nA: 94강 젊은이들의 월급 저축-1 어느 정"
+  },
+  "jungbub_qa_47bed021e37b78e246ca1801e55dccac": {
+    "hash": "fa65cdb42545c8bd333bb68059434522",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_89_824041"
+    ],
+    "source_text": "Q: What is in Youtube_0029강 남을 도와주고 싶은데.txt?\nA: 29강 남을 도와주고 싶은데\n질문: 스승님께서는 항상 인연을 위해서"
+  },
+  "jungbub_qa_f3687b6fa8fdcb189186d2aca82c4f6e": {
+    "hash": "0eecce61a5434b47e00df641df485cd7",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_90_7880894"
+    ],
+    "source_text": "Q: What is in Youtube_0024강 공적인 삶-2 봉사.txt?\nA: 24강 공적인 삶-2 봉사\n그렇게 해서 내한테 있는 쌀을 조금 더 주고,"
+  },
+  "jungbub_qa_9cbf46f491375b6b390ea4a7df1a6e83": {
+    "hash": "4dd522b90902bca62366c54fc6c97633",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_91_5716494"
+    ],
+    "source_text": "Q: What is in Youtube_0059강 악법도 꼭 지켜야 하나요 (점검필요).txt?\nA: 59강 악법도 꼭 지켜야 하나요?\n질문"
+  },
+  "jungbub_qa_1c8238e26f6a41323ad1eb4b77940069": {
+    "hash": "39ac8809cebbac1ae33fa46d1c972b9a",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_92_7458002"
+    ],
+    "source_text": "Q: What is in Youtube_0093강 젊은이들의 내집 마련.txt?\nA: 93강 젊은이들의 내집 마련\n질문1 : 30대 중반의 직장인입니다"
+  },
+  "jungbub_qa_2a5ec30dcf7c9c7dc24fd9e9bf72eba9": {
+    "hash": "503ec0ff4b28b260e7c37f7f62767999",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_93_9742344"
+    ],
+    "source_text": "Q: What is in Youtube_0056강 IMF와 금모으기운동.txt?\nA: 56강 IMF와 금 모으기 운동\n질문: 우리나라가 1997년 외환위기로 "
+  },
+  "jungbub_qa_64f43c6d65cd0133ec6dd297ae5d9a56": {
+    "hash": "21b6504e158a60ecee66f60b926e9833",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_94_4554882"
+    ],
+    "source_text": "Q: What is in Youtube_0067강 성직자의 정치발언.txt?\nA: 67강 성직자의 정치발언\n질문: 요즘 스님이나 목사님 신부님들의 사회참"
+  },
+  "jungbub_qa_eea8e7ea36501ec0d480f67bc8b4c85d": {
+    "hash": "776a41b53b242c550355bedd39b84824",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_95_9431492"
+    ],
+    "source_text": "Q: What is in Youtube_0073강 내조를 더 잘하고 싶은데요. -1.txt?\nA: 73강 내조를 더 잘하고 싶은데요-1\n질문 : 남편"
+  },
+  "jungbub_qa_708df0ae7bf05f8a31042149ea0ee250": {
+    "hash": "e9e42b73b3a4b9fa4db2c759dc3472b3",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_96_5408046"
+    ],
+    "source_text": "Q: What is in Youtube_0041강 자선냄비 기부.txt?\nA: 41강 자선냄비 기부\n질문 : 얼마 전 서울 명동 거리의 자선냄비에 ‘소외된 어른들"
+  },
+  "jungbub_qa_b3f7fb58e4c6ec85e9db6222b56f7a53": {
+    "hash": "0e9aac8e877de606b080a57eba8c56f8",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_97_9213989"
+    ],
+    "source_text": "Q: What is in Youtube_0006강 저는 왜 인복이 지지리도 없을까요?.txt?\nA: 6강 저는 왜 인복이 지지리도 없을까요?\n"
+  },
+  "jungbub_qa_214d39eb6fbfe98ad0f6b4a610baa6a6": {
+    "hash": "c4efe5385b3b349369bb5b6c64c21247",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_98_3353822"
+    ],
+    "source_text": "Q: What is in Youtube_0065강 누구를 위한 시위인가.txt?\nA: 65강 누구를 위한 시위인가?\n질문1 : 보통 시민단체들은 서민 편에"
+  },
+  "jungbub_qa_9dd91929267a4892e73405efc6932d1b": {
+    "hash": "36de20f9cb9b16480fb828346cdc13d6",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_99_8780356"
+    ],
+    "source_text": "Q: What is in Youtube_0035강 대학생 취업-2.txt?\nA: 35강 대학생 취업-2 취업임용시험\n질문1: 그러면 젊은이가 창업을 하는 것은 올"
+  },
+  "jungbub_qa_c86c4169ab42ed18b7a8ed435c4eb87c": {
+    "hash": "5e8dfd7da59136e6ad42699877471d9d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_100_5217853"
+    ],
+    "source_text": "Q: What is in Youtube_0015강 상대에게 다가가기.txt?\nA: 15강 상대에게 다가가기\n질문 : 어떤 사람이 제 눈에 자꾸 들어와요. 그 사"
+  },
+  "jungbub_qa_8b22a0d48753d5fa49c9fc8e962f92fb": {
+    "hash": "738ecc0e3535a09428a9f5d99343ed3d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_101_3023951"
+    ],
+    "source_text": "Q: What is in Youtube_0036강 대학생 취업-3.txt?\nA: 36강 대학생 취업-3 벤처 창업\n질문 : 집 안의 여력이 없는 경우에 빚을 내서"
+  },
+  "jungbub_qa_0b0c069da230c50ea2bd035a8f3e0c60": {
+    "hash": "0a84b52be1b82d41c9d132730ce5d33b",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_102_2641998"
+    ],
+    "source_text": "Q: What is in Youtube_0090강 기업은 살찌는데 어찌 국가는 빚지는가-2.txt?\nA: 90강 기업은 살찌는데 어찌"
+  },
+  "jungbub_qa_8c3dffc9892b9b2c899bf0c0ee97995d": {
+    "hash": "22a30aeb9d135029fbb0b725fa5ad147",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_103_2223636"
+    ],
+    "source_text": "Q: What is in Youtube_0066강 장수하는 것은 남의 명을 이어 사는 것인지.txt?\nA: 66강 장수하는 것은"
+  },
+  "jungbub_qa_a5834d79b1964a1b81da8d2acc74954b": {
+    "hash": "b0a99d5ceed981ee3cbf587a7312dea2",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_104_5654014"
+    ],
+    "source_text": "Q: What is in Youtube_0064강 부익부빈익빈 때문에 좌절감을 느낍니다.txt?\nA: 64강 부익부 빈익빈 때문에"
+  },
+  "jungbub_qa_38bd3237dd7287527e584c0685914a5e": {
+    "hash": "4690db3d5ef3795a014bb8aa4003479f",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_105_3369970"
+    ],
+    "source_text": "Q: What is in Youtube_0007강 여여하게 살고 싶다..txt?\nA: 7강 여여하게 살고 싶다.\n질문 : 정말 어려운 질문을 하겠습니다. 어떤"
+  },
+  "jungbub_qa_1b55f7f0010e7d0f127813ff85730c04": {
+    "hash": "32909a131d283b76bb3674b7764f80fa",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_106_5119894"
+    ],
+    "source_text": "Q: What is in Youtube_0074강 내조를 더 잘하고 싶은데요. -2.txt?\nA: 질문1)\n남편은 바깥일을 하고 저는 집에서 남편의 "
+  },
+  "jungbub_qa_1eadebaaedecd271d7a1bc0a8c3ddaec": {
+    "hash": "6019430526255f0795763b6917aac6ae",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_107_1103998"
+    ],
+    "source_text": "Q: What is in Youtube_0076강 자리가 사람을 만든다.txt?\nA: 76강 자리가 사람을 만든다\n질문1 : 자리가 사람을 만든다는 말이"
+  },
+  "jungbub_qa_ba37ad15e70295160b02a05e573157eb": {
+    "hash": "55293ee2cc93ce0cc801658eb8d81c40",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_108_7280317"
+    ],
+    "source_text": "Q: What is in Youtube_0054강 지나간 것은 놓고 즐겁게 살라..txt?\nA: 54강 지나간 것은 놓고 지금부터 즐겁게 살라"
+  },
+  "jungbub_qa_ac33dae390ef1d3f41f5a1c468bc933a": {
+    "hash": "6ce09a6392a075ba03b9db404de9e25f",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_109_6973113"
+    ],
+    "source_text": "Q: What is in Youtube_0058강 지구재앙이 왜 일어나는지_2.txt?\nA: 58강. 지구재앙이 왜 일어나는지 - 2\n질문 : 요즘 미"
+  },
+  "jungbub_qa_26023bb3c25498eaab1b1be67a0ffd9d": {
+    "hash": "6edbb7a0106dcfa20a2e7cd2b48ccc67",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_110_9851013"
+    ],
+    "source_text": "Q: What is in Youtube_0077강 전 재산을 사회 환원 한다는데-1.txt?\nA: 77강 전 재산을 사회 환원 한다는데-1\n질"
+  },
+  "jungbub_qa_4f2014ad54cc4905fd0c01761725272a": {
+    "hash": "a3864fc4620a38c77bdddf2b43c39e1b",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_111_21402"
+    ],
+    "source_text": "Q: What is in Youtube_0062강 기업총수 부인들의 내조와 사회참여는 어떻게 해야 하나요_3.txt?\nA"
+  },
+  "jungbub_qa_411551d6980638e4efdfc6c5a3bd5f0d": {
+    "hash": "cd85c42f23d79aed2b046948d5b87065",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_112_1191310"
+    ],
+    "source_text": "Q: What is in Youtube_0045강 청년들의 실력(스펙) 쌓기.txt?\nA: 45강 청년들의 실력(스펙) 쌓기\n\n질문 : 지난 강의"
+  },
+  "jungbub_qa_a50d9543021b06b13641e7c381d19726": {
+    "hash": "d7fe2861fb6d11a1faef9bf309a7ed64",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_113_4857521"
+    ],
+    "source_text": "Q: What is in Youtube_00017강 전생-2 검사와 도둑.txt?\nA: 17강 전생-2 검사와 도둑\n### 요약 및 설명\n이 문서는 스승님과"
+  },
+  "jungbub_qa_bc63dd5c4d2a7639b82be2975e53a6e4": {
+    "hash": "b3a494fb5f095786f63e61294d897215",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_114_4895128"
+    ],
+    "source_text": "Q: What is in Youtube_0003강 불의를 보면 참지 못합니다..txt?\nA: 3강 불의를 보면 참지 못합니다.\n\n질문 : 남편이 "
+  },
+  "jungbub_qa_a8eb8f5fcf4266c349d3267ffaec071a": {
+    "hash": "78737f0ec69a04c6917654a5df73462d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_116_9047008"
+    ],
+    "source_text": "Q: What is in Youtube_0096강 젊은이들의 월급 저축-3 주식투자.txt?\nA: 96강 젊은이들의 월급 저축-3 주식투자\n"
+  },
+  "jungbub_qa_cee5716769a0ee17e4f5f09b176cf0dd": {
+    "hash": "7bfa873b692b3037a105f614e6e92ac9",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_117_5781942"
+    ],
+    "source_text": "Q: What is in Youtube_0038강 조기 경제교육-2.txt?\nA: [정법강의] 38강 조기 경제교육-2(2/2)\n질문1 : 선생님 그러면 애들 머"
+  },
+  "jungbub_qa_b5398bfa31720dea7b27b453a9033ed4": {
+    "hash": "b3b3ec197522a9c619113fd40cf47383",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_118_5614787"
+    ],
+    "source_text": "Q: What is in Youtube_0055강 기계문명의 발달로 생각이 퇴화되고 있는 것 같다..txt?\nA: 55강 "
+  },
+  "jungbub_qa_b084c941ef3563fb8488b5c00fb5df61": {
+    "hash": "14fe3bcd6cf4346992ad63a36523c3e5",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_119_7317719"
+    ],
+    "source_text": "Q: What is in Youtube_0012강 화가 아예 나지 않으려면.txt?\nA: 12강 화가 아예 나지 않으려면\n질문 : 불교에서 말하는 인욕에 "
+  },
+  "jungbub_qa_1b3af365be457875a01fc0fece75c9b4": {
+    "hash": "a2ace66d99c468753f6913dbad9522f6",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_120_2938078"
+    ],
+    "source_text": "Q: What is in Youtube_0080강 전 재산을 사회 환원 한다는데-4.txt?\nA: 80강 전 재산을 사회 환원 한다는데-4\n내"
+  },
+  "jungbub_qa_9160ad74d157608e51dc0b62310896e2": {
+    "hash": "9aeb93a3953e336652273cdbc576d7c1",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_121_4913746"
+    ],
+    "source_text": "Q: What is in Youtube_0018강 국익에 반하는 프로젝트에 참여해야 하나요.txt?\nA: 18강 국익에 반하는 프로젝"
+  },
+  "jungbub_qa_de50e7ac09d5a00900cc6ae6174e5ce9": {
+    "hash": "7d679bdd4d21ced68734d357b64e1c98",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_122_1142436"
+    ],
+    "source_text": "Q: What is in Youtube_0049강 존경받는 기업인이 되려면-2.txt?\nA: 49강 존경받는 기업인이 되려면-2(2_3)\n모이면"
+  },
+  "jungbub_qa_ff70b6ba6617d73d168f972f1e9169fb": {
+    "hash": "7494b2122d489d6396e86909230c2552",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_123_9594334"
+    ],
+    "source_text": "Q: What is in Youtube_0017강 전생-2 검사와 도둑.txt?\nA: 17강 전생-2 검사와 도둑\n질문 : 「스승」 책에서 검사와 도둑은 기"
+  },
+  "jungbub_qa_c7156daa60358323c8339491813d374b": {
+    "hash": "15d38d2d9e893349d9675691af0c615a",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_124_7540437"
+    ],
+    "source_text": "Q: What is in Youtube_0088강 왜 평균수명이 늘어나나요-3.txt?\nA: 88강 왜 평균수명이 늘어나나요?-3\n질문: 한국인의 평"
+  },
+  "jungbub_qa_47a4949cbc8d8336945fdd6b783fc0bd": {
+    "hash": "c7a7427cc5ae749f587a9547cafccd15",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_125_5362570"
+    ],
+    "source_text": "Q: What is in Youtube_0052강 OECD회원국 중 최고성장률을 기록했는데_2.txt?\nA: 52강 OECD회원국 "
+  },
+  "jungbub_qa_0af2ec9114d42ba85a119a58e813eec4": {
+    "hash": "5d4f4f5c55bbd6ee2006064a720240b5",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_126_8173210"
+    ],
+    "source_text": "Q: What is in Youtube_0092강 집착 수행 묵언-2.txt?\nA: 92강 집착, 수행, 묵언 -2\n남이 하는 거를 보면서 나는 에너지를 얻"
+  },
+  "jungbub_qa_fc86e4e75367557c8acd84e5aadc7879": {
+    "hash": "63cb53d3dc90cb83abcbe0660c878b93",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_127_5801624"
+    ],
+    "source_text": "Q: What is in Youtube_0032강 이 시대의 효_1.txt?\nA: 32강 이 시대의 효-1\n효가 지금 밖에 우리가 살면서 배웠던 게 뭐예요? 효. (부"
+  },
+  "jungbub_qa_e9ffe3d2532e60d154b60f37fcccadba": {
+    "hash": "333cd974fedb909274e273813aa8de32",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_128_2455748"
+    ],
+    "source_text": "Q: What is in Youtube_0034강 대학생 취업-1.txt?\nA: 34강 대학생 취업-1 취업이냐, 창업이냐?\n질문: 딸이 내년 초에 대학을 졸업하"
+  },
+  "jungbub_qa_c2c59a3b1e5174dd6647e47d807265d2": {
+    "hash": "c38560684f8389a934eec538f3c99a97",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_129_7506597"
+    ],
+    "source_text": "Q: What is in Youtube_0070강 대형마트의 지역상권 점령-2 달동네 재개발.txt?\nA: 70강 대형마트의 지역"
+  },
+  "jungbub_qa_a135a06e952d6f3da8db7bc11e92e6a1": {
+    "hash": "442b78402d633afb6927768035b27cab",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_130_9744604"
+    ],
+    "source_text": "Q: What is in Youtube_0071강 재산 상속을 자식에게 하려는데...-1.txt?\nA: 71강 재산 상속을 자식에게 하려는데."
+  },
+  "jungbub_qa_94666fd97e250acf1dc4b412b19e16de": {
+    "hash": "f0e76d6115ed5befcace4f21eb19ffc4",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_131_103767"
+    ],
+    "source_text": "Q: What is in Youtube_0026강 물질봉사와 재능봉사.txt?\nA: 26강 물질봉사와 재능봉사\n질문1: 어려운 사람에게 물질을 그냥 주"
+  },
+  "jungbub_qa_b78fd73d3f74cd1e3caa7c4e0f1f0454": {
+    "hash": "271ebfaa6926fdfb8fa33512da0e280d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_132_7941876"
+    ],
+    "source_text": "Q: What is in Youtube_0044강 극한경쟁.txt?\nA: 44강 극한경쟁\n질문: 지금 우리나라는 기업과 사회가 대립과 극한경쟁으로 치닫고 있습니다"
+  },
+  "jungbub_qa_e66665f729d7ee5e28ae0f660c5299fc": {
+    "hash": "6e9010ab955d450d180d244cbadadf59",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_133_5986846"
+    ],
+    "source_text": "Q: What is in Youtube_0095강 젊은이들의 월급 저축-2 공돈이 생기면.txt?\nA: 95강 젊은이들의 월급 저축"
+  },
+  "jungbub_qa_29e3a0983ea0ceb43a20bce17a801eb2": {
+    "hash": "874f2e26b60161f706b114d02e1012ee",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_134_5618234"
+    ],
+    "source_text": "Q: What is in Youtube_0061강 기업총수 부인들의 내조와 사회참여는 어떻게 해야 하나요_2.txt?\nA"
+  },
+  "jungbub_qa_d38e8abec3970c8786e0ae2efcdc9331": {
+    "hash": "c272454dc003ae27d45d988154868084",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_135_2611974"
+    ],
+    "source_text": "Q: What is in Youtube_0019강 자식-1 아이를 유산시킨 후 참회하고 싶은데.txt?\nA: 19강 자식-1 아이를 "
+  },
+  "jungbub_qa_1847d90a442c1cc1409bdae644c5cdb4": {
+    "hash": "2ec0c65f8b1b5572674ad7db4a99df99",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_136_2489771"
+    ],
+    "source_text": "Q: What is in Youtube_0051강 OECD회원국 중  최고 성장률을 기록했는데_1.txt?\nA: 51강 OECD회원"
+  },
+  "jungbub_qa_bc5310b036ab0239aabf82a5eddbdb52": {
+    "hash": "4a4300c658355dacb92d35d35eca2130",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_137_5695372"
+    ],
+    "source_text": "Q: What is in Youtube_0085강 청년실업-5 기업 1대들의 창업.txt?\nA: 85강 청년실업-5 기업 1대들의 창업\n질문 "
+  },
+  "jungbub_qa_0aea820e3311fe88a542a205888d5680": {
+    "hash": "84f5e2e89094d8fa8047acc1bc3e40b8",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_138_8814885"
+    ],
+    "source_text": "Q: What is in Youtube_0068강 정치콘서트, 소통의 대안인가.txt?\nA: 68강 정치콘서트, 소통의 대안인가?\n질문: 연예계에"
+  },
+  "jungbub_qa_4266f061b4fe15350e58cdd82192af8b": {
+    "hash": "7510454b9fea6519513e1b48b9cd752e",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_139_5677825"
+    ],
+    "source_text": "Q: What is in Youtube_0091강 집착 수행 묵언-1.txt?\nA: 1강 집착, 수행, 묵언 (1)\n질문 : 무엇에 집착하는 것과 거기에 빠"
+  },
+  "jungbub_qa_d40754b74860b83ea5dc51046a730beb": {
+    "hash": "fab0beb9b8542e4c578f43bd7912ed13",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_140_2841129"
+    ],
+    "source_text": "Q: What is in Youtube_0084강 청년실업-4 사회구조적 측면.txt?\nA: 84강 청년실업-4 사회구조적 측면\n질문1 : 그런"
+  },
+  "jungbub_qa_907dc9f1deecc19018e2b5800195a180": {
+    "hash": "8996cbf5b9764a934e0af32bc6347286",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_141_4231603"
+    ],
+    "source_text": "Q: What is in Youtube_0028강 기도하면 잘못을 용서받을 수 있나요.txt?\nA: 28강 기도하면 잘못을 용서받을 수"
+  },
+  "jungbub_qa_152b64a18ac18a456f7500c645e19081": {
+    "hash": "72d7ad46c9797b64b82d7efb4b389caa",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_142_2682326"
+    ],
+    "source_text": "Q: What is in Youtube_0075강 잘 죽는 법(Well-dying).txt?\nA: 75강 잘 죽는 법(Well-dying)\n질문 : 점점 나이가 "
+  },
+  "jungbub_qa_6057144f6f7f9824e1558f735f380109": {
+    "hash": "ac4e0e46947bdaef17c26e6ce9638e8f",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_143_9020624"
+    ],
+    "source_text": "Q: What is in Youtube_0047강 신 패러다임 복지-2.txt?\nA: 47강 신 패러다임 복지-2\n이 나라가 이 복지 신패러다임을 하나를 바르"
+  },
+  "jungbub_qa_73ceee1aa71f189b6a9f9590775cf637": {
+    "hash": "f87f3e09b3485d76aa87802d9a1b3af0",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_144_5011654"
+    ],
+    "source_text": "Q: What is in Youtube_0081강 청년실업-1 근본 해결책.txt?\nA: 81강 청년실업-1 근본 해결책\n질문 : 지금 고용노동부"
+  },
+  "jungbub_qa_4b8ac2e54e1f88555636843cfb612e35": {
+    "hash": "69a00f924e0fb491c2f70ebb93538311",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_145_5238286"
+    ],
+    "source_text": "Q: What is in Youtube_0013강 봉사활동-1 아들이 취업은 하지 않고 봉사활동만 합니다.txt?\n"
+  },
+  "jungbub_qa_a998495fe735983fac37e4d27553ed04": {
+    "hash": "71c2caf1f5d1d8b5bcf6da6fecfa9c61",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_146_601456"
+    ],
+    "source_text": "Q: What is in Youtube_0040강 실패와 성공, 젊어서 고생-2.txt?\nA: 40강 실패와 성공, 젊어서 고생-2(2/2)\n그래서 "
+  },
+  "jungbub_qa_f647d0da0c09c6032cedf7a9934d3f13": {
+    "hash": "a3ced9a3802382d82aace5813b404b3f",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_147_1888011"
+    ],
+    "source_text": "Q: What is in Youtube_0043강 명퇴 후 창업에 성공하려면.txt?\nA: 43강 명퇴 후 창업에 성공하려면\n저는 50대 퇴직자인"
+  },
+  "jungbub_qa_240e9a5842863a8000fc8a6e92b80fa5": {
+    "hash": "a1e812596a4e825020acadbd8bcd0f6d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_148_8274066"
+    ],
+    "source_text": "Q: What is in Youtube_0002강 양심의 가책을 느낍니다.txt?\nA: 2강 양심의 가책을 느낍니다\n질문 : 친구가 공사입찰 보는 일"
+  },
+  "jungbub_qa_cfe7899522d71c75636f891b2763fab6": {
+    "hash": "e9ef96682fdea524c32c7ca84faea37e",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_149_5144810"
+    ],
+    "source_text": "Q: What is in Youtube_0082강 청년실업-2 70_ 임금.txt?\nA: 81강 청년실업-2 70% 임금\n질문 : 70% 임금조건만 된다면"
+  },
+  "jungbub_qa_843018fa8734918f35e0a701bf5820bd": {
+    "hash": "d5ac66dd6b7361096e85954d2cda5d59",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_150_3162012"
+    ],
+    "source_text": "Q: What is in Youtube_0023강 공적인 삶-1 자존심.txt?\nA: 23강 공적인 삶-1 자존심\n질문 : 스승님 강의를 듣다보면 공적인"
+  },
+  "jungbub_qa_1a852e0e1335e72c32f02f50be7ddb54": {
+    "hash": "8f9fa421a05d2a42ea7a43b29d13a7b4",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_151_7126103"
+    ],
+    "source_text": "Q: What is in Youtube_0039강 실패와 성공, 젊어서 고생-1.txt?\nA: 39강 실패와 성공, 젊어서 고생-1(1/2)\n질문 :"
+  },
+  "jungbub_qa_b049fb04ac9587da64394e004ff18c72": {
+    "hash": "8ebd1644c3c16427321480ea71afc670",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_152_4885905"
+    ],
+    "source_text": "Q: What is in Youtube_0027강 청년취업.txt?\nA: 27강 청년취업\n질문 : 대학 졸업하고 취직도 하지 않고 집에서 놀고 있는 자식에게 부모가"
+  },
+  "jungbub_qa_60bbee5d6cabaf9b05a6a33f602e677a": {
+    "hash": "fbf25402a4b44d704d1e448c5a405f4d",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_153_7945037"
+    ],
+    "source_text": "Q: What is in Youtube_0037강 조기 경제교육-1.txt?\nA: 37강 조기 경제교육-1(1/2)\n질문 : 자녀의 경제 교육은 빠르면 빠를수록 "
+  },
+  "jungbub_qa_cbeb029c6cb6735ffc40d051fd81529a": {
+    "hash": "94bc8532cecf7e26ac68d8c7a1d9c3dc",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_154_2483523"
+    ],
+    "source_text": "Q: What is in Youtube_0005강 용서.txt?\nA: 5강 용서\n질문 : 얼마 전 ‘오늘’이라는 영화가 개봉을 했는데 그 내용을 보면, 여주인공이 자신의 "
+  },
+  "jungbub_qa_a294fecf087be3458cff2caa2dd69186": {
+    "hash": "7f07420053353f79e13d8122cbd823b7",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_155_8224953"
+    ],
+    "source_text": "Q: What is in Youtube_0011강 깨달음-4 여여하게 인생을 마칠 수 있을까요.txt?\nA: 11강 깨달음-4 여여"
+  },
+  "jungbub_qa_07b9fbfb4816ee1a941f7dfeb8bdd3ed": {
+    "hash": "b8c2b21b7fe691595451d77fb2e6916e",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_156_4949082"
+    ],
+    "source_text": "Q: What is in Youtube_0046강 신패러다임 복지-1.txt?\nA: 46강 신패러다임의 복지-1\n\n여, 우리가 기업이 일어날 때는 백성들의 도"
+  },
+  "jungbub_qa_676164ebe3996657ce58032762f2b8c0": {
+    "hash": "8105080238d285f7389403afd043262c",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_157_1181490"
+    ],
+    "source_text": "Q: What is in Youtube_0063강 접대문화를 어떻게 봐야 합니까.txt?\nA: 63강 접대문화를 어떻게 봐야 합니까?\n질문: 우"
+  },
+  "jungbub_qa_fef24d130625f0aa33e386a83a393638": {
+    "hash": "76f37bea43722854f4a21bc72836e036",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_158_6666861"
+    ],
+    "source_text": "Q: What is in Youtube_0098강 신년인사와 새해덕담-2.txt?\nA: 98강 신년인사와 새해덕담-2\n질문: 보통 연말연시가 되면 송년"
+  },
+  "jungbub_qa_eebc719806ea9f090aced6321e3c04fe": {
+    "hash": "772152991d436a3a6e78b27a14ad3a6b",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_159_6734743"
+    ],
+    "source_text": "Q: What is in Youtube_0020강 자식-2 자식이 없는 이유.txt?\nA: 20강 자식-2 자식이 없는 이유\n질문 : 자식으로 오는 것이"
+  },
+  "jungbub_qa_5417c40e8a6677b47f890e9280deefd4": {
+    "hash": "f3dd20cdd6695e62b001b57e5865495b",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_160_6423187"
+    ],
+    "source_text": "Q: What is in Youtube_0021강 나만 바라보고 있어요.txt?\nA: 21강 나만 바라보고 있어요\n질문 : 가족들이 모든 집안문제를 저한테만"
+  },
+  "jungbub_qa_63fbf5df3c1f2eab6bcbc3e2f211db20": {
+    "hash": "b27b1e0574e50ab6ad1c13786d52b468",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_161_9937285"
+    ],
+    "source_text": "Q: What is in Youtube_0009강 깨달음-2 나는 누구이며 무엇을 해야 하는가.txt?\nA: 9강 깨달음-2 나는 누구"
+  },
+  "jungbub_qa_59b141f3c5ca2216f20f0b20badc7b75": {
+    "hash": "943fbce43ced5b3907ac3cef32641a50",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_162_4932033"
+    ],
+    "source_text": "Q: What is in Youtube_0057강 지구재앙이 왜 일어나는지_1.txt?\nA: 57강 지구재앙이 왜 일어나는지 – 1\n질문 : 요즘 미국"
+  },
+  "jungbub_qa_0856468fcae7da0bdaa8a5268d63ca15": {
+    "hash": "7606370f2d97faa82471b46d87693dc1",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_164_3644779"
+    ],
+    "source_text": "Q: What is in Youtube_0089강 기업은 살찌는데 어찌 국가는 빚지는가-1.txt?\nA: 89강 기업은 살찌는데 어찌"
+  },
+  "jungbub_qa_a22fc3bca66fea8ca1af2fe2051087d3": {
+    "hash": "7a5de8b6ddf3b250af7c65ff59e09f91",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_165_1685310"
+    ],
+    "source_text": "Q: What is in Youtube_0031강 이 시대 아버지 像과 여성2, 복지와 인류대민봉사.txt?\nA: 31강 이 시대 아버"
+  },
+  "jungbub_qa_e15a586164f667ebb5bf848795d9b6d0": {
+    "hash": "8c0c7dfb5cd5fd7ded1fd966f9ccc014",
+    "processed_time": "2025-05-11T16:30:26.903567",
+    "chunks_count": 1,
+    "tags": [],
+    "vector_ids": [
+      "doc_166_3043392"
+    ],
+    "source_text": "Q: What is in Youtube_0025강 공적인 삶-3 어려움.txt?\nA: 25강 공적인 삶-3 어려움\n느그가 간접적으로 오는 거를 등한시 했고"
   }
 }

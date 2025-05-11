@@ -38,9 +38,21 @@ jobs:
           python -m hongikjiki.document_manager update_documents --data-dir data/jungbub_teachings
           python scripts/aggregate_qa.py --out data/qa/high_insight_qa_dataset.jsonl
 
+      - name: Use refined QA dataset
+        run: |
+          echo "Using pre-refined QA dataset"
+          cp data/qa/refined_high_insight_qa_dataset.jsonl data/qa/high_insight_qa_dataset.jsonl
+
       - name: Validate QA dataset
         run: |
           python scripts/qa_lint.py data/qa/high_insight_qa_dataset.jsonl
+
+      - name: Build Chroma vector store
+        run: |
+          python scripts/build_vector_store.py \
+            --qa-file data/qa/high_insight_qa_dataset.jsonl \
+            --persist-dir data/vector_store \
+            --embedding-model text-embedding-3-small
 
       - name: Upload artefact
         uses: actions/upload-artifact@v4
