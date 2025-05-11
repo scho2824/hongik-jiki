@@ -59,7 +59,7 @@ jobs:
 
       # 7) (옵션) S3 배포: main 브랜치에서만 실행, DEPLOY_ROLE이 정의된 경우에만 실행
       - name: Deploy to S3
-        if: github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != ''
+        if: ${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_ROLE != '' }}
         env:
           AWS_ROLE_ARN: ${{ secrets.DEPLOY_ROLE }}
         run: |
