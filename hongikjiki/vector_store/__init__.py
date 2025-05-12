@@ -8,6 +8,7 @@ from .base import VectorStoreBase
 from .embeddings import EmbeddingsBase, HuggingFaceEmbeddings, OpenAIEmbeddings, get_embeddings
 from .chroma_store import ChromaVectorStore
 from .tag_index import TagIndex, TagAwareSearch
+from .load import load_vector_store
 
 # Add alias for backward compatibility
 JungbubVectorStore = ChromaVectorStore
@@ -21,5 +22,6 @@ __all__ = [
     'ChromaVectorStore',
     'JungbubVectorStore',
     'TagIndex',
-    'TagAwareSearch'
+    'TagAwareSearch',
+    'load_vector_store'
 ]

@@ -16,40 +16,89 @@ class ChromaVectorStore(VectorStoreBase):
     텍스트 청크를 벡터화하여 저장하고 유사도 검색 기능 제공
     """
     
-    def __init__(self, 
+    def __init__(self,
+                collection=None,
                 collection_name: str = "hongikjiki_documents",
                 persist_directory: str = "./data/vector_store",
                 embeddings = None):
         """
         ChromaVectorStore 초기화
-        
+
         Args:
-            collection_name: 컬렉션 이름
-            persist_directory: 벡터 저장소 지속성 디렉토리
+            collection: 기존 Chroma 컬렉션 객체
+            collection_name: 컬렉션 이름 (collection이 None인 경우 사용)
+            persist_directory: 벡터 저장소 지속성 디렉토리 (collection이 None인 경우 사용)
             embeddings: 임베딩 모델 (없으면 기본값 사용)
         """
         super().__init__()
-        
-        # 디렉토리 생성
-        os.makedirs(persist_directory, exist_ok=True)
-        
+
         # 임베딩 설정
         self.embeddings = embeddings
-        
-        # Chroma 클라이언트 초기화
-        self.client = chromadb.PersistentClient(
-            path=persist_directory,
-            settings=Settings(
-                anonymized_telemetry=False,
-                allow_reset=True
-            )
-        )
-        
-        # 컬렉션 생성 또는 가져오기
-        self.collection = self.client.get_or_create_collection(
-            name=collection_name,
-            metadata={"hnsw:space": "cosine"}
-        )
+        if self.embeddings is None:
+            from hongikjiki.vector_store.embeddings import get_embeddings
+            self.embeddings = get_embeddings("openai", model="text-embedding-ada-002")
+
+        # 컬렉션 객체가 전달된 경우
+        if collection is not None:
+            # Collection 객체 유형 확인
+            if hasattr(collection, 'get') and callable(getattr(collection, 'get')):
+                # 정상적인 컬렉션 객체로 판단됨
+                self.collection = collection
+                # 컬렉션과 관련된 클라이언트 접근이 필요한 경우를 위한 더미 클라이언트
+                self.client = None
+                logger.info("사전 초기화된 컬렉션 사용")
+            else:
+                # 비정상적인 컬렉션 객체인 경우, 새로 초기화 시도
+                logger.warning(f"전달된 컬렉션 객체가 유효하지 않습니다. 타입: {type(collection)}")
+                logger.warning("컬렉션을 새로 생성합니다.")
+                collection = None
+                # 아래 else 블록으로 진행
+
+        # 컬렉션이 없거나 유효하지 않은 경우 새로 생성
+        if collection is None:
+            # 디렉토리 생성
+            os.makedirs(persist_directory, exist_ok=True)
+
+            try:
+                # Chroma 클라이언트 초기화 - 여러 설정 시도
+                # 첫 번째 시도: 기본 설정으로 초기화
+                try:
+                    self.client = chromadb.PersistentClient(
+                        path=persist_directory,
+                        settings=Settings(
+                            anonymized_telemetry=False,
+                            allow_reset=True
+                        )
+                    )
+                except Exception as e1:
+                    logger.warning(f"기본 설정으로 Chroma 초기화 실패: {e1}")
+                    # 두 번째 시도: 단순 설정으로 초기화
+                    try:
+                        self.client = chromadb.PersistentClient(path=persist_directory)
+                    except Exception as e2:
+                        logger.warning(f"단순 설정으로 Chroma 초기화 실패: {e2}")
+                        # 마지막 시도: 임시 디렉토리 생성
+                        import tempfile
+                        temp_dir = tempfile.mkdtemp()
+                        logger.warning(f"임시 디렉토리에 Chroma 초기화 시도: {temp_dir}")
+                        self.client = chromadb.PersistentClient(path=temp_dir)
+
+                # 컬렉션 생성 또는 가져오기 시도
+                try:
+                    self.collection = self.client.get_or_create_collection(
+                        name=collection_name,
+                        metadata={"hnsw:space": "cosine"}
+                    )
+                    logger.info(f"새 컬렉션 생성 또는 기존 컬렉션 로드: {collection_name}")
+                except Exception as coll_err:
+                    logger.warning(f"메타데이터로 컬렉션 생성 실패: {coll_err}")
+                    # 메타데이터 없이 시도
+                    self.collection = self.client.get_or_create_collection(name=collection_name)
+                    logger.info(f"메타데이터 없이 컬렉션 생성됨: {collection_name}")
+
+            except Exception as e:
+                logger.error(f"Chroma 초기화 오류: {e}")
+                raise ValueError(f"ChromaDB 초기화 실패: {e}") from e
         
         # 태그 관련 필드 초기화
         self.tag_index = None

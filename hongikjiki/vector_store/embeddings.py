@@ -1,5 +1,6 @@
 from typing import Dict, Any, Optional, List, Union,Tuple
 import logging
+import os
 
 logger = logging.getLogger("HongikJikiChatBot")
 
@@ -84,18 +85,35 @@ class OpenAIEmbeddings(EmbeddingsBase):
     OpenAI API를 사용한 임베딩 구현
     """
     
-    def __init__(self, model: str = "text-embedding-3-small", **kwargs):
+    def __init__(self, model: str = "text-embedding-3-small", api_key: str = None, model_name: str = None, **kwargs):
         """
         OpenAIEmbeddings 초기화
-        
+
         Args:
             model: OpenAI 임베딩 모델 이름
+            api_key: OpenAI API 키 (없으면 환경 변수에서 가져옴)
+            model_name: 대체 모델 이름 (model과 동일 기능, 호환성 유지용)
             kwargs: 추가 매개변수
         """
         try:
             import openai
-            self.client = openai.OpenAI()
+            # model_name 파라미터 처리 (호환성 유지)
+            if model_name and not model:
+                model = model_name
+
+            # API 키 명시적 설정
+            api_key = api_key or os.environ.get("OPENAI_API_KEY")
+            if not api_key:
+                raise ValueError("OpenAI API 키가 설정되지 않았습니다. API 키를 직접 전달하거나 OPENAI_API_KEY 환경 변수를 설정하세요.")
+
+            # OpenAI 클라이언트 초기화 시 명시적으로 API 키 설정
+            self.client = openai.OpenAI(api_key=api_key)
+            logger.info("OpenAI 클라이언트 초기화 성공")
+
             self.model = model
+            # model_name 파라미터 제거 (API 호출 시 에러 방지)
+            if 'model_name' in kwargs:
+                del kwargs['model_name']
             self.kwargs = kwargs
             logger.info(f"OpenAI 임베딩 모델 설정: {model}")
         except ImportError:
@@ -105,43 +123,50 @@ class OpenAIEmbeddings(EmbeddingsBase):
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         """
         문서 텍스트를 벡터로 임베딩
-        
+
         Args:
             texts: 임베딩할 텍스트 리스트
-            
+
         Returns:
             List[List[float]]: 임베딩 벡터 리스트
         """
-        # 청크가 큰 경우 분할하여 처리
-        embeddings = []
-        for i in range(0, len(texts), 20):  # API 제한 고려
-            batch = texts[i:i+20]
-            response = self.client.embeddings.create(
-                model=self.model,
-                input=batch,
-                **self.kwargs
-            )
-            batch_embeddings = [item.embedding for item in response.data]
-            embeddings.extend(batch_embeddings)
-        
-        return embeddings
-    
+        try:
+            # 청크가 큰 경우 분할하여 처리
+            embeddings = []
+            for i in range(0, len(texts), 20):  # API 제한 고려
+                batch = texts[i:i+20]
+                response = self.client.embeddings.create(
+                    model=self.model,
+                    input=batch
+                )
+                batch_embeddings = [item.embedding for item in response.data]
+                embeddings.extend(batch_embeddings)
+
+            return embeddings
+        except Exception as e:
+            logger.error(f"문서 임베딩 오류: {e}")
+            raise
+
     def embed_query(self, text: str) -> List[float]:
         """
         쿼리 텍스트를 벡터로 임베딩
-        
+
         Args:
             text: 임베딩할 쿼리 텍스트
-            
+
         Returns:
             List[float]: 임베딩 벡터
         """
-        response = self.client.embeddings.create(
-            model=self.model,
-            input=text,
-            **self.kwargs
-        )
-        return response.data[0].embedding
+        try:
+            logger.info(f"쿼리 임베딩 시도: 모델={self.model}")
+            response = self.client.embeddings.create(
+                model=self.model,
+                input=text
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            logger.error(f"쿼리 임베딩 오류: {e}")
+            raise
 
 
 def get_embeddings(embedding_type: str = "huggingface", **kwargs) -> EmbeddingsBase:
