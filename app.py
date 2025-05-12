@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify
 import sys
 import os
 import logging
+import uuid
+import json
 
 # 환경변수 로드
 from dotenv import load_dotenv
@@ -21,8 +23,9 @@ from hongikjiki.utils import setup_logging
 from hongikjiki.text_processing.document_processor import DocumentProcessor
 from hongikjiki.text_processing.document_loader import DocumentLoader
 from hongikjiki.vector_store.chroma_store import ChromaVectorStore
-from hongikjiki.chatbot import HongikJikiChatBot
 from hongikjiki.langchain_integration.llm import get_llm
+from hongikjiki.langchain_integration.chain import get_chatbot_chain
+from hongikjiki.vector_store import load_vector_store
 
 # Flask 앱 생성
 app = Flask(__name__)
@@ -96,17 +99,15 @@ try:
     
     # LLM 인스턴스화 (HongikJikiChatBot 인스턴스화 전에)
     llm = get_llm("openai", model="gpt-4o", temperature=0.7)
-    # 챗봇 초기화
-    chatbot = HongikJikiChatBot(
+    
+    vector_store = load_vector_store(
         persist_directory=persist_directory,
-        embedding_type="huggingface",  # 또는 "openai"
-        llm_type="openai",  # 또는 다른 LLM 유형
+        embedding_type="huggingface",
         collection_name="hongikjiki_documents",
-        embedding_kwargs={
-            "model_name": EMBEDDING_MODEL
-        },
-        llm=llm  # Pass the pre-initialized llm
+        embedding_kwargs={"model_name": EMBEDDING_MODEL}
     )
+    chatbot = get_chatbot_chain(llm=llm, vector_store=vector_store)
+    
     # Load and assign TagSchema so chatbot.tag_schema exists
     from hongikjiki.tagging.tag_schema import TagSchema
     tag_schema_path = "data/config/tag_schema.yaml"
@@ -138,6 +139,12 @@ def ask():
         data = request.json
         question = data.get('question', '')
         
+        related_path = os.path.join("data/qa/high_insight_qa_dataset_formatted_related.json")
+        related_questions_map = {}
+        if os.path.exists(related_path):
+            with open(related_path, 'r', encoding='utf-8') as f:
+                related_questions_map = json.load(f)
+        
         if not question:
             return jsonify({"error": "질문이 비어있습니다."}), 400
         
@@ -155,12 +162,20 @@ def ask():
             logger.info(f"추출된 태그: {extracted_tags}")
         
         # 챗봇 응답 생성
-        response = chatbot.chat(question)
-        
-        # 관련 질문 추천 가져오기 (해당 메서드가 있는 경우)
-        suggested_questions = []
-        if hasattr(chatbot, 'get_related_questions'):
-            suggested_questions = chatbot.get_related_questions(question)
+        response = chatbot.run(question)
+        lecture_id = response.get("lecture_id", "")
+        lecture_title = response.get("lecture_title", "")
+        answer_text = response.get("answer", "")
+        qa_id = response.get("qa_id", "")
+
+        # 답변에 GPT 통찰 1문장 추가
+        insight_prompt = f"다음 답변의 핵심 통찰 또는 교훈을 1문장으로 요약해주세요:\n\n{answer_text}"
+        insight = chatbot.llm.generate(insight_prompt).strip()
+        answer_text += f"\n\n🧠 통찰 요약: {insight}"
+
+        # 관련 질문: insight 필드 포함하여 변환
+        related_questions_raw = related_questions_map.get(qa_id, [])
+        suggested_questions = [{"question": q["question"], "insight": q.get("insight", "")} for q in related_questions_raw]
         
         # 추천 문서 가져오기 (해당 메서드가 있는 경우)
         recommended_documents = []
@@ -169,7 +184,11 @@ def ask():
 
         # 응답 데이터 구성
         response_data = {
-            "response": response,
+            "response": {
+                "answer": answer_text,
+                "lecture_id": lecture_id,
+                "lecture_title": lecture_title
+            },
             "extracted_tags": extracted_tags,
             "suggested_questions": suggested_questions,
             "recommended_documents": recommended_documents

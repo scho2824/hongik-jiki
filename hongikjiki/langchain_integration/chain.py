@@ -116,7 +116,7 @@ class QAChain(ChainBase):
         self.prompt_template = PromptTemplate(prompt_template or default_template)
         self.citation_template = PromptTemplate(citation_prompt_template or default_citation_template)
     
-    def run(self, input_data: Union[str, Dict[str, Any]]) -> str:
+    def run(self, input_data: Union[str, Dict[str, Any]]) -> dict:
         """
         체인 실행
         
@@ -124,7 +124,7 @@ class QAChain(ChainBase):
             input_data: 입력 데이터 (문자열 또는 딕셔너리)
             
         Returns:
-            str: 생성된 답변
+            dict: 생성된 답변 및 출처 정보
         """
         try:
             # 입력 데이터 처리
@@ -153,6 +153,14 @@ class QAChain(ChainBase):
                     self.memory.add_ai_message(no_result_response)
                 return no_result_response
             
+            # 출처 정보 추출
+            first_metadata = search_results[0].get("metadata", {})
+            lecture_id = first_metadata.get("lecture_id", "")
+            lecture_title = first_metadata.get("lecture_title", "")
+            source_content = search_results[0].get("content", "")
+            summary_prompt = f"다음은 정법 강의의 일부입니다. 이 내용을 요약해 5줄 이내로 핵심만 정리해주세요:\n\n{source_content}"
+            source_summary = self.llm.generate(summary_prompt).strip()
+
             # 컨텍스트 구성
             context, sources = self._build_context(search_results, additional_context)
             
@@ -184,7 +192,12 @@ class QAChain(ChainBase):
             if self.memory:
                 self.memory.add_ai_message(final_answer)
             
-            return final_answer
+            return {
+                "answer": final_answer,
+                "lecture_id": lecture_id,
+                "lecture_title": lecture_title,
+                "source_summary": source_summary
+            }
             
         except Exception as e:
             logger.error(f"QA 체인 실행 오류: {e}")
@@ -431,3 +444,20 @@ class ConversationalQAChain(QAChain):
             error_msg = f"죄송합니다. 답변 생성 중 오류가 발생했습니다: {str(e)}"
             self.memory.add_ai_message(error_msg)
             return error_msg
+def get_chatbot_chain(llm: LLMBase, vector_store: VectorStoreBase, memory: Optional[MemoryBase] = None, k: int = 4):
+    """
+    챗봇 실행을 위한 체인 생성자 함수
+
+    Args:
+        llm: 언어 모델 인스턴스
+        vector_store: 벡터 저장소 인스턴스
+        memory: 메모리 (있으면 Conversational, 없으면 QAChain 사용)
+        k: 검색 문서 수
+
+    Returns:
+        QAChain 또는 ConversationalQAChain 인스턴스
+    """
+    if memory:
+        return ConversationalQAChain(llm=llm, vector_store=vector_store, memory=memory, k=k)
+    else:
+        return QAChain(llm=llm, vector_store=vector_store, memory=None, k=k)

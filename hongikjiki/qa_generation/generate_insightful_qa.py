@@ -72,16 +72,22 @@ def process_file(input_path, output_path, lecture_id=None, lecture_title=""):
     # ------------------------------------------------------------------------
     # Populate metadata fields from arguments or default to empty
     for qa in qa_data:
-        # Set lecture_id if provided; otherwise, ensure field exists but empty
+        # 기존 필드 유지
         if lecture_id is not None:
             qa["lecture_id"] = lecture_id
         else:
             qa.setdefault("lecture_id", "")
-        # Set lecture_title if provided; otherwise, ensure field exists but empty
+
         if lecture_title:
             qa["lecture_title"] = lecture_title
         else:
             qa.setdefault("lecture_title", "")
+
+        # metadata 필드 생성 또는 갱신
+        qa["metadata"] = {
+            "lecture_id": qa.get("lecture_id", ""),
+            "lecture_title": qa.get("lecture_title", "")
+        }
     # ------------------------------------------------------------------------
 
     enhanced = []
