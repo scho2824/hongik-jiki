@@ -69,6 +69,7 @@ jobs:
 
       # 8️⃣ Upload tagged artefact for this run (always)
       - name: Upload tagged QA dataset artefact
+        # v2 또는 v3 대신 v4 사용
         uses: actions/upload-artifact@v4
         with:
           name: tagged_qa_${{ github.sha }}

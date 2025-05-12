@@ -46,6 +46,22 @@ jobs:
         run: |
           jq empty data/qa/high_insight_qa_dataset.json
 
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 📤 Upload dataset
+        uses: actions/upload-artifact@v4
+        with:
+          name: high-insight-dataset
+          path: data/qa/high_insight_qa_dataset.json
+
+      - name: 📥 Download dataset
+        uses: actions/download-artifact@v4
+        with:
+          name: high-insight-dataset
+
       - name: 🆔 Configure git identity
         run: |
           git config user.email "${{ github.actor }}@users.noreply.github.com"
