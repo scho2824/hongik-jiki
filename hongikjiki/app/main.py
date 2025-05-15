@@ -1,6 +1,8 @@
 # hongikjiki/app/main.py
-import os
 import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+# hongikjiki/app/main.py
 import traceback
 from pathlib import Path
 from hongikjiki.utils.logging_setup import setup_logging

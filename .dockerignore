@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+.venv/
+logs/
+data/vector_store/
+data/chunks/
+data/embeddings/
+output/
+.ipynb_checkpoints/
+.git/
