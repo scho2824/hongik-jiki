@@ -12,6 +12,8 @@ import subprocess
 import time
 import json
 from datetime import datetime, timedelta
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[2]
 
 # 로깅 설정
 os.makedirs("logs", exist_ok=True)
@@ -74,14 +76,14 @@ def run_command(command, desc):
 def prepare_directories():
     """필요한 디렉토리 구조 준비"""
     directories = [
-        "data/jungbub_teachings",         # 원본 문서
-        "data/processed_originals",       # 처리 완료된 원본
-        "data/tag_data/input_chunks/processed_chunks", # 처리된 청크
-        "data/tag_data/auto_tagged",      # 태깅된 문서
-        "data/qa",                        # QA 생성 결과
-        "data/vector_store",              # 벡터 저장소
-        "data/processed",                 # 처리된 데이터셋
-        "logs"                            # 로그 파일
+        ROOT_DIR / "data/jungbub_teachings",         # 원본 문서
+        ROOT_DIR / "data/processed_originals",       # 처리 완료된 원본
+        ROOT_DIR / "data/tag_data/input_chunks/processed_chunks", # 처리된 청크
+        ROOT_DIR / "data/tag_data/auto_tagged",      # 태깅된 문서
+        ROOT_DIR / "data/qa",                        # QA 생성 결과
+        ROOT_DIR / "data/vector_store",              # 벡터 저장소
+        ROOT_DIR / "data/processed",                 # 처리된 데이터셋
+        ROOT_DIR / "logs"                            # 로그 파일
     ]
     
     for directory in directories:
@@ -91,7 +93,7 @@ def prepare_directories():
 def count_documents(directory):
     """디렉토리 내 문서 파일 수 계산"""
     count = 0
-    for root, _, files in os.walk(directory):
+    for root, _, files in os.walk(str(directory)):
         for file in files:
             ext = os.path.splitext(file)[1].lower()
             if ext in ['.txt', '.rtf', '.pdf', '.docx', '.md']:
@@ -108,8 +110,8 @@ def stage1_document_processing():
     stage_start = time.time()
     
     # 문서 처리 전 상태 확인
-    orig_count = count_documents("data/jungbub_teachings")
-    processed_count = count_documents("data/processed_originals")
+    orig_count = count_documents(ROOT_DIR / "data/jungbub_teachings")
+    processed_count = count_documents(ROOT_DIR / "data/processed_originals")
     logger.info(f"처리 전 상태: 원본 문서 {orig_count}개, 처리 완료 문서 {processed_count}개")
     
     # 1-1: 문서 청킹 파이프라인 실행
@@ -133,7 +135,7 @@ def stage1_document_processing():
         return False
     
     # 처리 후 상태 확인
-    processed_count_after = count_documents("data/processed_originals")
+    processed_count_after = count_documents(ROOT_DIR / "data/processed_originals")
     logger.info(f"처리 후 상태: 처리 완료 문서 {processed_count_after}개 (새로 처리됨: {processed_count_after - processed_count}개)")
     
     stage_elapsed = time.time() - stage_start
@@ -153,7 +155,7 @@ def stage2_vector_building():
     
     # 2-1: 청크 병합
     stage2_1_success = run_command(
-        "python3 hongikjiki/utils/merge_chunks.py --input-dir data/tag_data/auto_tagged --output-file data/processed/jungbub_dataset.json",
+        f"python3 hongikjiki/utils/merge_chunks.py --input-dir {str(ROOT_DIR / 'data/tag_data/auto_tagged')} --output-file {str(ROOT_DIR / 'data/processed/jungbub_dataset.json')}",
         "2-1: 청크 병합"
     )
     
@@ -163,7 +165,7 @@ def stage2_vector_building():
     
     # 2-2: QA 생성
     stage2_2_success = run_command(
-        "python3 hongikjiki/qa_generation/generate_qa.py --input_file data/processed/jungbub_dataset.json --output_file data/qa/jungbub_qa_dataset.json",
+        f"python3 hongikjiki/qa_generation/generate_qa.py --input_file {str(ROOT_DIR / 'data/processed/jungbub_dataset.json')} --output_file {str(ROOT_DIR / 'data/qa/jungbub_qa_dataset.json')}",
         "2-2: QA 생성"
     )
     
@@ -173,7 +175,7 @@ def stage2_vector_building():
     
     # 2-3: 벡터 저장소 구축
     stage2_3_success = run_command(
-        "python3 hongikjiki/scripts/build_vector_store.py --qa_file data/qa/jungbub_qa_dataset.json --persist_dir data/vector_store --collection_name hongikjiki_jungbub",
+        f"python3 hongikjiki/scripts/build_vector_store.py --qa_file {str(ROOT_DIR / 'data/qa/jungbub_qa_dataset.json')} --persist_dir {str(ROOT_DIR / 'data/vector_store')} --collection_name hongikjiki_jungbub",
         "2-3: 벡터 저장소 구축"
     )
     

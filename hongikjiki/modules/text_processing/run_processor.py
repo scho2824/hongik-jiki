@@ -7,16 +7,19 @@ import argparse
 import json
 import os
 import logging
+from pathlib import Path
 from hongikjiki.modules.text_processing.document_processor import DocumentProcessor
+
+ROOT_DIR = Path(__file__).resolve().parents[3]
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser(description="DocumentProcessor 기반 문서 전처리")
-    parser.add_argument("--input-file", type=str, help="단일 텍스트 파일 경로")
-    parser.add_argument("--input-dir", type=str, help="텍스트 파일이 포함된 디렉토리 경로")
-    parser.add_argument("--output-file", type=str, required=True, help="전처리 결과를 저장할 JSON 파일 경로")
+    parser.add_argument("--input-file", type=Path, help="단일 텍스트 파일 경로")
+    parser.add_argument("--input-dir", type=Path, help="텍스트 파일이 포함된 디렉토리 경로")
+    parser.add_argument("--output-file", type=Path, required=True, help="전처리 결과를 저장할 JSON 파일 경로")
     parser.add_argument("--chunk-size", type=int, default=1000, help="청크 최대 크기 (기본값: 1000)")
     parser.add_argument("--overlap", type=int, default=200, help="청크 간 중첩 길이 (기본값: 200)")
     
@@ -32,8 +35,8 @@ def main():
         return
 
     # JSON으로 결과 저장
-    os.makedirs(os.path.dirname(args.output_file), exist_ok=True)
-    with open(args.output_file, "w", encoding="utf-8") as f:
+    args.output_file.parent.mkdir(parents=True, exist_ok=True)
+    with args.output_file.open("w", encoding="utf-8") as f:
         logger.info(f"📄 처리된 청크 수: {len(chunks)}")
         json.dump(chunks, f, ensure_ascii=False, indent=2)
 

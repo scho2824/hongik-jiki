@@ -4,14 +4,19 @@ import json
 import random
 import logging
 
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+
 logger = logging.getLogger("HongikJikiChatBot")
 
-def load_tag_questions(json_path="data/tag_question_map.json"):
+def load_tag_questions(json_path: str | Path = ROOT_DIR / "data" / "tag_question_map.json"):
     """외부 JSON에서 태그별 질문 로드"""
-    if not os.path.exists(json_path):
+    json_path = Path(json_path)
+    if not json_path.exists():
         logger.warning(f"Tag question map not found: {json_path}")
         return {}
-    with open(json_path, "r", encoding="utf-8") as f:
+    with json_path.open("r", encoding="utf-8") as f:
         return json.load(f)
 
 def generate_related_questions(tags, current_question):

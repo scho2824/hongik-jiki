@@ -1,4 +1,3 @@
-
 import uuid
 import re
 
@@ -10,13 +9,17 @@ logger = logging.getLogger(__name__)
 import json
 import argparse
 from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[3]
 
-def load_qa_data(input_path):
-    with open(input_path, 'r', encoding='utf-8') as f:
+def load_qa_data(input_path: Path | str):
+    input_path = Path(input_path)
+    with input_path.open('r', encoding='utf-8') as f:
         return json.load(f)
 
-def save_qa_data(data, output_path):
-    with open(output_path, 'w', encoding='utf-8') as f:
+def save_qa_data(data, output_path: Path | str):
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open('w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 def extract_tags(text):

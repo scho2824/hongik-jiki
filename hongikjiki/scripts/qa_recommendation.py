@@ -7,12 +7,18 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def load_qa_dataset(path):
-    with open(path, 'r', encoding='utf-8') as f:
+# Set ROOT_DIR to three levels above this file
+ROOT_DIR = Path(__file__).resolve().parents[3]
+
+def load_qa_dataset(path: str | Path):
+    path = Path(path)
+    with path.open('r', encoding='utf-8') as f:
         return json.load(f)
 
-def save_related_map(related_map, output_path):
-    with open(output_path, 'w', encoding='utf-8') as f:
+def save_related_map(related_map, output_path: str | Path):
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open('w', encoding='utf-8') as f:
         json.dump(related_map, f, ensure_ascii=False, indent=2)
 
 def build_tag_index(qa_data):
@@ -62,13 +68,16 @@ def main():
     parser.add_argument("--top_k", type=int, default=5, help="Number of related questions to return per QA")
     args = parser.parse_args()
 
-    qa_data = load_qa_dataset(args.input)
+    input_path = Path(args.input)
+    output_path = Path(args.output)
+
+    qa_data = load_qa_dataset(input_path)
     llm = get_llm()
     tag_index = build_tag_index(qa_data)
     related_map = recommend_questions(qa_data, tag_index, llm, top_k=args.top_k)
-    save_related_map(related_map, args.output)
+    save_related_map(related_map, output_path)
 
-    logger.info(f"Generated related question map for {len(qa_data)} QA items → {args.output}")
+    logger.info(f"Generated related question map for {len(qa_data)} QA items → {output_path}")
 
 if __name__ == "__main__":
     main()

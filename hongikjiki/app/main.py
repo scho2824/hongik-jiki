@@ -2,10 +2,13 @@
 import os
 import sys
 import traceback
+from pathlib import Path
 from hongikjiki.utils.logging_setup import setup_logging
 from hongikjiki.app.config import OPENAI_API_KEY
 from hongikjiki.app.ui import create_ui
 from hongikjiki.core.chatbot import HongikJikiChatbot
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
 
 # 로깅 설정
 logger = setup_logging()
@@ -44,7 +47,7 @@ def init_modules():
             # 벡터 스토어 초기화
             vector_store = ChromaVectorStore(
                 collection_name=COLLECTION_NAME,
-                persist_directory=PERSIST_DIR,
+                persist_directory=str(PERSIST_DIR),
                 embeddings=embeddings
             )
             
@@ -69,15 +72,17 @@ def init_modules():
         try:
             from hongikjiki.modules.tagging.tag_schema import TagSchema
             from hongikjiki.modules.tagging.tag_extractor import TagExtractor
-            from hongikjiki.app.config import TAG_SCHEMA_PATH, TAG_PATTERN_PATH
             
-            if os.path.exists(TAG_SCHEMA_PATH) and os.path.exists(TAG_PATTERN_PATH):
-                tag_schema = TagSchema(TAG_SCHEMA_PATH)
+            tag_schema_path = ROOT_DIR / "data" / "config" / "tag_schema.yaml"
+            tag_pattern_path = ROOT_DIR / "data" / "config" / "tag_patterns.json"
+            
+            if tag_schema_path.exists() and tag_pattern_path.exists():
+                tag_schema = TagSchema(str(tag_schema_path))
                 tag_extractor = TagExtractor(tag_schema, 0.5)
                 logger.info("태그 시스템 로드 완료")
                 print("태그 시스템 로드 완료")
             else:
-                logger.warning(f"태그 파일이 없습니다: {TAG_SCHEMA_PATH} 또는 {TAG_PATTERN_PATH}")
+                logger.warning(f"태그 파일이 없습니다: {tag_schema_path} 또는 {tag_pattern_path}")
                 tag_schema = None
                 tag_extractor = None
         except Exception as e:

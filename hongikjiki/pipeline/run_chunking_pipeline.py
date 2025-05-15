@@ -1,5 +1,3 @@
-
-
 #!/usr/bin/env python3
 """
 Run Chunking Pipeline for Hongik-Jiki Chatbot
@@ -10,27 +8,28 @@ This script loads documents, normalizes and chunks them, then saves the chunks f
 import os
 import sys
 import json
+import logging
+from uuid import uuid4
 from pathlib import Path
 from typing import Dict, Any
-from uuid import uuid4
 
-# Set up project path
+ROOT_DIR = Path(__file__).resolve().parents[2]
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from hongikjiki.modules.text_processing.document_loader import DocumentLoader
 from hongikjiki.modules.text_processing.text_normalizer import TextNormalizer
 from hongikjiki.modules.text_processing.document_chunker import DocumentChunker
-import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ChunkingPipeline")
 
-INPUT_DIR = "data/jungbub_teachings"
-OUTPUT_DIR = "data/tag_data/input_chunks"
+INPUT_DIR = ROOT_DIR / "data/jungbub_teachings"
+OUTPUT_DIR = ROOT_DIR / "data/tag_data/input_chunks"
 
-def run_chunking_pipeline(input_dir: str = INPUT_DIR, output_dir: str = OUTPUT_DIR) -> None:
-    os.makedirs(output_dir, exist_ok=True)
-    
+def run_chunking_pipeline(input_dir: str = str(INPUT_DIR), output_dir: str = str(OUTPUT_DIR)) -> None:
+    output_path = Path(output_dir)
+    os.makedirs(output_path, exist_ok=True)
+
     loader = DocumentLoader()
     normalizer = TextNormalizer()
     chunker = DocumentChunker()
@@ -47,7 +46,7 @@ def run_chunking_pipeline(input_dir: str = INPUT_DIR, output_dir: str = OUTPUT_D
 
         for i, chunk in enumerate(chunks):
             chunk_id = f"{doc_id}_{i}"
-            out_path = os.path.join(output_dir, f"{chunk_id}.json")
+            out_path = output_path / f"{chunk_id}.json"
             chunk_data: Dict[str, Any] = {
                 "id": chunk_id,
                 "content": chunk,
@@ -62,7 +61,7 @@ def run_chunking_pipeline(input_dir: str = INPUT_DIR, output_dir: str = OUTPUT_D
                 json.dump(chunk_data, f, ensure_ascii=False, indent=2)
             chunk_count += 1
 
-    logger.info(f"{chunk_count}개의 청크를 {output_dir}에 저장했습니다.")
+    logger.info(f"{chunk_count}개의 청크를 {output_path}에 저장했습니다.")
 
 if __name__ == "__main__":
     run_chunking_pipeline()

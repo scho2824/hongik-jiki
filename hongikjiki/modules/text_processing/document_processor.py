@@ -4,6 +4,9 @@ from typing import List, Dict, Any, Optional
 import hashlib
 import json
 from datetime import datetime
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[3]
 
 from hongikjiki.modules.text_processing.document_loader import DocumentLoader
 from hongikjiki.modules.text_processing.text_normalizer import TextNormalizer
@@ -49,7 +52,7 @@ class DocumentProcessor:
         # 처리된 문서 해시 추적 (중복 감지용)
         self.processed_hashes = []
     
-    def process_directory(self, directory: str) -> List[Dict[str, Any]]:
+    def process_directory(self, directory: str | Path) -> List[Dict[str, Any]]:
         """
         디렉토리 내 모든 문서 처리
         
@@ -59,25 +62,25 @@ class DocumentProcessor:
         Returns:
             List[Dict]: 처리 및 청킹된 문서 리스트
         """
+        directory = Path(directory)
         all_chunks = []
         
         # 각 파일 처리
-        for filename in os.listdir(directory):
-            file_path = os.path.join(directory, filename)
+        for file_path in directory.iterdir():
             
             # 디렉토리 건너뛰기
-            if os.path.isdir(file_path):
+            if file_path.is_dir():
                 continue
                 
             # 파일 확장자 확인
-            ext = os.path.splitext(filename)[1].lower()
+            ext = file_path.suffix.lower()
             if ext in ['.txt', '.md', '.pdf', '.docx', '.rtf']:
                 chunks = self.process_file(file_path)
                 all_chunks.extend(chunks)
         
         return all_chunks
     
-    def process_file(self, file_path: str) -> List[Dict[str, Any]]:
+    def process_file(self, file_path: str | Path) -> List[Dict[str, Any]]:
         """
         단일 파일 처리
         
@@ -87,8 +90,9 @@ class DocumentProcessor:
         Returns:
             List[Dict]: 처리 및 청킹된 문서 리스트 (청킹 결과에 따라 여러 개일 수 있음)
         """
+        file_path = Path(file_path)
         try:
-            doc_data = self.document_loader.load_document(file_path) or {}
+            doc_data = self.document_loader.load_document(str(file_path)) or {}
         except Exception as e:
             logger.error(f"파일 처리 오류: {e}")
             return []
@@ -111,11 +115,11 @@ class DocumentProcessor:
                 continue
             meta = self.metadata_extractor.extract_metadata(
                 normalized,
-                file_path,
+                str(file_path),
                 metadata_in
             )
             # Ensure filename stays as the original basename, not full path
-            meta['filename'] = os.path.basename(file_path)
+            meta['filename'] = file_path.name
             docs_to_chunk = [{"content": normalized, "metadata": meta}]
             chunks = self.document_chunker.split_documents(docs_to_chunk)
             for chunk in chunks:

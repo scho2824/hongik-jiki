@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 from typing import List, Dict, Any, Optional, Union, Sequence, Tuple, cast
+from pathlib import Path
 
 import chromadb
 from chromadb.config import Settings
@@ -10,6 +11,9 @@ from chromadb.api.models.Collection import Collection
 from hongikjiki.modules.vector_store.base import VectorStoreBase
 
 logger = logging.getLogger("HongikJikiChatBot")
+
+# 프로젝트 루트 디렉토리 (최상위에서 2단계 위)
+ROOT_DIR = Path(__file__).resolve().parents[2]
 
 class ChromaVectorStore(VectorStoreBase):
     similarity_search_by_vector: Optional[Any] = None
@@ -61,8 +65,8 @@ class ChromaVectorStore(VectorStoreBase):
 
         # 컬렉션이 없거나 유효하지 않은 경우 새로 생성
         if self.collection is None:
-            # 디렉토리 생성
-            os.makedirs(persist_directory, exist_ok=True)
+            # 디렉토리 생성 (Path 객체 사용)
+            Path(persist_directory).mkdir(parents=True, exist_ok=True)
 
             try:
                 # Chroma 클라이언트 초기화 - 여러 설정 시도
@@ -112,17 +116,15 @@ class ChromaVectorStore(VectorStoreBase):
         
         # 태그 인덱스 로드 시도
         try:
-            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-            if project_root not in sys.path:
-                sys.path.append(project_root)
-                
+            if str(ROOT_DIR) not in sys.path:
+                sys.path.append(str(ROOT_DIR))
+
             from hongikjiki.modules.vector_store.tag_index import TagIndex, TagAwareSearch
-            
-            # 태그 인덱스 파일 확인
-            tag_index_path = os.path.join(project_root, 'data', 'tag_data', 'tag_index.json')
-            if os.path.exists(tag_index_path):
+
+            tag_index_path = ROOT_DIR / "data" / "tag_data" / "tag_index.json"
+            if tag_index_path.exists():
                 logger.info(f"태그 인덱스 로드 중: {tag_index_path}")
-                self.tag_index = TagIndex(tag_index_path)
+                self.tag_index = TagIndex(str(tag_index_path))
                 self.tag_aware_search = TagAwareSearch(self.tag_index)
                 logger.info("태그 기반 검색 초기화 완료")
             else:
@@ -442,37 +444,29 @@ class ChromaVectorStore(VectorStoreBase):
         
         # 태그 스키마 로드 시도
         try:
-            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-            if project_root not in sys.path:
-                sys.path.append(project_root)
+            if str(ROOT_DIR) not in sys.path:
+                sys.path.append(str(ROOT_DIR))
 
             from hongikjiki.modules.tagging.tag_schema import TagSchema
 
-            # 태그 스키마 파일 확인
-            tag_schema_path = os.path.join(project_root, 'data', 'config', 'tag_schema.yaml')
-            if os.path.exists(tag_schema_path):
-                # TagSchema 초기화
-                tag_schema = TagSchema(tag_schema_path)
+            tag_schema_path = ROOT_DIR / "data" / "config" / "tag_schema.yaml"
+            if tag_schema_path.exists():
+                tag_schema = TagSchema(str(tag_schema_path))
 
                 # 모든 태그 이름 가져오기 (get_all_tags 메서드 사용)
                 if hasattr(tag_schema, 'get_all_tags') and callable(getattr(tag_schema, 'get_all_tags')):
-                    # TagSchema 클래스에 get_all_tags 메서드가 있는 경우
                     all_tag_objects = tag_schema.get_all_tags()
-                    # Tag 객체에서 name 속성 가져오기
                     all_tags = []
                     for tag_obj in all_tag_objects:
                         if hasattr(tag_obj, 'name'):
                             all_tags.append(tag_obj.name)
                 elif hasattr(tag_schema, 'tags') and isinstance(tag_schema.tags, dict):
-                    # tags 딕셔너리 속성을 직접 사용
                     all_tags = list(tag_schema.tags.keys())
                 else:
-                    # 다른 방법으로 태그 이름 추출 시도
                     all_tags = []
                     logger.warning("태그 스키마에서 태그 이름을 추출할 수 없습니다.")
 
                 if all_tags:
-                    # 태그 추출
                     if hasattr(self.tag_aware_search, 'extract_tags_from_query') and callable(getattr(self.tag_aware_search, 'extract_tags_from_query')):
                         clean_query, extracted_tags = self.tag_aware_search.extract_tags_from_query(query, all_tags)
                         logger.info(f"쿼리에서 태그 추출: {extracted_tags}")
@@ -503,30 +497,24 @@ class ChromaVectorStore(VectorStoreBase):
         # 태그가 없으면 태그 추출 시도
         if not tags:
             try:
-                project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-                if project_root not in sys.path:
-                    sys.path.append(project_root)
+                if str(ROOT_DIR) not in sys.path:
+                    sys.path.append(str(ROOT_DIR))
 
                 from hongikjiki.modules.tagging.tag_schema import TagSchema
                 from hongikjiki.modules.tagging.tag_extractor import TagExtractor
 
-                # 태그 스키마 및 패턴 파일 확인
-                tag_schema_path = os.path.join(project_root, 'data', 'config', 'tag_schema.yaml')
-                tag_patterns_path = os.path.join(project_root, 'data', 'config', 'tag_patterns.json')
+                tag_schema_path = ROOT_DIR / "data" / "config" / "tag_schema.yaml"
+                tag_patterns_path = ROOT_DIR / "data" / "config" / "tag_patterns.json"
 
-                if os.path.exists(tag_schema_path):
-                    tag_schema = TagSchema(tag_schema_path)
+                if tag_schema_path.exists():
+                    tag_schema = TagSchema(str(tag_schema_path))
                     try:
-                        # Create TagExtractor with just the schema (which should already have patterns loaded)
                         tag_extractor = TagExtractor(tag_schema)
                     except TypeError as e:
                         print(f"TagExtractor initialization error: {e}")
-                        # Fallback options if needed
                         tag_extractor = TagExtractor(tag_schema)
 
-                    # extract_tags_from_query 메서드가 있는지 확인
                     if hasattr(tag_extractor, 'extract_tags_from_query') and callable(getattr(tag_extractor, 'extract_tags_from_query')):
-                        # 쿼리 내용에서 태그 추출
                         tags = tag_extractor.extract_tags_from_query(clean_query)
             except Exception as e:
                 logger.warning(f"쿼리에서 태그 추출기 사용 실패: {e}")
@@ -591,10 +579,8 @@ class ChromaVectorStore(VectorStoreBase):
             # 태그 인덱스도 초기화
             if self.tag_index:
                 # 태그 인덱스 리셋 (빈 인덱스로 저장)
-                project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-                if project_root not in sys.path:
-                    sys.path.append(project_root)
-                
+                if str(ROOT_DIR) not in sys.path:
+                    sys.path.append(str(ROOT_DIR))
                 from hongikjiki.modules.vector_store.tag_index import TagIndex
                 self.tag_index = TagIndex()
                 self.tag_index.save_index()

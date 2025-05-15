@@ -3,9 +3,12 @@ import os
 import json
 import hashlib
 from datetime import datetime
+from pathlib import Path
 from langchain.schema import Document
 from hongikjiki.modules.vector_store.chroma_store import ChromaVectorStore
 from hongikjiki.modules.vector_store.embeddings import get_embeddings
+
+ROOT_DIR = Path(__file__).resolve().parents[3]
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("VectorBuilder")
@@ -23,7 +26,7 @@ def hash_text(text):
     return hashlib.md5(text.encode("utf-8")).hexdigest()
 
 def load_qa_pairs(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
+    with file_path.open("r", encoding="utf-8") as f:
         return [json.loads(line) for line in f if line.strip()]
 
 def convert_to_documents(qa_pairs):
@@ -55,7 +58,13 @@ def convert_to_documents(qa_pairs):
             continue
     return documents
 
-def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_name="hongikjiki_jungbub", append_log=False):
+def build_vector_store(
+    qa_file: Path,
+    persist_dir: Path = Path("./data/vector_store"),
+    collection_name: str = "hongikjiki_jungbub",
+    append_log: bool = False
+):
+
     logger.info("🔹 QA 데이터 로드 중...")
     qa_pairs = load_qa_pairs(qa_file)
     logger.info(f"🔹 총 {len(qa_pairs)}개의 QA 항목")
@@ -65,7 +74,7 @@ def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_na
     logger.info("🔹 벡터 저장소 초기화 중...")
     vector_store = ChromaVectorStore(
         collection_name=collection_name,
-        persist_directory=persist_dir,
+        persist_directory=str(persist_dir),
         embeddings=get_embeddings("openai", model="text-embedding-3-small")
     )
 
@@ -95,12 +104,12 @@ def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_na
     # vector_store.add_texts([doc.page_content for doc in docs], metadatas=[doc.metadata for doc in docs])
 
     # --- Extended metadata logging ---
-    processed_log_path = "data/processed_files.json"
-    os.makedirs(os.path.dirname(processed_log_path), exist_ok=True)
+    processed_log_path = ROOT_DIR / "data/processed_files.json"
+    processed_log_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Load existing log if it exists
-    if os.path.exists(processed_log_path) and append_log:
-        with open(processed_log_path, "r", encoding="utf-8") as f:
+    if processed_log_path.exists() and append_log:
+        with processed_log_path.open("r", encoding="utf-8") as f:
             processed_log = json.load(f)
     else:
         processed_log = {}
@@ -122,7 +131,7 @@ def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_na
             }
 
     # Save back to file
-    with open(processed_log_path, "w", encoding="utf-8") as f:
+    with processed_log_path.open("w", encoding="utf-8") as f:
         json.dump(processed_log, f, ensure_ascii=False, indent=2)
 
     vector_store.persist()
@@ -168,10 +177,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # validation: require qa_file unless running query mode
-    if not args.query and not args.qa_file:
-        parser.error("either --qa_file or --query must be provided")
+    if not args.query:
+        if not args.qa_file:
+            parser.error("--qa_file is required unless --query is provided")
+        qa_path = Path(args.qa_file)
+    persist_path = Path(args.persist_dir)
 
     if args.query:
         test_vector_query(args.query, args.top_k)
     else:
-        build_vector_store(args.qa_file, persist_dir=args.persist_dir, collection_name=args.collection_name, append_log=args.append_log)
+        build_vector_store(qa_path, persist_dir=persist_path, collection_name=args.collection_name, append_log=args.append_log)

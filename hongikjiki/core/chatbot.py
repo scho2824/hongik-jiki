@@ -6,6 +6,10 @@ hongikjiki.core.chatbot
 순수한 비즈니스 로직만 포함하고, 실제 구현체(LLM, 벡터 저장소 등)는 의존성 주입 받습니다.
 """
 
+# For future file path consistency
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[2]
+
 import logging
 from typing import List, Dict, Any, Optional, Union, Tuple
 import os

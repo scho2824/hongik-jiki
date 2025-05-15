@@ -1,3 +1,5 @@
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[3]
 from typing import Dict, Any, Optional, List, Union,Tuple
 import logging
 import os

@@ -5,6 +5,9 @@ LangChain 통합을 위한 LLM 구현
 import os
 import logging
 from typing import List, Dict, Any, Optional, Union
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
 
 from hongikjiki.langchain_integration.base import LLMBase
 

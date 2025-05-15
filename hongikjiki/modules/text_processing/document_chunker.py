@@ -3,13 +3,23 @@ import json
 import os
 from datetime import datetime
 from typing import List, Dict, Any, Optional, Tuple
+from pathlib import Path
+
+# Define ROOT_DIR as three levels up from this file
+ROOT_DIR = Path(__file__).resolve().parents[3]
 
 def get_file_hash(text: str) -> str:
     return hashlib.md5(text.encode('utf-8')).hexdigest()
 
-def save_processed_file_metadata(documents: List[Dict[str, Any]], output_path: str = "data/processed_files.json") -> None:
-    if os.path.exists(output_path):
-        with open(output_path, "r", encoding="utf-8") as f:
+def save_processed_file_metadata(
+    documents: List[Dict[str, Any]],
+    output_path: str | Path = ROOT_DIR / "data" / "processed_files.json"
+) -> None:
+    # Ensure output_path is a Path object
+    output_path = Path(output_path) if isinstance(output_path, str) else output_path
+
+    if output_path.exists():
+        with output_path.open("r", encoding="utf-8") as f:
             processed_data = json.load(f)
     else:
         processed_data = {}
@@ -28,7 +38,7 @@ def save_processed_file_metadata(documents: List[Dict[str, Any]], output_path: s
             "vector_ids": []  # Placeholder to be updated after vectorization
         }
 
-    with open(output_path, "w", encoding="utf-8") as f:
+    with output_path.open("w", encoding="utf-8") as f:
         json.dump(processed_data, f, ensure_ascii=False, indent=2)
 
 import re

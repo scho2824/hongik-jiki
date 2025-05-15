@@ -7,6 +7,8 @@ from typing import List, Dict, Any, Optional, Tuple, Union
 from tqdm import tqdm  # 진행 상황 표시용
 import random
 import os
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[3]
 import glob
 
 # 로깅 설정
@@ -16,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # 안전하게 태그 추출기 초기화
 try:
-    tag_schema = TagSchema.load_from_yaml("data/converted_tag_schema.yaml")
+    tag_schema = TagSchema.load_from_yaml(str(ROOT_DIR / "data/converted_tag_schema.yaml"))
     tag_extractor = TagExtractor(tag_schema)
 except Exception as e:
     logger.warning(f"태그 추출기 초기화 실패: {e}")
@@ -122,7 +124,7 @@ def generate_multiple_qa(text: str, tags: Dict[str, float], source: Optional[str
         qa_item["tags"] = list(set(qa_item["tags"]))
     return qa_list
 
-def load_dataset(input_dir: str) -> List[Dict[str, Any]]:
+def load_dataset(input_dir: Path) -> List[Dict[str, Any]]:
     """
     주어진 디렉토리에서 JSON 및 JSONL 파일을 로드합니다.
     
@@ -134,19 +136,18 @@ def load_dataset(input_dir: str) -> List[Dict[str, Any]]:
     """
     dataset = []
     
-    if not os.path.exists(input_dir):
+    input_path = input_dir
+    if not input_path.exists():
         logger.warning(f"입력 디렉토리가 존재하지 않습니다: {input_dir}")
         return dataset
         
     try:
-        json_files = glob.glob(os.path.join(input_dir, "**", "*.json"), recursive=True)
-        jsonl_files = glob.glob(os.path.join(input_dir, "**", "*.jsonl"), recursive=True)
-        all_files = json_files + jsonl_files
+        all_files = list(input_path.rglob("*.json")) + list(input_path.rglob("*.jsonl"))
 
         for file_path in all_files:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    if file_path.endswith(".jsonl"):
+                with file_path.open("r", encoding="utf-8") as f:
+                    if str(file_path).endswith(".jsonl"):
                         for line in f:
                             if line.strip():
                                 dataset.append(json.loads(line))
@@ -238,7 +239,7 @@ def advanced_qa_generator(dataset: List[Dict[str, Any]], min_length: int = 30) -
     
     return qa_pairs
 
-def save_qa_dataset(output_path: str, qa_pairs: List[Dict[str, Any]], append: bool = False) -> None:
+def save_qa_dataset(output_path: Path, qa_pairs: List[Dict[str, Any]], append: bool = False) -> None:
     """
     QA 쌍을 JSON 파일로 저장합니다.
     
@@ -248,13 +249,10 @@ def save_qa_dataset(output_path: str, qa_pairs: List[Dict[str, Any]], append: bo
         append: 기존 파일에 추가할지 여부
     """
     try:
-        # 디렉토리 확인 및 생성
-        output_dir = os.path.dirname(output_path)
-        if output_dir and not os.path.exists(output_dir):
-            os.makedirs(output_dir, exist_ok=True)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         
-        if append and os.path.exists(output_path):
-            with open(output_path, "r", encoding="utf-8") as f:
+        if append and output_path.exists():
+            with output_path.open("r", encoding="utf-8") as f:
                 try:
                     existing_data = json.load(f)
                     if not isinstance(existing_data, list):
@@ -265,7 +263,7 @@ def save_qa_dataset(output_path: str, qa_pairs: List[Dict[str, Any]], append: bo
         else:
             combined_data = qa_pairs
             
-        with open(output_path, "w", encoding="utf-8") as f:
+        with output_path.open("w", encoding="utf-8") as f:
             json.dump(combined_data, f, ensure_ascii=False, indent=2)
     except Exception as e:
         logger.error(f"QA 데이터 저장 실패: {e}")
@@ -295,7 +293,7 @@ class QAGenerator:
         """
         return advanced_qa_generator(dataset, self.min_length)
 
-    def generate_from_file(self, input_file: str) -> List[Dict[str, Any]]:
+    def generate_from_file(self, input_file: Path) -> List[Dict[str, Any]]:
         """
         파일로부터 데이터를 로드하고 QA 쌍을 생성합니다.
         
@@ -305,10 +303,10 @@ class QAGenerator:
         Returns:
             QA 쌍 리스트
         """
-        if os.path.isdir(input_file):
+        if input_file.is_dir():
             data = load_dataset(input_file)
         else:
-            data = load_dataset(os.path.dirname(input_file))
+            data = load_dataset(input_file.parent)
         return self.generate(data)
 
 if __name__ == "__main__":
@@ -321,11 +319,14 @@ if __name__ == "__main__":
     parser.add_argument("--append", action="store_true", help="기존 출력 파일에 QA 데이터를 추가합니다.")
     args = parser.parse_args()
 
-    logger.info(f"📥 입력 디렉토리: {args.input_dir}")
-    logger.info(f"📤 출력 파일: {args.output_file}")
+    input_dir: Path = Path(args.input_dir)
+    output_file: Path = Path(args.output_file)
 
-    dataset = load_dataset(args.input_dir)
+    logger.info(f"📥 입력 디렉토리: {input_dir}")
+    logger.info(f"📤 출력 파일: {output_file}")
+
+    dataset = load_dataset(input_dir)
     qa_pairs = advanced_qa_generator(dataset, args.min_length)
-    save_qa_dataset(args.output_file, qa_pairs, append=args.append)
+    save_qa_dataset(output_file, qa_pairs, append=args.append)
 
     logger.info(f"✅ 총 {len(qa_pairs)}개의 QA 쌍이 생성되어 저장되었습니다.")

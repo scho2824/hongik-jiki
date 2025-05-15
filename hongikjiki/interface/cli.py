@@ -13,7 +13,11 @@ hongikjiki.interface.cli
 import os
 import sys
 import logging
+from pathlib import Path
 from dotenv import load_dotenv
+
+# Define ROOT_DIR
+ROOT_DIR = Path(__file__).resolve().parents[2]
 
 # 환경변수 로드
 load_dotenv()
@@ -46,7 +50,7 @@ def initialize_chatbot():
     # 환경변수 로드
     EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', 'openai')
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-    DATA_DIR = os.getenv('DATA_DIR', 'data/jungbub_teachings')
+    DATA_DIR = Path(os.getenv('DATA_DIR', ROOT_DIR / "data" / "jungbub_teachings"))
     CHATBOT_NAME = os.getenv('CHATBOT_NAME', 'Hongik-Jiki')
     DEVELOPER_NAME = os.getenv('DEVELOPER_NAME', '개발연구원 조성우')
     
@@ -77,8 +81,8 @@ def initialize_chatbot():
     tag_extractor = None
     if USE_TAG_EXTRACTOR:
         try:
-            tag_schema_path = "data/config/tag_schema.yaml"
-            tag_schema = TagSchema(tag_schema_path)
+            tag_schema_path = ROOT_DIR / "data" / "config" / "tag_schema.yaml"
+            tag_schema = TagSchema(str(tag_schema_path))
             tag_extractor = TagExtractor(tag_schema)
             logger.info("태그 추출기 초기화 완료")
         except Exception as e:
@@ -93,13 +97,13 @@ def initialize_chatbot():
         logger.info("데이터베이스가 비어 있습니다. 문서 로드 및 처리를 시작합니다.")
         
         # Check if DATA_DIR exists
-        if not os.path.isdir(DATA_DIR):
+        if not DATA_DIR.is_dir():
             logger.warning(f"{DATA_DIR} 폴더가 존재하지 않습니다.")
             print(f"오류: {DATA_DIR} 폴더를 찾을 수 없습니다.")
             sys.exit(1)
         
         # 문서 로드
-        documents = text_processor.process_directory(DATA_DIR)
+        documents = text_processor.process_directory(str(DATA_DIR))
         
         if not documents:
             logger.warning(f"{DATA_DIR} 폴더에 문서가 없습니다.")

@@ -21,8 +21,9 @@ from hongikjiki.modules.qa_generation.generate_refined_qa import refine_single_q
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+ROOT_DIR = Path(__file__).resolve().parents[3]
 # 문서 메타데이터 파일 경로
-META_FILE = Path("./data/document_metadata.json")
+META_FILE = ROOT_DIR / "data" / "document_metadata.json"
 
 SUPPORTED_EXTENSIONS = {".txt", ".pdf", ".docx", ".rtf"}
 
@@ -287,13 +288,13 @@ def update_documents(data_dir: Union[str, Path], vector_store=None, force_reinde
 
             from hongikjiki.modules.tagging.tag_extractor import TagExtractor
             from hongikjiki.modules.tagging.tag_schema import TagSchema
-            
+
             # 태그 스키마 파일 경로 확인
-            tag_schema_path = "data/config/tag_schema.yaml"
-            if not os.path.exists(tag_schema_path):
-                tag_schema_path = "data/converted_tag_schema.yaml"
-            
-            tag_schema = TagSchema(tag_schema_path)
+            tag_schema_path = ROOT_DIR / "data" / "config" / "tag_schema.yaml"
+            if not tag_schema_path.exists():
+                tag_schema_path = ROOT_DIR / "data" / "converted_tag_schema.yaml"
+
+            tag_schema = TagSchema(str(tag_schema_path))
             tag_extractor = TagExtractor(tag_schema)
 
             for chunk in document_chunks:
@@ -429,6 +430,7 @@ if __name__ == "__main__":
     parser.add_argument("--reindex", action="store_true", help="강제 재색인 여부")
 
     args = parser.parse_args()
+    args.dir = Path(args.dir)
 
     result = update_documents(args.dir, force_reindex=args.reindex)
     print(json.dumps(result, ensure_ascii=False, indent=2))

@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[3]
 import re
 import hashlib
 import logging
@@ -122,11 +124,11 @@ class MetadataExtractor:
             from hongikjiki.modules.tagging.tag_extractor import TagExtractor
 
             # 태그 스키마 및 패턴 파일 경로 확인
-            tag_schema_path = os.path.join(project_root, 'data', 'config', 'tag_schema.yaml')
-            tag_patterns_path = os.path.join(project_root, 'data', 'config', 'tag_patterns.json')
+            tag_schema_path = ROOT_DIR / "data" / "config" / "tag_schema.yaml"
+            tag_patterns_path = ROOT_DIR / "data" / "config" / "tag_patterns.json"
 
-            if os.path.exists(tag_schema_path):
-                tag_schema = TagSchema(tag_schema_path)
+            if tag_schema_path.exists():
+                tag_schema = TagSchema(str(tag_schema_path))
                 tag_extractor = TagExtractor(tag_schema)
         except ImportError:
             logger.warning("태그 모듈을 불러올 수 없습니다. 기본 태그 추출 방식을 사용합니다.")

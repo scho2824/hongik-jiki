@@ -1,3 +1,5 @@
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[3]
 import os
 import re
 import logging
@@ -7,27 +9,27 @@ import json
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROCESSED_RECORD_PATH = os.path.join(BASE_DIR, "../../../data/processed_files.json")
+PROCESSED_RECORD_PATH = ROOT_DIR / "data" / "processed_files.json"
 
 def calculate_file_hash(file_path: str) -> str:
     sha256_hash = hashlib.sha256()
-    with open(file_path, "rb") as f:
+    with open(str(file_path), "rb") as f:
         for byte_block in iter(lambda: f.read(4096), b""):
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
 
 def load_processed_files() -> dict:
     try:
-        if os.path.exists(PROCESSED_RECORD_PATH):
-            with open(PROCESSED_RECORD_PATH, "r", encoding="utf-8") as f:
+        if os.path.exists(str(PROCESSED_RECORD_PATH)):
+            with open(str(PROCESSED_RECORD_PATH), "r", encoding="utf-8") as f:
                 return json.load(f)
     except json.JSONDecodeError as e:
         logger.warning(f"기록 파일이 손상되었습니다. 새로 초기화합니다: {e}")
     return {}
 
 def save_processed_files(record: dict):
-    os.makedirs(os.path.dirname(PROCESSED_RECORD_PATH), exist_ok=True)
-    with open(PROCESSED_RECORD_PATH, "w", encoding="utf-8") as f:
+    os.makedirs(os.path.dirname(str(PROCESSED_RECORD_PATH)), exist_ok=True)
+    with open(str(PROCESSED_RECORD_PATH), "w", encoding="utf-8") as f:
         json.dump(record, f, indent=2, ensure_ascii=False)
 
 logger = logging.getLogger("HongikJikiChatBot")
@@ -279,26 +281,30 @@ class DocumentLoader:
 
         processed_files = load_processed_files()
 
-        for root, _, files in os.walk(base_dir):
+        # Resolve base_dir relative to project root
+        base_dir = str(ROOT_DIR / "data" / "jungbub_teachings")
+        logger.info(f"문서 로드 경로: {base_dir}")
+
+        for root, _, files in os.walk(str(base_dir)):
             for file in files:
                 ext = os.path.splitext(file)[1].lower()
                 if ext in supported_exts:
-                    file_path = os.path.join(root, file)
+                    file_path = Path(root) / file
 
-                    file_hash = calculate_file_hash(file_path)
+                    file_hash = calculate_file_hash(str(file_path))
                     if file_hash in processed_files:
                         logger.info(f"이미 처리된 파일입니다. 건너뜀: {file_path}")
                         continue
 
-                    docs = self.load_document(file_path)
+                    docs = self.load_document(str(file_path))
                     if docs:
                         for doc in docs:
-                            relative = os.path.relpath(root, base_dir)
+                            relative = os.path.relpath(root, str(base_dir))
                             doc["metadata"]["label"] = relative
                             loaded_documents.append(doc)
 
                         processed_files[file_hash] = {
-                            "file_path": file_path,
+                            "file_path": str(file_path),
                             "processed_time": datetime.now().isoformat(),
                             "chunks_count": None,
                             "vector_ids": []

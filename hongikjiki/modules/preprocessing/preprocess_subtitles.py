@@ -5,6 +5,8 @@ from pathlib import Path
 import logging
 logger = logging.getLogger(__name__)
 
+ROOT_DIR = Path(__file__).resolve().parents[3]
+
 def normalize_text(text: str) -> str:
     """Apply basic normalization: strip, unify quotes, fix dashes, etc."""
     return (
@@ -20,7 +22,8 @@ def extract_tags(text: str) -> List[str]:
         from hongikjiki.modules.tagging.tag_extractor import TagExtractor
         # Load tag schema from JSON file
         from hongikjiki.modules.tagging.tag_schema import TagSchema
-        tag_schema = TagSchema.load_from_file("data/tag_keywords.json")
+        tag_schema_path = ROOT_DIR / "data" / "tag_keywords.json"
+        tag_schema = TagSchema.load_from_file(str(tag_schema_path))
         extractor = TagExtractor(tag_schema)
         raw_tags = extractor.extract_tags(text)
         # Process dictionary or tuple output into a flat list of tag strings
@@ -89,10 +92,13 @@ if __name__ == "__main__":
     parser.add_argument("--output_file", type=str, required=True)
     args = parser.parse_args()
 
-    print(f"📁 자막 디렉토리: {args.input_dir}")
-    print(f"💾 출력 파일: {args.output_file}")
+    input_dir = Path(args.input_dir)
+    output_file = Path(args.output_file)
 
-    dataset = read_subtitle_files(args.input_dir)
-    save_dataset(args.output_file, dataset)
+    print(f"📁 자막 디렉토리: {input_dir}")
+    print(f"💾 출력 파일: {output_file}")
+
+    dataset = read_subtitle_files(str(input_dir))
+    save_dataset(str(output_file), dataset)
 
     print(f"✅ 총 {len(dataset)}개의 문장이 저장되었습니다.")

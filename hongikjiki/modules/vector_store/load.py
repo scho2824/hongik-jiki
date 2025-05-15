@@ -7,6 +7,9 @@ import chromadb
 from chromadb.config import Settings
 from hongikjiki.modules.vector_store.embeddings import get_embeddings
 from typing import Optional, Dict, Any
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[3]
 
 logger = logging.getLogger("HongikJikiChatBot")
 
@@ -31,7 +34,7 @@ def ensure_openai_key(kwargs: dict):
     return kwargs
 
 def load_vector_store(
-    persist_directory: str,
+    persist_directory: str | Path,
     collection_name: str,
     embedding_type: str = "openai",
     embedding_kwargs: Optional[Dict[str, Any]] = None,
@@ -54,6 +57,8 @@ def load_vector_store(
     """
     embedding_kwargs = embedding_kwargs or {}
     
+    persist_directory = Path(persist_directory)
+    
     # Ensure API key is passed if using OpenAI
     if embedding_type.lower() == "openai":
         embedding_kwargs = ensure_openai_key(embedding_kwargs)
@@ -67,13 +72,13 @@ def load_vector_store(
         raise ValueError(f"임베딩 초기화 실패: {emb_error}")
     
     # Ensure directory exists
-    os.makedirs(persist_directory, exist_ok=True)
+    persist_directory.mkdir(parents=True, exist_ok=True)
     
     # 여러 단계의 시도를 통해 벡터 스토어 로드
     # 1. 기본 설정으로 시도
     try:
         logger.info(f"벡터 스토어 로드 시도 1: {persist_directory}, 컬렉션: {collection_name}")
-        client, collection = create_collection(persist_directory, collection_name, metadata={"hnsw:space": "cosine"})
+        client, collection = create_collection(str(persist_directory), collection_name, metadata={"hnsw:space": "cosine"})
         
         logger.info(f"벡터 스토어 로드 성공: {collection_name}")
         return collection, embeddings
@@ -84,7 +89,7 @@ def load_vector_store(
         # 2. 단순 설정으로 시도
         try:
             logger.info("벡터 스토어 로드 시도 2: 단순 설정")
-            client, collection = create_collection(persist_directory, collection_name)
+            client, collection = create_collection(str(persist_directory), collection_name)
             logger.info(f"단순 설정으로 벡터 스토어 로드 성공: {collection_name}")
             return collection, embeddings
         except Exception as e2:
@@ -97,16 +102,16 @@ def load_vector_store(
                 try:
                     # 기존 저장소 백업
                     backup_dir = f"{persist_directory}_backup_{int(time.time())}"
-                    if os.path.exists(persist_directory):
-                        shutil.copytree(persist_directory, backup_dir)
+                    if persist_directory.exists():
+                        shutil.copytree(str(persist_directory), backup_dir)
                         logger.info(f"벡터 스토어 백업 완료: {backup_dir}")
                         
                         # 디렉토리 삭제 및 재생성
-                        shutil.rmtree(persist_directory)
-                        os.makedirs(persist_directory, exist_ok=True)
+                        shutil.rmtree(str(persist_directory))
+                        persist_directory.mkdir(parents=True, exist_ok=True)
                     
                     # 새 클라이언트 및 컬렉션 생성
-                    client, collection = create_collection(persist_directory, collection_name)
+                    client, collection = create_collection(str(persist_directory), collection_name)
                     
                     logger.info(f"벡터 스토어 재설정 및 새 컬렉션 생성 성공: {collection_name}")
                     return collection, embeddings

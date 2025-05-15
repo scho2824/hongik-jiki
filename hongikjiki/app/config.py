@@ -1,5 +1,6 @@
 # hongikjiki/app/config.py
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from packaging import version as pkg_version
 import gradio as gr
@@ -10,12 +11,14 @@ load_dotenv()
 # API 키
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
+
 # 경로 설정
-PERSIST_DIR = "data/vector_store"
+ROOT_DIR = Path(__file__).resolve().parents[2]
+PERSIST_DIR = ROOT_DIR / "data" / "vector_store"
 COLLECTION_NAME = "hongikjiki_jungbub"
-TAG_SCHEMA_PATH = "data/config/tag_schema.yaml"
-TAG_PATTERN_PATH = "data/config/tag_patterns.json"
-QA_FILE_PATH = "data/qa/high_insight_qa_dataset_formatted_related.json"
+TAG_SCHEMA_PATH = ROOT_DIR / "data" / "config" / "tag_schema.yaml"
+TAG_PATTERN_PATH = ROOT_DIR / "data" / "config" / "tag_patterns.json"
+QA_FILE_PATH = ROOT_DIR / "data" / "qa" / "high_insight_qa_dataset_formatted_related.json"
 
 # Gradio 버전 체크
 GRADIO_VERSION = pkg_version.parse(gr.__version__)
