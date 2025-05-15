@@ -97,19 +97,19 @@ def create_ui(chatbot_instance):
         question1_btn.click(
             click_related_question,
             inputs=[question1_btn],
-            outputs=[msg, msg]
+            outputs=[msg]
         )
         
         question2_btn.click(
             click_related_question,
             inputs=[question2_btn],
-            outputs=[msg, msg]
+            outputs=[msg]
         )
         
         question3_btn.click(
             click_related_question,
             inputs=[question3_btn],
-            outputs=[msg, msg]
+            outputs=[msg]
         )
         
     return demo

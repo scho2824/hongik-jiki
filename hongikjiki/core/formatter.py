@@ -1,5 +1,4 @@
 # hongikjiki/core/formatter.py
-# hongikjiki/core/formatter.py
 from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[2]
 import logging
@@ -58,7 +57,7 @@ def format_response(results, answer, extracted_tags=None):
         formatted += f"🔎 관련 인용:\n> {quoted_insights[0]}\n\n"
     
     # 태그 추가
-    if tags:
+    if tags and len(tags) > 0:  # 태그가 실제로 있는 경우에만
         tag_list = ' '.join([f"#{tag}" for tag in tags])
         formatted += f"🏷️ 관련 태그: {tag_list}"
     

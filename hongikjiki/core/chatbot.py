@@ -218,7 +218,7 @@ class HongikJikiChatbot:
             formatted += f"🔎 관련 인용:\n{quoted_insights[0]}\n\n"
         
         # 태그 추가
-        if tags:
+        if tags and len(tags) > 0:  # 태그가 실제로 있는 경우에만
             tag_list = ' '.join([f"#{tag}" for tag in tags])
             formatted += f"🏷️ 관련 태그: {tag_list}"
         
@@ -324,13 +324,14 @@ class HongikJikiChatbot:
         
         Args:
             message: 사용자 질문
-            history: 대화 이력
+            history: 대화 이력 (각 항목은 {'role': 'user' 또는 'assistant', 'content': '메시지'} 형식)
             
         Returns:
             Dict: 답변 및 관련 정보
         """
         logger.info(f"사용자 질문: {message}")
-        actual_history = history or []
+        if history is None:
+            history = []
         
         # 질문에서 태그 추출
         extracted_tags = self.extract_tags(message)

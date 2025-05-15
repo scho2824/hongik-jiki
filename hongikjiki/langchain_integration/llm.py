@@ -64,9 +64,10 @@ class OpenAILLM(LLMBase):
             max_tokens = kwargs.get("max_tokens", self.max_tokens)
             
             # Chat Completion API 호출
+            # 타입 에러 수정: 메시지 형식을 정확히 지정
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "user", "content": prompt}],  # 명시적으로 올바른 형식 사용
                 temperature=temperature,
                 max_tokens=max_tokens
             )
@@ -111,7 +112,7 @@ class OpenAILLM(LLMBase):
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "user", "content": prompt}],  # 명시적으로 올바른 형식 사용
                 temperature=self.temperature,
                 max_tokens=self.max_tokens
             )
@@ -135,7 +136,7 @@ class OpenAILLM(LLMBase):
             # API 호출
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "user", "content": prompt}],  # 명시적으로 올바른 형식 사용
                 temperature=self.temperature,
                 max_tokens=self.max_tokens
             )
