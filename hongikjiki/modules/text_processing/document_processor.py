@@ -53,31 +53,34 @@ class DocumentProcessor:
         self.processed_hashes = []
     
     def process_directory(self, directory: str | Path) -> List[Dict[str, Any]]:
-        """
-        디렉토리 내 모든 문서 처리
-        
-        Args:
-            directory: 처리할 문서가 있는 디렉토리 경로
-            
-        Returns:
-            List[Dict]: 처리 및 청킹된 문서 리스트
-        """
         directory = Path(directory)
         all_chunks = []
-        
-        # 각 파일 처리
-        for file_path in directory.iterdir():
-            
-            # 디렉토리 건너뛰기
-            if file_path.is_dir():
-                continue
-                
-            # 파일 확장자 확인
-            ext = file_path.suffix.lower()
-            if ext in ['.txt', '.md', '.pdf', '.docx', '.rtf']:
-                chunks = self.process_file(file_path)
-                all_chunks.extend(chunks)
-        
+        processed_files = 0
+
+        # 지원하는 파일 확장자 정의
+        SUPPORTED_EXTENSIONS = ['.txt', '.md', '.pdf', '.docx', '.rtf']
+
+        # 로깅 추가
+        logger = logging.getLogger("HongikJikiChatBot")
+        logger.info(f"디렉토리 처리 시작: {directory}")
+
+        # 재귀적으로 모든 파일 찾기
+        for file_path in directory.glob("**/*"):
+            if file_path.is_file() and file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
+                logger.info(f"파일 처리 중: {file_path}")
+                try:
+                    # 파일 처리
+                    chunks = self.process_file(file_path)
+                    if chunks:
+                        all_chunks.extend(chunks)
+                        processed_files += 1
+                        logger.info(f"파일 처리 완료: {file_path.name} - {len(chunks)}개 청크 생성")
+                    else:
+                        logger.warning(f"파일 처리 결과 청크 없음: {file_path.name}")
+                except Exception as e:
+                    logger.error(f"파일 처리 중 오류 발생: {file_path.name} - {e}")
+
+        logger.info(f"디렉토리 처리 완료: {processed_files}개 파일, 총 {len(all_chunks)}개 청크")
         return all_chunks
     
     def process_file(self, file_path: str | Path) -> List[Dict[str, Any]]:
