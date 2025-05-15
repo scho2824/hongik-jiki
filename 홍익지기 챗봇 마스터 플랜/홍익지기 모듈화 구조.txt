@@ -1,0 +1,113 @@
+Hongik-JiKi/
+├── data/                      # 🔹 원본 및 정제된 데이터 저장소
+│   ├── config/
+│   ├── jungbub_teaching/     # 원문 강의 데이터
+│   ├── processed/
+│   ├── qa/
+│   ├── raw/                  # 테스트용 데이터
+│   └── vector_store/
+
+├── scripts/                   # 🔹 스크립트 모음
+│   ├── aggregate_qa.py
+│   ├── qa_lint.py
+│   ├── tag_from_qa_dataset.py
+│   └── test_recommendation_api.py
+
+├── output/                    # 🔹 생성된 결과물 저장소
+│   ├── chunks.json
+│   └── metadata.json
+
+├── templates/                 # 🔹 응답 및 UI 템플릿
+│   ├── 404.html
+│   ├── 500.html
+│   └── index.html
+
+├── tests/                     # 🔹 테스트 코드
+│   ├── unit/
+│   │   ├── __init__.py
+│   │   ├── test_chatbot.py
+│   │   ├── test_formatter.py
+│   │   └── test_related_questions.py
+│   ├── integration/
+│   │   └── __init__.py
+│   └── conftest.py
+
+├── docs/                      # 🔹 문서 및 소개 자료
+│   ├── architecture.md
+│   ├── user_guide.md
+│   └── api_reference.md
+
+├── .env
+├── requirements.txt
+├── pyproject.toml
+├── README.md
+└── .gitignore
+
+hongikjiki/
+├── __init__.py
+├── chatbot.py                 # 챗봇 통합 엔트리
+├── app/                       # 🔹 애플리케이션 실행 계층
+│   ├── __init__.py
+│   ├── main.py
+│   ├── config.py
+│   └── ui.py
+├── interface/                 # 🔹 사용자 인터페이스
+│   ├── __init__.py
+│   ├── web.py
+│   ├── cli.py
+│   └── utils.py
+├── core/                      # 🔹 핵심 로직
+│   ├── __init__.py
+│   ├── chatbot.py
+│   ├── formatter.py
+│   └── models.py
+├── modules/                   # 🔹 처리 모듈 계층
+│   ├── __init__.py
+│   ├── preprocessing/
+│   │   ├── cleaner.py
+│   │   ├── chunker.py
+│   │   └── __init__.py
+│   ├── tagging/
+│   │   ├── tagger.py
+│   │   ├── schema.py
+│   │   └── __init__.py
+│   ├── qa_generation/
+│   │   ├── generator.py
+│   │   ├── template.py
+│   │   └── __init__.py
+│   ├── vector_store/
+│   │   ├── vectorizer.py
+│   │   ├── retriever.py
+│   │   └── __init__.py
+│   └── text_processing/
+│       ├── document_manager.py
+│       ├── document_chunker.py
+│       ├── document_loader.py
+│       ├── document_processor.py
+│       ├── metadata_extractor.py
+│       ├── run_processor.py
+│       ├── text_narmalizer.py
+│       └── __init__.py
+├── pipeline/                  # 🔹 실행 파이프라인
+│   ├── __init__.py
+│   ├── run_all_pipeline.py
+│   ├── run_chunking_pipeline.py
+│   ├── run_tagging.py
+│   ├── run_qa_gen.py
+│   └── run_ingest.py
+├── scripts/                   # 🔹 기타 스크립트
+│   ├── __init__.py
+│   ├── build_vector_store.py
+│   ├── format_qa_postprocess.py
+│   ├── qa_recommendation.py
+│   └── save_tag_schema.py
+├── utils/                     # 🔹 공통 유틸리티
+│   ├── __init__.py
+│   ├── logging_setup.py
+│   ├── file_utils.py
+│   ├── merge_chunks.py
+│   └── response_formatter.py
+└── data/
+    ├── __init__.py
+    └── tag_data/
+        └── tag_index.json

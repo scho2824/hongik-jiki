@@ -4,8 +4,11 @@ import json
 import hashlib
 from datetime import datetime
 from langchain.schema import Document
-from hongikjiki.vector_store.chroma_store import ChromaVectorStore
-from hongikjiki.vector_store.embeddings import get_embeddings
+from hongikjiki.modules.vector_store.chroma_store import ChromaVectorStore
+from hongikjiki.modules.vector_store.embeddings import get_embeddings
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("VectorBuilder")
 
 os.makedirs("logs", exist_ok=True)
 
@@ -15,8 +18,6 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
-
-logger = logging.getLogger("VectorBuilder")
 
 def hash_text(text):
     return hashlib.md5(text.encode("utf-8")).hexdigest()
@@ -54,7 +55,7 @@ def convert_to_documents(qa_pairs):
             continue
     return documents
 
-def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_name="hongikjiki_jungbub"):
+def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_name="hongikjiki_jungbub", append_log=False):
     logger.info("🔹 QA 데이터 로드 중...")
     qa_pairs = load_qa_pairs(qa_file)
     logger.info(f"🔹 총 {len(qa_pairs)}개의 QA 항목")
@@ -98,7 +99,7 @@ def build_vector_store(qa_file, persist_dir="./data/vector_store", collection_na
     os.makedirs(os.path.dirname(processed_log_path), exist_ok=True)
 
     # Load existing log if it exists
-    if os.path.exists(processed_log_path):
+    if os.path.exists(processed_log_path) and append_log:
         with open(processed_log_path, "r", encoding="utf-8") as f:
             processed_log = json.load(f)
     else:
@@ -133,24 +134,26 @@ def test_vector_query(prompt: str, k: int = 3):
         persist_directory="data/vector_store",
         embeddings=get_embeddings("openai", model="text-embedding-3-small")
     )
+    assert vector_store.embeddings is not None
     embedding = vector_store.embeddings.embed_query(prompt)
 
-    # robust similarity search
-    if hasattr(vector_store, "similarity_search_by_vector"):
-        results = vector_store.similarity_search_by_vector(embedding, k=k)
-    elif hasattr(vector_store, "vectorstore"):
+    results = []
+    if (method := getattr(vector_store, "similarity_search_by_vector", None)) and callable(method):
+        results = method(embedding, k=k)
+    elif hasattr(vector_store, "vectorstore") and vector_store.vectorstore is not None:
         results = vector_store.vectorstore.similarity_search_by_vector(embedding, k=k)
-    elif hasattr(vector_store, "store"):
+    elif hasattr(vector_store, "store") and vector_store.store is not None:
         results = vector_store.store.similarity_search_by_vector(embedding, k=k)
-    elif hasattr(vector_store, "query"):
+    elif callable(getattr(vector_store, "query", None)):
         results = vector_store.query(prompt, top_k=k)
     else:
         raise AttributeError("No available similarity search method found in ChromaVectorStore")
 
+    if not isinstance(results, list):
+        results = []
+
     for i, doc in enumerate(results, 1):
-        print(f"\n🔹 Top {i}")
-        print(doc["content"])
-        print(f"📎 Metadata: {doc['metadata']}")
+        logger.info(f"\n🔹 Top {i}\n{doc['content']}\n📎 Metadata: {doc['metadata']}")
 
 if __name__ == "__main__":
     import argparse
@@ -160,6 +163,7 @@ if __name__ == "__main__":
     parser.add_argument("--collection_name", type=str, default="hongikjiki_jungbub", help="Name of the Chroma collection")
     parser.add_argument("--query", type=str, help="Run a similarity query")
     parser.add_argument("--top_k", type=int, default=3, help="Top K results to return")
+    parser.add_argument("--append_log", action="store_true", help="기존 processed_files.json에 병합 저장")
 
     args = parser.parse_args()
 
@@ -170,4 +174,4 @@ if __name__ == "__main__":
     if args.query:
         test_vector_query(args.query, args.top_k)
     else:
-        build_vector_store(args.qa_file, persist_dir=args.persist_dir, collection_name=args.collection_name)
+        build_vector_store(args.qa_file, persist_dir=args.persist_dir, collection_name=args.collection_name, append_log=args.append_log)

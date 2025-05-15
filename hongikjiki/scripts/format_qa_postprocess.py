@@ -2,6 +2,10 @@
 import uuid
 import re
 
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 import json
 import argparse
@@ -57,7 +61,7 @@ def main():
     formatted_data = format_qa_items(raw_data)
     save_qa_data(formatted_data, output_path)
 
-    print(f"Formatted {len(formatted_data)} QA items to: {output_path}")
+    logger.info(f"Formatted {len(formatted_data)} QA items to: {output_path}")
 
     # Optional: generate related question mapping
     generate_related = True
@@ -95,7 +99,7 @@ def main():
         related_map = recommend_questions(formatted_data, build_tag_index(formatted_data), top_k=5)
         related_output_path = output_path.with_name(output_path.stem + "_related.json")
         save_qa_data(related_map, related_output_path)
-        print(f"Generated related questions file: {related_output_path}")
+        logger.info(f"Generated related questions file: {related_output_path}")
 
 if __name__ == "__main__":
     main()

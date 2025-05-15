@@ -25,8 +25,8 @@ def init_modules():
     try:
         # 홍익지기 모듈 임포트
         from hongikjiki.langchain_integration.llm import get_llm
-        from hongikjiki.vector_store.embeddings import get_embeddings
-        from hongikjiki.vector_store.chroma_store import ChromaVectorStore
+        from hongikjiki.modules.vector_store.embeddings import get_embeddings
+        from hongikjiki.modules.vector_store.chroma_store import ChromaVectorStore
         
         # 벡터 스토어 초기화
         try:
@@ -67,13 +67,13 @@ def init_modules():
         
         # 태그 시스템 로드
         try:
-            from hongikjiki.tagging.tag_schema import TagSchema
-            from hongikjiki.tagging.tag_extractor import TagExtractor
+            from hongikjiki.modules.tagging.tag_schema import TagSchema
+            from hongikjiki.modules.tagging.tag_extractor import TagExtractor
             from hongikjiki.app.config import TAG_SCHEMA_PATH, TAG_PATTERN_PATH
             
             if os.path.exists(TAG_SCHEMA_PATH) and os.path.exists(TAG_PATTERN_PATH):
                 tag_schema = TagSchema(TAG_SCHEMA_PATH)
-                tag_extractor = TagExtractor(tag_schema, TAG_PATTERN_PATH)
+                tag_extractor = TagExtractor(tag_schema, 0.5)
                 logger.info("태그 시스템 로드 완료")
                 print("태그 시스템 로드 완료")
             else:
@@ -125,4 +125,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

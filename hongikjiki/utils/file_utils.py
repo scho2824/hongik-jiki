@@ -1,9 +1,26 @@
 # hongikjiki/utils/file_utils.py
-import tempfile
 import os
+import tempfile
 import logging
+from pathlib import Path
+from typing import Optional
+
+CHATBOT_NAME = os.getenv("CHATBOT_NAME", "Hongik-Jiki")
+DEVELOPER_NAME = os.getenv("DEVELOPER_NAME", "개발연구원 조성우")
 
 logger = logging.getLogger("HongikJikiChatBot")
+
+def ensure_dir(directory: str) -> None:
+    """디렉토리가 존재하지 않으면 생성"""
+    os.makedirs(directory, exist_ok=True)
+
+def setup_logging(log_level: str = "INFO") -> None:
+    """기본 로깅 설정"""
+    logging.basicConfig(
+        level=getattr(logging, log_level.upper(), logging.INFO),
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[logging.StreamHandler()]
+    )
 
 def create_temp_file(content, suffix=".txt", encoding="utf-8"):
     """임시 파일 생성 (다운로드용)"""

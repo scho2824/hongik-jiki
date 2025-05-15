@@ -1,24 +1,23 @@
 # hongikjiki/core/related_questions.py
+import os
+import json
+import random
 import logging
 
 logger = logging.getLogger("HongikJikiChatBot")
 
+def load_tag_questions(json_path="data/tag_question_map.json"):
+    """외부 JSON에서 태그별 질문 로드"""
+    if not os.path.exists(json_path):
+        logger.warning(f"Tag question map not found: {json_path}")
+        return {}
+    with open(json_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
 def generate_related_questions(tags, current_question):
     """태그 기반 관련 질문 생성"""
     # 태그별 질문 맵핑
-    tag_questions = {
-        "감정": [
-            "감정이 불안정한 이유는 무엇인가요?",
-            "화가 날 때 어떻게 다스려야 할까요?",
-            "자신의 감정을 이해하는 방법은 무엇인가요?"
-        ],
-        "관계": [
-            "가족과의 갈등을 어떻게 해결할 수 있나요?",
-            "인간관계에서 중요한 것은 무엇인가요?",
-            "타인을 이해하는 방법은 무엇인가요?"
-        ],
-        # 기존 코드에서 가져온 다른 태그들...
-    }
+    tag_questions = load_tag_questions()
     
     related = []
     # 태그 기반 질문 추가
@@ -30,6 +29,8 @@ def generate_related_questions(tags, current_question):
                         "question": question,
                         "insight": f"'{tag}' 관련 질문입니다."
                     })
+        else:
+            logger.debug(f"태그 '{tag}'에 해당하는 질문이 없습니다.")
     
     # 일반 질문 추가 (태그가 없거나 적을 경우)
     general_questions = [
@@ -39,6 +40,8 @@ def generate_related_questions(tags, current_question):
         {"question": "홍익인간이란 무엇인가요?", "insight": "홍익인간 철학에 관한 질문입니다."}
     ]
     
+    random.shuffle(related)
+    
     # 관련 질문이 부족하면 일반 질문 추가
     if len(related) < 3:
         for q in general_questions:
@@ -47,5 +50,11 @@ def generate_related_questions(tags, current_question):
                 if len(related) >= 3:
                     break
     
-    # 최대 3개 반환
-    return related[:3]
+    # 최대 3개 반환, 중복 제거
+    seen = set()
+    final = []
+    for q in related:
+        if q["question"].lower() not in seen:
+            final.append(q)
+            seen.add(q["question"].lower())
+    return final[:3]

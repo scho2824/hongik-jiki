@@ -1,6 +1,6 @@
 # scripts/save_tag_schema.py
 
-from hongikjiki.tagging.tag_schema import TagSchema
+from hongikjiki.modules.tagging.tag_schema import TagSchema
 
 if __name__ == "__main__":
     schema = TagSchema()

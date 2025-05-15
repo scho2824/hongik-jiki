@@ -55,16 +55,6 @@ class OpenAILLM(LLMBase):
             raise
     
     def generate(self, prompt: str, **kwargs) -> str:
-        """
-        단일 프롬프트로부터 텍스트 생성
-        
-        Args:
-            prompt: 입력 프롬프트
-            **kwargs: 추가 매개변수 (temperature, max_tokens 등 재정의 가능)
-            
-        Returns:
-            str: 생성된 텍스트
-        """
         try:
             # 기본 설정에 추가 매개변수 병합
             temperature = kwargs.get("temperature", self.temperature)
@@ -78,8 +68,12 @@ class OpenAILLM(LLMBase):
                 max_tokens=max_tokens
             )
             
-            # 응답 추출
-            return response.choices[0].message.content.strip()
+            # 응답 추출 - None 체크 추가
+            if response and response.choices and len(response.choices) > 0:
+                content = response.choices[0].message.content
+                return content.strip() if content else ""
+            else:
+                return ""
         
         except Exception as e:
             logger.error(f"텍스트 생성 오류: {e}")
@@ -118,7 +112,8 @@ class OpenAILLM(LLMBase):
                 temperature=self.temperature,
                 max_tokens=self.max_tokens
             )
-            return response.choices[0].message.content
+            content = response.choices[0].message.content or ""
+            return content.strip()
         except Exception as e:
             logger.error(f"텍스트 생성 오류: {e}")
             raise
@@ -143,7 +138,8 @@ class OpenAILLM(LLMBase):
             )
 
             # 응답 추출
-            return response.choices[0].message.content
+            content = response.choices[0].message.content or ""
+            return content.strip()
         except Exception as e:
             logger.error(f"API 호출 오류: {e}")
             return f"오류 발생: {str(e)}"
@@ -285,3 +281,5 @@ def get_llm(llm_type: str = "openai", **kwargs) -> LLMBase:
     
     # 적절한 LLM 클래스 생성 및 반환
     return llm_types[llm_type](**kwargs)
+
+__all__ = ["get_llm", "OpenAILLM", "NaverClovaLLM"]

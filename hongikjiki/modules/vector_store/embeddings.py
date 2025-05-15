@@ -1,0 +1,231 @@
+from typing import Dict, Any, Optional, List, Union,Tuple
+import logging
+import os
+import openai
+
+logger = logging.getLogger("HongikJikiChatBot")
+
+class EmbeddingsBase:
+    """임베딩 모델 기본 인터페이스"""
+    
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """
+        문서 텍스트를 벡터로 임베딩
+        
+        Args:
+            texts: 임베딩할 텍스트 리스트
+            
+        Returns:
+            List[List[float]]: 임베딩 벡터 리스트
+        """
+        raise NotImplementedError("이 메서드는 하위 클래스에서 구현해야 합니다.")
+    
+    def embed_query(self, text: str) -> List[float]:
+        """
+        쿼리 텍스트를 벡터로 임베딩
+        
+        Args:
+            text: 임베딩할, 쿼리 텍스트
+            
+        Returns:
+            List[float]: 임베딩 벡터
+        """
+        raise NotImplementedError("이 메서드는 하위 클래스에서 구현해야 합니다.")
+
+
+class HuggingFaceEmbeddings(EmbeddingsBase):
+    """
+    HuggingFace 모델을 사용한 임베딩 구현
+    """
+    
+    def __init__(self, model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2", **kwargs):
+        """
+        HuggingFaceEmbeddings 초기화
+        
+        Args:
+            model_name: HuggingFace 모델 이름
+            kwargs: 추가 매개변수
+        """
+        try:
+            from sentence_transformers import SentenceTransformer
+            self.model = SentenceTransformer(model_name, **kwargs)
+            self.model_name = model_name
+            logger.info(f"HuggingFace 임베딩 모델 로드: {model_name}")
+        except ImportError:
+            logger.error("sentence-transformers 패키지가 설치되지 않았습니다.")
+            raise ImportError("sentence-transformers 패키지를 설치하세요: pip install sentence-transformers")
+    
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """
+        문서 텍스트를 벡터로 임베딩
+        
+        Args:
+            texts: 임베딩할 텍스트 리스트
+            
+        Returns:
+            List[List[float]]: 임베딩 벡터 리스트
+        """
+        embeddings = self.model.encode(texts)
+        # Convert numpy ndarray to list of floats for type consistency
+        return embeddings.tolist()
+    
+    def embed_query(self, text: str) -> List[float]:
+        """
+        쿼리 텍스트를 벡터로 임베딩
+        
+        Args:
+            text: 임베딩할 쿼리 텍스트
+            
+        Returns:
+            List[float]: 임베딩 벡터
+        """
+        embedding = self.model.encode(text)
+        # Convert tensor or ndarray to list of floats
+        try:
+            return embedding.tolist()
+        except AttributeError:
+            # Convert PyTorch tensor to list of floats
+            try:
+                return embedding.detach().cpu().tolist()
+            except Exception:
+                # Fallback: convert tensor elements to floats
+                return [float(x) for x in embedding]
+
+    def get_model_name(self) -> str:
+        return self.model_name
+
+    def is_remote(self) -> bool:
+        return False  # for HuggingFaceEmbeddings
+
+
+class OpenAIEmbeddings(EmbeddingsBase):
+    """
+    OpenAI API를 사용한 임베딩 구현
+    """
+    
+    def __init__(self, model: str = "text-embedding-3-small", api_key: Optional[str] = None, model_name: Optional[str] = None, **kwargs):
+        """
+        OpenAIEmbeddings 초기화
+
+        Args:
+            model: OpenAI 임베딩 모델 이름
+            api_key: OpenAI API 키 (없으면 환경 변수에서 가져옴)
+            model_name: 대체 모델 이름 (model과 동일 기능, 호환성 유지용)
+            kwargs: 추가 매개변수
+        """
+        try:
+            import openai
+            # model_name 파라미터 처리 (호환성 유지)
+            if model_name:
+                model = model_name
+            elif not model:
+                model = "text-embedding-3-small"
+
+            # API 키 명시적 설정
+            api_key = api_key or os.environ.get("OPENAI_API_KEY")
+            if not api_key:
+                raise ValueError("OpenAI API 키가 설정되지 않았습니다. API 키를 직접 전달하거나 OPENAI_API_KEY 환경 변수를 설정하세요.")
+
+            # OpenAI 클라이언트 초기화 시 명시적으로 API 키 설정
+            self.client = openai.OpenAI(api_key=api_key)
+            logger.info("OpenAI 클라이언트 초기화 성공")
+
+            self.model = model
+            # model_name 파라미터 제거 (API 호출 시 에러 방지)
+            if 'model_name' in kwargs:
+                del kwargs['model_name']
+            self.kwargs = kwargs
+            logger.info(f"OpenAI 임베딩 모델 설정: {model}")
+        except ImportError:
+            logger.error("openai 패키지가 설치되지 않았습니다.")
+            raise ImportError("openai 패키지를 설치하세요: pip install openai")
+    
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """
+        문서 텍스트를 벡터로 임베딩
+
+        Args:
+            texts: 임베딩할 텍스트 리스트
+
+        Returns:
+            List[List[float]]: 임베딩 벡터 리스트
+        """
+        try:
+            # 청크가 큰 경우 분할하여 처리
+            embeddings = []
+            for i in range(0, len(texts), 20):  # API 제한 고려
+                batch = texts[i:i+20]
+                response = self.client.embeddings.create(
+                    model=self.model,
+                    input=batch
+                )
+                batch_embeddings = [item.embedding for item in response.data]
+                embeddings.extend(batch_embeddings)
+
+            return embeddings
+        except openai.BadRequestError as e:
+            logger.error("OpenAI 요청 오류: 잘못된 요청 형식")
+            raise
+        except openai.RateLimitError as e:
+            logger.error("OpenAI API 호출 제한 초과")
+            raise
+        except Exception as e:
+            logger.error(f"예상치 못한 임베딩 오류: {e}")
+            raise
+
+    def embed_query(self, text: str) -> List[float]:
+        """
+        쿼리 텍스트를 벡터로 임베딩
+
+        Args:
+            text: 임베딩할 쿼리 텍스트
+
+        Returns:
+            List[float]: 임베딩 벡터
+        """
+        try:
+            logger.info(f"쿼리 임베딩 시도: 모델={self.model}")
+            response = self.client.embeddings.create(
+                model=self.model,
+                input=text
+            )
+            return response.data[0].embedding
+        except openai.BadRequestError as e:
+            logger.error("OpenAI 요청 오류: 잘못된 요청 형식")
+            raise
+        except openai.RateLimitError as e:
+            logger.error("OpenAI API 호출 제한 초과")
+            raise
+        except Exception as e:
+            logger.error(f"예상치 못한 임베딩 오류: {e}")
+            raise
+
+    def get_model_name(self) -> str:
+        return self.model
+
+    def is_remote(self) -> bool:
+        return True  # for OpenAIEmbeddings
+
+
+def get_embeddings(embedding_type: str = "huggingface", **kwargs) -> EmbeddingsBase:
+    """
+    임베딩 타입에 따른 임베딩 객체 생성
+    
+    Args:
+        embedding_type: 임베딩 타입 ("huggingface" 또는 "openai")
+        kwargs: 임베딩 생성자에 전달할 매개변수
+        
+    Returns:
+        EmbeddingsBase: 임베딩 객체
+
+    Note:
+        반환된 객체는 get_model_name() 및 is_remote() 메서드를 제공하여
+        모델 이름 확인 및 원격 API 사용 여부 판단이 가능합니다.
+        또한, kwargs를 통해 다양한 초기화 옵션을 유연하게 전달할 수 있습니다.
+    """
+    if embedding_type.lower() == "huggingface":
+        return HuggingFaceEmbeddings(**kwargs)
+    elif embedding_type.lower() == "openai":
+        return OpenAIEmbeddings(**kwargs)
+    else:
+        raise ValueError(f"지원하지 않는 임베딩 타입: {embedding_type}")

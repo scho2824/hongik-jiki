@@ -41,14 +41,16 @@ def run_command(command, desc):
         )
         
         # 실시간 출력 캡처
+        assert process.stdout is not None
         while True:
             output = process.stdout.readline()
             if output == '' and process.poll() is not None:
                 break
             if output:
                 logger.info(output.strip())
-        
+
         # 오류 확인
+        assert process.stderr is not None
         stderr = process.stderr.read()
         if stderr:
             logger.error(stderr)

@@ -3,6 +3,9 @@ import argparse
 from collections import defaultdict, Counter
 from pathlib import Path
 from hongikjiki.langchain_integration.llm import get_llm
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def load_qa_dataset(path):
     with open(path, 'r', encoding='utf-8') as f:
@@ -39,8 +42,13 @@ def recommend_questions(qa_data, tag_index, llm, top_k=5):
         for rid in related_ids:
             question = id_to_question.get(rid)
             if question:
-                prompt = f"다음 질문은 정법적 관점에서 어떤 통찰을 주는지 1문장으로 설명해주세요:\n\n\"{question}\""
-                explanation = llm.generate(prompt).strip()
+                try:
+                    prompt = f"다음 질문은 정법적 관점에서 어떤 통찰을 주는지 1문장으로 설명해주세요:\n\n\"{question}\""
+                    explanation = llm.generate(prompt).strip()
+                except Exception as e:
+                    logger.warning(f"Insight generation failed for question: {question[:50]}... → {e}")
+                    explanation = "관련 질문입니다."
+
                 related_questions.append({"question": question, "insight": explanation})
 
         recommendations[target_id] = related_questions
@@ -60,7 +68,7 @@ def main():
     related_map = recommend_questions(qa_data, tag_index, llm, top_k=args.top_k)
     save_related_map(related_map, args.output)
 
-    print(f"Generated related question map for {len(qa_data)} QA items → {args.output}")
+    logger.info(f"Generated related question map for {len(qa_data)} QA items → {args.output}")
 
 if __name__ == "__main__":
     main()

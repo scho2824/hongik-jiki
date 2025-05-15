@@ -1,12 +1,13 @@
 # hongikjiki/core/formatter.py
 import logging
+import re
 
 logger = logging.getLogger("HongikJikiChatBot")
 
 def format_response(results, answer, extracted_tags=None):
     """챗봇 응답을 포맷팅하는 함수"""
     # 태그 추출
-    tags = set(extracted_tags or [])
+    tags = set(sorted(extracted_tags or []))
     quoted_insights = []
     source_info = []
     
@@ -26,7 +27,7 @@ def format_response(results, answer, extracted_tags=None):
         lecture_title = metadata.get('lecture_title', '')
         
         if lecture_id or lecture_title:
-            info = f"[문서 {i+1}]"
+            info = f"📘 강의 {i+1}:"
             if lecture_title:
                 info += f" 「{lecture_title}」"
             if lecture_id:
@@ -35,15 +36,12 @@ def format_response(results, answer, extracted_tags=None):
         
         # 인용문 추출
         content = result.get('content', '')
-        if content and ":" in content:  # "Q: ... A: ..." 포맷 처리
-            parts = content.split("A: ")
-            if len(parts) > 1:
-                answer_part = parts[1].strip()
-                sentences = answer_part.split(".")
-                if sentences:
-                    sentence = sentences[0].strip()
-                    if 10 <= len(sentence) <= 100:
-                        quoted_insights.append(f'"{sentence}"')
+        if content:
+            match = re.search(r"A[:：]\s*(.+?)(?:\.|\n|$)", content)
+            if match:
+                sentence = match.group(1).strip()
+                if 10 <= len(sentence) <= 100:
+                    quoted_insights.append(f'"{sentence}"')
     
     # 응답 포맷팅
     formatted = f"{answer}\n\n"
@@ -54,7 +52,7 @@ def format_response(results, answer, extracted_tags=None):
     
     # 인용문 추가
     if quoted_insights:
-        formatted += f"🔎 관련 인용:\n{quoted_insights[0]}\n\n"
+        formatted += f"🔎 관련 인용:\n> {quoted_insights[0]}\n\n"
     
     # 태그 추가
     if tags:

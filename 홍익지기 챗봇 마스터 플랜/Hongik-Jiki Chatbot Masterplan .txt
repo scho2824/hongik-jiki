@@ -311,3 +311,82 @@ Solution:
 The Hongik-Jiki chatbot represents a powerful opportunity to make Master Cheongong's timeless wisdom accessible to a broader audience through modern technology. By creating a digital guide that can provide personalized, context-aware guidance drawn from thousands of lectures, this project will help both existing followers and newcomers apply these teachings to their daily lives.
 The incremental approach to development and content processing ensures that quality and authenticity will be maintained throughout, while the dual-language support expands the reach of these valuable teachings across cultural and linguistic boundaries.
 With careful attention to both technical excellence and spiritual integrity, the Hongik-Jiki chatbot has the potential to become a trusted companion for many on their journey of personal growth and spiritual development.
+
+11. Repository & Directory Structure
+The following tree illustrates the current project organization, combining both the outer project workspace (Hongik-JiKi/) and the main python package (hongikjiki/).
+
+Hongik-JiKi/
+├── data/                      # Raw, processed, and vector data
+│   ├── config/
+│   ├── jungbub_teaching/      # Original lecture texts
+│   ├── processed/
+│   ├── qa/
+│   ├── raw/                   # Test data
+│   └── vector_store/
+├── scripts/                   # Utility scripts
+│   ├── aggregate_qa.py
+│   ├── qa_lint.py
+│   ├── tag_from_qa_dataset.py
+│   └── test_recommendation_api.py
+├── output/                    # Generated artefacts
+│   ├── chunks.json
+│   └── metadata.json
+├── templates/                 # UI templates
+│   ├── 404.html
+│   ├── 500.html
+│   └── index.html
+├── tests/                     # Unit & integration tests
+│   ├── unit/
+│   ├── integration/
+│   └── conftest.py
+├── docs/                      # Documentation
+│   ├── architecture.md
+│   ├── user_guide.md
+│   └── api_reference.md
+├── .env
+├── requirements.txt
+├── pyproject.toml
+├── README.md
+└── .gitignore
+
+hongikjiki/
+├── __init__.py
+├── chatbot.py                 # Entry point for chatbot logic
+├── app/                       # Application layer
+│   ├── main.py
+│   ├── config.py
+│   └── ui.py
+├── interface/                 # User interface adaptors
+│   ├── web.py
+│   ├── cli.py
+│   └── utils.py
+├── core/                      # Core logic
+│   ├── chatbot.py
+│   ├── formatter.py
+│   └── models.py
+├── modules/                   # Processing modules
+│   ├── preprocessing/
+│   ├── tagging/
+│   ├── qa_generation/
+│   ├── vector_store/
+│   └── text_processing/
+├── pipeline/                  # End‑to‑end execution pipelines
+│   ├── run_all_pipeline.py
+│   ├── run_chunking_pipeline.py
+│   ├── run_tagging.py
+│   ├── run_qa_gen.py
+│   └── run_ingest.py
+├── scripts/                   # Additional helper scripts
+│   ├── build_vector_store.py
+│   ├── format_qa_postprocess.py
+│   ├── qa_recommendation.py
+│   └── save_tag_schema.py
+├── utils/                     # Common utilities
+│   ├── logging_setup.py
+│   ├── file_utils.py
+│   ├── merge_chunks.py
+│   └── response_formatter.py
+└── data/
+    └── tag_data/
+        └── tag_index.json
+

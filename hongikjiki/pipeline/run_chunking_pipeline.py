@@ -17,9 +17,9 @@ from uuid import uuid4
 # Set up project path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from hongikjiki.text_processing.document_loader import DocumentLoader
-from hongikjiki.text_processing.text_normalizer import TextNormalizer
-from hongikjiki.text_processing.document_chunker import DocumentChunker
+from hongikjiki.modules.text_processing.document_loader import DocumentLoader
+from hongikjiki.modules.text_processing.text_normalizer import TextNormalizer
+from hongikjiki.modules.text_processing.document_chunker import DocumentChunker
 import logging
 
 logging.basicConfig(level=logging.INFO)

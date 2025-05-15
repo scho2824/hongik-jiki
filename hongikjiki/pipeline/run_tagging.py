@@ -15,11 +15,11 @@ from datetime import datetime
 # Add project root to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from hongikjiki.tagging.tag_schema import TagSchema
-from hongikjiki.tagging.tag_extractor import TagExtractor
-from hongikjiki.tagging.tag_analyzer import TagAnalyzer
-from hongikjiki.tagging.tagging_tools import TaggingBatch, TagValidationTool
-from hongikjiki.vector_store.tag_index import TagIndex
+from hongikjiki.modules.tagging.tag_schema import TagSchema
+from hongikjiki.modules.tagging.tag_extractor import TagExtractor
+from hongikjiki.modules.tagging.tag_analyzer import TagAnalyzer
+from hongikjiki.modules.tagging.tagging_tools import TaggingBatch, TagValidationTool
+from hongikjiki.modules.vector_store.tag_index import TagIndex
 
 def setup_logging(log_file: str = "logs/tagging.log") -> logging.Logger:
     """

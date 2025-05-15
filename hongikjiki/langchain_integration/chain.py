@@ -8,7 +8,7 @@ from typing import List, Dict, Any, Optional, Union, Callable, Tuple
 
 from hongikjiki.langchain_integration.base import ChainBase, LLMBase
 from hongikjiki.langchain_integration.memory import MemoryBase
-from hongikjiki.vector_store.base import VectorStoreBase
+from hongikjiki.modules.vector_store.base import VectorStoreBase
 
 logger = logging.getLogger("HongikJikiChatBot")
 
@@ -116,7 +116,7 @@ class QAChain(ChainBase):
         self.prompt_template = PromptTemplate(prompt_template or default_template)
         self.citation_template = PromptTemplate(citation_prompt_template or default_citation_template)
     
-    def run(self, input_data: Union[str, Dict[str, Any]]) -> dict:
+    def run(self, input_data: Union[str, Dict[str, Any]]) -> Union[str, Dict[str, Any]]:
         """
         체인 실행
         
@@ -124,7 +124,7 @@ class QAChain(ChainBase):
             input_data: 입력 데이터 (문자열 또는 딕셔너리)
             
         Returns:
-            dict: 생성된 답변 및 출처 정보
+            Union[str, Dict[str, Any]]: 생성된 답변 (문자열 또는 답변과 메타데이터를 포함한 딕셔너리)
         """
         try:
             # 입력 데이터 처리
@@ -137,10 +137,10 @@ class QAChain(ChainBase):
             
             # 유효한 질문인지 확인
             if not question.strip():
-                return "질문을 입력해 주세요."
+                return {"answer": "질문을 입력해 주세요."}
             
             # 메모리에 사용자 질문 추가
-            if self.memory:
+            if self.memory is not None:
                 self.memory.add_user_message(question)
             
             # 벡터 저장소에서 관련 문서 검색
@@ -148,25 +148,31 @@ class QAChain(ChainBase):
             
             # 검색 결과가 없는 경우
             if not search_results:
-                no_result_response = "죄송합니다. 질문에 관련된 정법 문서를 찾지 못했습니다. 다른 질문을 해주시거나 질문을 조금 더 구체적으로 해주세요."
-                if self.memory:
+                no_result_response = "죄송합니다. 질문에 관련된 정법 문서를 찾지 못했습니다. 다른 질문을 해주시거나, 질문을 조금 더 구체적으로 해주세요."
+                if self.memory is not None:
                     self.memory.add_ai_message(no_result_response)
-                return no_result_response
+                return {"answer": no_result_response}
             
             # 출처 정보 추출
-            first_metadata = search_results[0].get("metadata", {})
-            lecture_id = first_metadata.get("lecture_id", "")
-            lecture_title = first_metadata.get("lecture_title", "")
-            source_content = search_results[0].get("content", "")
-            summary_prompt = f"다음은 정법 강의의 일부입니다. 이 내용을 요약해 5줄 이내로 핵심만 정리해주세요:\n\n{source_content}"
-            source_summary = self.llm.generate(summary_prompt).strip()
+            lecture_id = ""
+            lecture_title = ""
+            source_summary = ""
+            
+            if search_results and len(search_results) > 0:
+                first_metadata = search_results[0].get("metadata", {})
+                lecture_id = first_metadata.get("lecture_id", "")
+                lecture_title = first_metadata.get("lecture_title", "")
+                source_content = search_results[0].get("content", "")
+                if source_content:
+                    summary_prompt = f"다음은 정법 강의의 일부입니다. 이 내용을 요약해 5줄 이내로 핵심만 정리해주세요:\n\n{source_content}"
+                    source_summary = self.llm.generate(summary_prompt).strip()
 
             # 컨텍스트 구성
             context, sources = self._build_context(search_results, additional_context)
             
             # 대화 기록 가져오기
             chat_history = ""
-            if self.memory:
+            if self.memory is not None:
                 chat_history = self.memory.get_chat_history(max_tokens=1000)
             
             # 프롬프트 구성
@@ -189,7 +195,7 @@ class QAChain(ChainBase):
             final_answer = self.llm.generate(citation_prompt)
             
             # 메모리에 AI 답변 추가
-            if self.memory:
+            if self.memory is not None:
                 self.memory.add_ai_message(final_answer)
             
             return {
@@ -202,9 +208,9 @@ class QAChain(ChainBase):
         except Exception as e:
             logger.error(f"QA 체인 실행 오류: {e}")
             error_msg = f"죄송합니다. 답변 생성 중 오류가 발생했습니다: {str(e)}"
-            if self.memory:
+            if self.memory is not None:
                 self.memory.add_ai_message(error_msg)
-            return error_msg
+            return {"answer": error_msg}
     
     def _build_context(self, search_results: List[Dict[str, Any]], 
                       additional_context: Optional[str] = None) -> Tuple[str, str]:
@@ -225,8 +231,8 @@ class QAChain(ChainBase):
         
         # 검색 결과 포맷팅
         for i, doc in enumerate(search_results):
-            content = doc["content"]
-            metadata = doc["metadata"]
+            content = doc.get("content", "")
+            metadata = doc.get("metadata", {})
             similarity = doc.get("score", 0.0)
             
             # 메타데이터에서 유용한 정보 추출
@@ -339,8 +345,13 @@ class ConversationalQAChain(QAChain):
         Returns:
             str: 재구성된 독립적인 질문
         """
-        # 대화 기록이 없으면 원래 질문 반환
-        if not self.memory or len(self.memory.messages) <= 1:
+        # 메모리가 없는 경우 원래 질문 반환
+        if self.memory is None:
+            return current_question
+        
+        # 대화 기록 확인 - messages 속성 직접 접근 대신 더 안전한 방법 사용
+        chat_history = self.memory.get_chat_history()
+        if not chat_history or len(chat_history.strip()) < 20:  # 최소 길이로 판단
             return current_question
         
         # 질문 재구성을 위한 프롬프트
@@ -357,7 +368,7 @@ class ConversationalQAChain(QAChain):
 """
         
         prompt = condense_template.format(
-            chat_history=self.memory.get_chat_history(),
+            chat_history=chat_history,
             current_question=current_question
         )
         
@@ -371,7 +382,7 @@ class ConversationalQAChain(QAChain):
             logger.warning(f"질문 재구성 오류: {e}, 원래 질문 사용")
             return current_question
     
-    def run(self, input_data: Union[str, Dict[str, Any]]) -> str:
+    def run(self, input_data: Union[str, Dict[str, Any]]) -> Union[str, Dict[str, Any]]:
         """
         대화형 체인 실행
         
@@ -379,7 +390,7 @@ class ConversationalQAChain(QAChain):
             input_data: 입력 데이터 (문자열 또는 딕셔너리)
             
         Returns:
-            str: 생성된 답변
+            Union[str, Dict[str, Any]]: 생성된 답변 (문자열 또는 답변과 메타데이터를 포함한 딕셔너리)
         """
         try:
             # 입력 데이터 처리
@@ -392,10 +403,11 @@ class ConversationalQAChain(QAChain):
             
             # 유효한 질문인지 확인
             if not question.strip():
-                return "질문을 입력해 주세요."
+                return {"answer": "질문을 입력해 주세요."}
             
             # 메모리에 사용자 질문 추가
-            self.memory.add_user_message(question)
+            if self.memory is not None:
+                self.memory.add_user_message(question)
             
             # 질문 재구성
             condensed_question = self.condense_question(question)
@@ -406,14 +418,17 @@ class ConversationalQAChain(QAChain):
             # 검색 결과가 없는 경우
             if not search_results:
                 no_result_response = "죄송합니다. 질문에 관련된 정법 문서를 찾지 못했습니다. 다른 질문을 해주시거나 질문을 조금 더 구체적으로 해주세요."
-                self.memory.add_ai_message(no_result_response)
-                return no_result_response
+                if self.memory is not None:
+                    self.memory.add_ai_message(no_result_response)
+                return {"answer": no_result_response}
             
             # 컨텍스트 구성
             context, sources = self._build_context(search_results, additional_context)
             
             # 대화 기록 가져오기
-            chat_history = self.memory.get_chat_history(max_tokens=1000)
+            chat_history = ""
+            if self.memory is not None:
+                chat_history = self.memory.get_chat_history(max_tokens=1000)
             
             # 프롬프트 구성
             prompt = self.prompt_template.format(
@@ -435,15 +450,30 @@ class ConversationalQAChain(QAChain):
             final_answer = self.llm.generate(citation_prompt)
             
             # 메모리에 AI 답변 추가
-            self.memory.add_ai_message(final_answer)
+            if self.memory is not None:
+                self.memory.add_ai_message(final_answer)
             
-            return final_answer
+            # 출처 정보 추출
+            lecture_id = ""
+            lecture_title = ""
+            if search_results and len(search_results) > 0:
+                first_metadata = search_results[0].get("metadata", {})
+                lecture_id = first_metadata.get("lecture_id", "")
+                lecture_title = first_metadata.get("lecture_title", "")
+            
+            return {
+                "answer": final_answer,
+                "lecture_id": lecture_id,
+                "lecture_title": lecture_title
+            }
             
         except Exception as e:
             logger.error(f"대화형 QA 체인 실행 오류: {e}")
             error_msg = f"죄송합니다. 답변 생성 중 오류가 발생했습니다: {str(e)}"
-            self.memory.add_ai_message(error_msg)
-            return error_msg
+            if self.memory is not None:
+                self.memory.add_ai_message(error_msg)
+            return {"answer": error_msg}
+
 def get_chatbot_chain(llm: LLMBase, vector_store: VectorStoreBase, memory: Optional[MemoryBase] = None, k: int = 4):
     """
     챗봇 실행을 위한 체인 생성자 함수
