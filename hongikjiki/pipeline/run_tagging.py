@@ -85,7 +85,7 @@ def run_tagging_pipeline(args: argparse.Namespace) -> None:
     tag_schema = TagSchema(args.tag_schema)
 
     logger.info("Initializing tag extractor")
-    tag_extractor = TagExtractor(tag_schema, args.tag_patterns)
+    tag_extractor = TagExtractor(tag_schema, min_confidence=args.min_confidence)
 
     logger.info("Initializing tag analyzer")
     tag_analyzer = TagAnalyzer(tag_schema)

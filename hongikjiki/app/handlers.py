@@ -24,45 +24,52 @@ def answer_question(message, history):
     try:
         # 대화 기록 형식 변환
         formatted_history = []
-        for user_msg, bot_msg in history:
-            formatted_history.append({"role": "user", "content": user_msg})
-            formatted_history.append({"role": "assistant", "content": bot_msg})
+        if isinstance(history, list):
+            if USE_MESSAGE_FORMAT:
+                for item in history:
+                    if isinstance(item, dict) and 'role' in item and 'content' in item:
+                        formatted_history.append(item)
+            else:
+                for item in history:
+                    if isinstance(item, tuple) and len(item) == 2:
+                        user_msg, bot_msg = item
+                        formatted_history.append({"role": "user", "content": user_msg})
+                        formatted_history.append({"role": "assistant", "content": bot_msg})
 
         # 챗봇 응답 생성
         result = chatbot_instance.answer_question(message, formatted_history)
-        formatted_answer = result["answer"]
-        file_output = result.get("file")
+        formatted_answer = result.get("answer", "")
+        file_output = result.get("file", None)
 
-        # Gradio 버전에 따른 반환 형식 조정
+        if not formatted_answer:
+            formatted_answer = "죄송합니다. 답변을 생성하지 못했습니다."
+
         if USE_MESSAGE_FORMAT:
-            if isinstance(history, list):
-                history.append({"role": "user", "content": message})
-                history.append({"role": "assistant", "content": formatted_answer})
-            else:
-                history = [
-                    {"role": "user", "content": message},
-                    {"role": "assistant", "content": formatted_answer}
-                ]
+            # history를 [{'role':..., 'content':...}] 형식으로 유지
+            if not isinstance(history, list):
+                history = []
+            history.append({"role": "user", "content": message})
+            history.append({"role": "assistant", "content": formatted_answer})
             return history, file_output
         else:
-            return history + [(message, formatted_answer)], file_output
+            # history를 [(질문, 답변)] 튜플 리스트로 유지
+            if not isinstance(history, list):
+                history = []
+            history.append((message, formatted_answer))
+            return history, file_output
 
     except Exception as e:
         logger.error(f"답변 생성 중 오류 발생: {e}")
-        error_msg = f"오류가 발생했습니다: {str(e)}"
-
         if USE_MESSAGE_FORMAT:
-            if isinstance(history, list):
-                history.append({"role": "user", "content": message})
-                history.append({"role": "assistant", "content": error_msg})
-            else:
-                history = [
-                    {"role": "user", "content": message},
-                    {"role": "assistant", "content": error_msg}
-                ]
+            if not isinstance(history, list):
+                history = []
+            history.append({"role": "user", "content": message})
+            history.append({"role": "assistant", "content": "죄송합니다. 답변 생성 중 오류가 발생했습니다."})
             return history, None
         else:
-            return history + [(message, error_msg)], None
+            if not isinstance(history, list):
+                history = []
+            return history + [(message, "죄송합니다. 답변 생성 중 오류가 발생했습니다.")], None
 
 def get_related_questions():
     """관련 질문 목록 가져오기"""

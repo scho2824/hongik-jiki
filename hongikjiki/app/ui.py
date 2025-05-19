@@ -40,21 +40,20 @@ def create_ui(chatbot_instance):
         # 파일 다운로드 영역
         download_file = gr.File(label="답변 다운로드", visible=False)
         
-        # 예시 질문
-        gr.Examples(
-            examples=[
-                "정법이란 무엇인가요?",
-                "영혼과 육신의 관계는?",
-                "현대 사회가 무너지는 이유는 무엇인가요?",
-                "청년이 사회에서 가져야 할 태도는?",
-                "운명은 정해져 있나요?",
-                "수행이란 정확히 무엇인가요?",
-                "정법은 불교나 유교와 무엇이 다른가요?",
-                "감정이 자꾸 요동치는 이유가 뭘까요?",
-                "무기력함을 어떻게 이겨낼 수 있죠?"
-            ],
-            inputs=msg,
-            label="💡 예시 질문을 선택해보세요"
+        # 예시 질문 (동적 업데이트)
+        example_questions = chatbot_instance.generate_related_questions([], "")
+        example_questions = [q["question"] for q in example_questions]
+        example_dropdown = gr.Dropdown(
+            choices=example_questions,
+            label="💡 예시 질문을 선택해보세요",
+            interactive=True
+        )
+        
+        # 예시 질문 선택 시 입력창에 반영
+        example_dropdown.change(
+            fn=lambda x: x,
+            inputs=example_dropdown,
+            outputs=msg
         )
         
         # 관련 질문 영역 

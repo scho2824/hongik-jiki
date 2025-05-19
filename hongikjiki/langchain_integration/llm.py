@@ -6,6 +6,7 @@ import os
 import logging
 from typing import List, Dict, Any, Optional, Union
 from pathlib import Path
+import json
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -19,7 +20,7 @@ class OpenAILLM(LLMBase):
     def __init__(self, 
                  model: str = "gpt-4o", 
                  api_key: Optional[str] = None,
-                 temperature: float = 0.7,
+                 temperature: float = 0.3,
                  max_tokens: int = 1000):
         """
         OpenAI LLM 초기화
@@ -151,8 +152,10 @@ class OpenAILLM(LLMBase):
 class NaverClovaLLM(LLMBase):
     """네이버 Clova API를 사용한 LLM 구현"""
     
-    def __init__(self, 
-                 api_key: Optional[str] = None,
+    def __init__(self,
+                 ncp_client_id: Optional[str] = None,
+                 ncp_client_secret: Optional[str] = None,
+                 clova_studio_api_key: Optional[str] = None, # 이전 api_key 역할
                  api_gateway: str = "https://clovastudio.apigw.ntruss.com/testapp/v1/completions/LK-D",
                  temperature: float = 0.7,
                  max_tokens: int = 1000):
@@ -160,7 +163,9 @@ class NaverClovaLLM(LLMBase):
         Clova LLM 초기화
         
         Args:
-            api_key: Clova API 키
+            ncp_client_id: 네이버 클라우드 플랫폼 Client ID (API Gateway용)
+            ncp_client_secret: 네이버 클라우드 플랫폼 Client Secret (API Gateway용)
+            clova_studio_api_key: Clova Studio 자체 API 키 (선택 사항, 다른 인증 방식용)
             api_gateway: API 게이트웨이 주소
             temperature: 생성 온도 (창의성 조절)
             max_tokens: 최대 생성 토큰 수
@@ -168,17 +173,24 @@ class NaverClovaLLM(LLMBase):
         try:
             # requests 라이브러리 임포트
             import requests
-            
-            # API 키 설정
-            self.api_key = api_key or os.environ.get("CLOVA_API_KEY")
-            if not self.api_key:
-                raise ValueError("Clova API 키가 필요합니다. API 키를 직접 전달하거나 CLOVA_API_KEY 환경 변수를 설정하세요.")
-            
+            self.requests = requests
+
+            # 인증 정보 설정
+            self.ncp_client_id = ncp_client_id or os.environ.get("NAVER_CLIENT_ID")
+            self.ncp_client_secret = ncp_client_secret or os.environ.get("NAVER_CLIENT_SECRET")
+            self.clova_studio_api_key = clova_studio_api_key or os.environ.get("CLOVA_API_KEY")
+
+            if not (self.ncp_client_id and self.ncp_client_secret) and not self.clova_studio_api_key:
+                raise ValueError(
+                    "네이버 클라우드 플랫폼 API 인증 정보가 필요합니다. "
+                    "ncp_client_id와 ncp_client_secret을 인자로 전달하거나 환경 변수(NAVER_CLIENT_ID, NAVER_CLIENT_SECRET)에 설정해야 합니다. "
+                    "또는 Clova Studio 자체 API 키를 clova_studio_api_key 인자로 전달하거나 CLOVA_API_KEY 환경 변수에 설정하세요."
+                )
+
             # 모델 및 설정
             self.api_gateway = api_gateway
             self.temperature = temperature
             self.max_tokens = max_tokens
-            self.requests = requests
             
             logger.info(f"Naver Clova LLM 초기화 완료: 온도={temperature}")
             
@@ -218,24 +230,41 @@ class NaverClovaLLM(LLMBase):
             }
             
             # 요청 헤더
-            headers = {
-                "Content-Type": "application/json",
-                "X-NCP-CLOVASTUDIO-API-KEY": self.api_key
-            }
+            headers = {"Content-Type": "application/json; charset=utf-8"}
+            if self.ncp_client_id and self.ncp_client_secret:
+                headers["X-NCP-APIGW-API-KEY-ID"] = self.ncp_client_id
+                headers["X-NCP-APIGW-API-KEY"] = self.ncp_client_secret
+                logger.debug("Using NCP API Gateway credentials (ID/Secret) for Clova API.")
+            elif self.clova_studio_api_key:
+                headers["X-NCP-CLOVASTUDIO-API-KEY"] = self.clova_studio_api_key
+                logger.debug("Using CLOVA_STUDIO_API_KEY for Clova API.")
+            else:
+                # 이 경우는 __init__에서 잡히지만, 안전장치로 추가
+                raise ValueError("Clova API 호출에 필요한 인증 정보가 설정되지 않았습니다.")
             
             # API 호출
             response = self.requests.post(
                 self.api_gateway,
-                json=request_data,
+                data=json.dumps(request_data, ensure_ascii=False).encode('utf-8'),
                 headers=headers
             )
             
             # 응답 파싱
             if response.status_code == 200:
-                result = response.json()
+                try:
+                    # response.content를 utf-8로 디코딩 후 json 파싱
+                    result = json.loads(response.content.decode('utf-8'))
+                except Exception as e:
+                    logger.error(f"Clova API 응답 디코딩/파싱 오류: {e}")
+                    return f"[API 응답 파싱 오류: {str(e)}]"
                 return result.get("result", {}).get("text", "").strip()
             else:
-                logger.error(f"Clova API 오류: {response.status_code} {response.text}")
+                # 한글 인코딩 오류 방지
+                try:
+                    error_text = response.content.decode('utf-8', errors='replace')
+                except Exception:
+                    error_text = str(response.content)
+                logger.error(f"Clova API 오류: {response.status_code} {error_text}")
                 return f"[API 오류: {response.status_code}]"
         
         except Exception as e:

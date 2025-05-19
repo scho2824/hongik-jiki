@@ -64,16 +64,16 @@ class TagExtractor:
             if tag_name in tag_scores:
                 continue  # Skip if already added from existing tags
             
-            score = self._calculate_tag_score(content, tag)
+            score = float(self._calculate_tag_score(content, tag))  # Ensure score is float
             
-            if score >= self.min_confidence:
+            if score >= float(self.min_confidence):  # Ensure min_confidence is float
                 tag_scores[tag_name] = score
         
         # Add parent tags for any child tags with high confidence
         parent_tags = self._get_parent_tags(tag_scores)
         for parent, score in parent_tags.items():
             if parent not in tag_scores or tag_scores[parent] < score:
-                tag_scores[parent] = score
+                tag_scores[parent] = float(score)  # Ensure score is float
 
         # Log near-threshold candidates for diagnostics
         near_candidates = self.log_near_threshold_candidates(content)

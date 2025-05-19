@@ -137,6 +137,12 @@ class HongikJikiChatbot:
         2. 문서에 없는 내용은 답변하지 마세요.
         3. 답변은 친절하고 이해하기 쉽게 작성하세요.
         4. 답변은 한국어로 작성하세요.
+        5. 답변은 최소 3문단 이상으로 구성하세요.
+        6. 각 문단은 하나의 주요 개념이나 관점을 다루세요.
+        7. 가능한 구체적인 예시나 비유를 포함하세요.
+        8. 답변의 마지막에는 실천적 조언이나 적용점을 포함하세요.
+        9. 답변에 사용한 출처를 명확히 인용하세요. "[문서 X]"와 같은 형식으로 인용해주세요.
+        10. 인용문을 사용할 때는 직접 인용 부분을 큰따옴표로 표시하세요.
         
         ### 관련 정법 문서:
         {context}
@@ -235,37 +241,37 @@ class HongikJikiChatbot:
         Returns:
             List[Dict]: 관련 질문 정보 리스트
         """
-        # 태그별 질문 맵핑
+        # 태그별 질문 맵핑 (더 깊이 있고 실용적인 질문으로 개선)
         tag_questions = {
             "감정": [
-                "감정이 불안정한 이유는 무엇인가요?",
-                "화가 날 때 어떻게 다스려야 할까요?",
-                "자신의 감정을 이해하는 방법은 무엇인가요?"
+                "감정이 요동칠 때 정법적으로 어떻게 다스릴 수 있나요?",
+                "정법에서 감정의 근원은 무엇이라고 보나요?",
+                "감정 조절이 어려운 상황에서 실천할 수 있는 방법은?"
             ],
             "관계": [
-                "가족과의 갈등을 어떻게 해결할 수 있나요?",
-                "인간관계에서 중요한 것은 무엇인가요?",
-                "타인을 이해하는 방법은 무엇인가요?"
+                "정법적 관점에서 가족 갈등을 해결하는 실질적 방법은?",
+                "직장이나 사회에서 인간관계가 힘들 때 정법적으로 접근하는 법은?",
+                "정법에서 말하는 건강한 인간관계의 핵심은 무엇인가요?"
             ],
             "정법": [
-                "정법의 핵심 원리는 무엇인가요?",
-                "정법에서 말하는 자유의지란 무엇인가요?",
-                "정법의 관점에서 행복이란 무엇인가요?"
+                "정법을 일상에 적용하려면 구체적으로 어떻게 해야 하나요?",
+                "정법과 현대 과학의 접점에는 어떤 것이 있나요?",
+                "정법에서 강조하는 실천적 덕목은 무엇인가요?"
             ],
             "자유": [
-                "진정한 자유란 무엇인가요?",
-                "자유로운 삶을 사는 방법은 무엇인가요?",
-                "자유와 책임의 관계는 무엇인가요?"
+                "정법에서 말하는 진정한 자유란 무엇이며, 어떻게 실현할 수 있나요?",
+                "자유와 책임의 균형을 정법적으로 설명해 주세요.",
+                "현대 사회에서 자유를 지키는 정법적 실천은?"
             ],
             "수행": [
-                "수행이란 무엇인가요?",
-                "일상에서 수행하는 방법은 무엇인가요?",
-                "수행을 통해 얻을 수 있는 것은 무엇인가요?"
+                "수행이 삶에 미치는 실제 변화 사례가 있나요?",
+                "정법적 수행을 꾸준히 이어가기 위한 팁이 있나요?",
+                "수행 중 흔히 겪는 어려움과 극복 방법은?"
             ],
             "마음": [
-                "마음을 다스리는 방법은 무엇인가요?",
-                "마음의 평화를 얻는 방법은 무엇인가요?",
-                "마음의 작용 원리는 무엇인가요?"
+                "정법에서 말하는 '마음의 평화'는 구체적으로 어떤 상태인가요?",
+                "마음이 불안할 때 정법적으로 안정시키는 방법은?",
+                "마음의 작용 원리를 일상에 적용하는 실천법은?"
             ]
         }
         
@@ -280,12 +286,14 @@ class HongikJikiChatbot:
                             "insight": f"'{tag}' 관련 질문입니다."
                         })
         
-        # 일반 질문 추가 (태그가 없거나 적을 경우)
+        # 일반 질문 추가 (더 깊이 있고 실용적인 질문)
         general_questions = [
-            {"question": "정법이란 무엇인가요?", "insight": "정법의 기본 개념에 관한 질문입니다."},
-            {"question": "자주독립의 의미는 무엇인가요?", "insight": "정신적 자립에 관한 질문입니다."},
-            {"question": "어떻게 마음의 평화를 찾을 수 있나요?", "insight": "마음 수행에 관한 질문입니다."},
-            {"question": "홍익인간이란 무엇인가요?", "insight": "홍익인간 철학에 관한 질문입니다."}
+            {"question": "정법을 일상에 적용하려면 어떻게 해야 하나요?", "insight": "정법의 실천적 적용에 관한 질문입니다."},
+            {"question": "정법적 관점에서 인간관계의 갈등을 해결하는 방법은?", "insight": "관계 문제의 정법적 해법에 관한 질문입니다."},
+            {"question": "정법과 현대 과학의 접점은 무엇인가요?", "insight": "정법과 과학의 융합에 관한 질문입니다."},
+            {"question": "수행이 삶에 미치는 실제 변화 사례가 있나요?", "insight": "수행의 효과와 사례에 관한 질문입니다."},
+            {"question": "정법에서 말하는 '마음의 평화'는 어떤 상태인가요?", "insight": "마음의 평화에 관한 정법적 해석입니다."},
+            {"question": "정법에서 강조하는 실천적 덕목은 무엇인가요?", "insight": "정법의 핵심 덕목에 관한 질문입니다."}
         ]
         
         # 관련 질문이 부족하면 일반 질문 추가
@@ -354,7 +362,7 @@ class HongikJikiChatbot:
             answer = self.llm.generate(prompt)
             
             # 관련 질문 생성
-            self.related_questions = self.generate_related_questions(extracted_tags, message)
+            self.related_questions = self.generate_related_questions(extracted_tags or [], message)
             
             # 임시 파일 생성
             temp_file = self.create_temp_file(answer)
@@ -370,7 +378,7 @@ class HongikJikiChatbot:
             formatted_answer = answer
             
             # 관련 질문 생성
-            self.related_questions = self.generate_related_questions(extracted_tags, message)
+            self.related_questions = self.generate_related_questions(extracted_tags or [], message)
             
             # 임시 파일 생성
             temp_file = self.create_temp_file(formatted_answer)
@@ -384,7 +392,7 @@ class HongikJikiChatbot:
         formatted_answer = self.format_response(results, answer, extracted_tags)
         
         # 관련 질문 생성
-        self.related_questions = self.generate_related_questions(extracted_tags, message)
+        self.related_questions = self.generate_related_questions(extracted_tags or [], message)
         
         # 임시 파일 생성
         temp_file = self.create_temp_file(formatted_answer)
